@@ -1,0 +1,30 @@
+# Build outputs
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Cache
+.cache/
+.vite/
+
+# Generated
+*.lock
+package-lock.json
+
+# Environment
+.env
+.env.*
+
+# Misc
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Public
+public/
