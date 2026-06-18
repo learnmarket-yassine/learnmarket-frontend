@@ -19,7 +19,6 @@ jobs:
     
     environment:
       name: production
-      url: ${{ secrets.FRONTEND_URL }}
     
     steps:
       - name: Checkout specific commit
