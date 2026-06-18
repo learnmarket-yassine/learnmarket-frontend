@@ -1,0 +1,85 @@
+name: Rollback PRODUCTION
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA to rollback to (full or short)'
+        required: true
+        type: string
+      reason:
+        description: 'Reason for rollback'
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    name: Rollback to ${{ github.event.inputs.commit_sha }}
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      url: ${{ secrets.FRONTEND_URL }}
+    
+    steps:
+      - name: Checkout specific commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Build rollback version
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_APP_NAME: LearnMarket
+          VITE_APP_VERSION: ${{ github.event.inputs.commit_sha }}-rollback
+          VITE_ENVIRONMENT: production
+        run: npm run build
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+      
+      - name: Deploy rollback to S3
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }}/ \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "*.html"
+          
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }}/ \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --content-type "text/html; charset=utf-8" \
+            --include "*.html" \
+            --exclude "*" \
+            --include "index.html"
+      
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+      
+      - name: Rollback summary
+        run: |
+          cat << EOF >> $GITHUB_STEP_SUMMARY
+          ## PRODUCTION Rollback Completed
+          
+          | Field | Value |
+          |-------|-------|
+          | Rolled back to | \`${{ github.event.inputs.commit_sha }}\` |
+          | Reason | ${{ github.event.inputs.reason }} |
+          | Rolled back by | ${{ github.actor }} |
+          | Timestamp | $(date -u +"%Y-%m-%d %H:%M:%S UTC") |
+          EOF
