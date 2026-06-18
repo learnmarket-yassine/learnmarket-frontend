@@ -17,7 +17,6 @@ jobs:
     
     environment:
       name: development
-      url: ${{ secrets.FRONTEND_URL }}
     
     steps:
       - name: Checkout code
