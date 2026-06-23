@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import AuthHeader from './AuthHeader'
 import AuthImg from '@/assets/images/login.png'
 
@@ -6,6 +7,7 @@ type AuthLayoutProps = {
 }
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
+  const navigate = useNavigate()
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background */}
@@ -16,7 +18,12 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
 
       <div className="container relative z-10 flex min-h-screen flex-col pb-16 pt-8">
         {/* Header */}
-        <AuthHeader title="Signup" />
+        <AuthHeader
+          buttonLabel="Signup"
+          onButtonClick={() => {
+            navigate('/register')
+          }}
+        />
 
         {/* Main content */}
         <main className="mt-8 flex flex-1">

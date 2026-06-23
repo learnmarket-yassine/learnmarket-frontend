@@ -1,7 +1,7 @@
-import GoogleIcon from '@/assets/GoogleIcon'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CustomInput } from '@/components/ui/CustomInput'
+import GoogleButton from '@/features/auth/components/ui/GoogleButton'
 import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
@@ -10,15 +10,7 @@ const LoginPage = () => {
       <div className="flex w-full flex-col items-center justify-center gap-7">
         <h1 className="text-3xl font-bold text-[#102A63]">Welcome back</h1>
         <p className="text-[#8E949F]">Enter your email and password to access your account.</p>
-        <button
-          type="submit"
-          data-mdb-button-init
-          data-mdb-ripple-init
-          className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white p-4 hover:bg-white"
-        >
-          <GoogleIcon />
-          <span className="text-sm font-medium text-[#2563EB]">Continue with Google</span>
-        </button>
+        <GoogleButton />
         <div className="flex w-full items-center justify-center gap-2">
           <hr className="flex-grow border-t border-[#ADADAD]" />
           <div className="text-[#102A63]">Or</div>
