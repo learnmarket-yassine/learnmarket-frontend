@@ -12,12 +12,19 @@ const RegisterForm = () => {
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   })
-  const { register, formState, handleSubmit, clearErrors, setError, setValue, reset, watch } = form
+  const { register, handleSubmit, formState } = form
+
+  const { errors } = formState
+
+  const onSubmit = () => {}
 
   return (
     <form
       className="flex h-full w-full flex-col gap-7"
-      onSubmit={handleSubmit(() => {})}
+      onSubmit={(e) => {
+        e.stopPropagation()
+        handleSubmit(onSubmit)(e)
+      }}
       noValidate
     >
       <div className="flex h-full flex-col gap-6">
@@ -25,11 +32,13 @@ const RegisterForm = () => {
           <CustomInput
             type="text"
             id="firstName"
-            {...register('firstName')}
             placeholder="Yassine"
             required
             label="First Name"
+            className="rounded-full bg-white"
             width="w-full"
+            error={errors.firstName?.message}
+            {...register('firstName')}
           />
           <CustomInput
             type="text"
@@ -37,7 +46,9 @@ const RegisterForm = () => {
             required
             label={'Last Name'}
             placeholder={'Ben Hadj Ali'}
+            className="rounded-full bg-white"
             width="w-full"
+            error={errors.lastName?.message}
             {...register('lastName')}
           />
         </div>
@@ -48,7 +59,9 @@ const RegisterForm = () => {
             placeholder={'foulen16@gmail.com'}
             required
             label={'Email'}
+            className="rounded-full bg-white"
             width="w-full"
+            error={errors.email?.message}
             {...register('email')}
           />
         </div>
@@ -60,8 +73,9 @@ const RegisterForm = () => {
             label={'Password'}
             width="w-full"
             required
-            className="bg-white"
+            className="rounded-full bg-white"
             passwordinput
+            error={errors.password?.message}
             {...register('password')}
           />
           <CustomInput
@@ -71,8 +85,9 @@ const RegisterForm = () => {
             label={'Confirm Password'}
             width="w-full"
             required
-            className="bg-white"
+            className="rounded-full bg-white"
             passwordinput
+            error={errors.confirmPassword?.message}
             {...register('confirmPassword')}
           />
         </div>

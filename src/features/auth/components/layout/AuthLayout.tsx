@@ -21,7 +21,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <AuthHeader
           buttonLabel="Signup"
           onButtonClick={() => {
-            navigate('/register')
+            navigate('/signup')
           }}
         />
 

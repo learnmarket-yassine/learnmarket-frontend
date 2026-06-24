@@ -40,9 +40,6 @@ export const signupSchema = z
     role: z.enum(['LEARNER', 'TUTOR']).refine((val) => ['LEARNER', 'TUTOR'].includes(val), {
       message: 'Please select a role',
     }),
-    acceptTerms: z.boolean().refine((val) => val === true, {
-      message: 'You must accept the terms',
-    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
