@@ -3,8 +3,6 @@ import { useStore } from '@/store/store'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
-const refreshTokenEndpoint = '/auth/refresh-token'
-
 const useRefreshToken = () => {
   const { setAuthenticationResult } = useStore((state) => state.auth)
   const navigate = useNavigate()
@@ -12,10 +10,8 @@ const useRefreshToken = () => {
   const { mutateAsync: getNewAccessToken } = useMutation({
     mutationFn: async () => {
       try {
-        const response = await axios.get(refreshTokenEndpoint, {
-          withCredentials: true, // Ensure cookies are sent with the request
-        })
-        setAuthenticationResult(response.data?.AuthenticationResult)
+        const response = await axios.post('/auth/refresh')
+        setAuthenticationResult(response.data?.token)
         return response.data?.AuthenticationResult
       } catch (error: unknown) {
         setAuthenticationResult(null)

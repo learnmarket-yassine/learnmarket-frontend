@@ -7,14 +7,14 @@ import useRefreshToken from '@/features/auth/hooks/useRefreshToken'
 const useAxiosPrivate = () => {
   const auth = useStore((state) => state.auth)
   const getNewAccessToken = useRefreshToken()
-  const accessToken = auth?.authenticationResult?.AccessToken
+  const accessToken = auth?.authenticationResult?.token
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       async (config) => {
         let interceptedAccessToken = accessToken
         if (!interceptedAccessToken) {
           const refreshedTokens = await getNewAccessToken() // Await refresh
-          interceptedAccessToken = refreshedTokens.AccessToken
+          interceptedAccessToken = refreshedTokens.token
         }
         if (!config.headers['Authorization']) {
           config.headers['Authorization'] = `Bearer ${interceptedAccessToken}`
@@ -35,7 +35,7 @@ const useAxiosPrivate = () => {
         ) {
           prevRequest.sent = true
           const refreshedTokens = await getNewAccessToken() // Await refresh
-          prevRequest.headers['Authorization'] = `Bearer ${refreshedTokens.AccessToken}`
+          prevRequest.headers['Authorization'] = `Bearer ${refreshedTokens.token}`
           return axiosPrivate(prevRequest)
         }
         return Promise.reject(error)

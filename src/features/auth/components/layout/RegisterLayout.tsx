@@ -1,17 +1,17 @@
-import { useState } from 'react'
 import AuthHeader from './AuthHeader'
 import RoleSwitcher from '../ui/RoleSwitcher'
 import RoleCard from '../ui/RoleCard'
 import LearnerImg from '@/assets/images/Learner_image.png'
 import TutorImg from '@/assets/images/Tutor_image.png'
 import { useNavigate } from 'react-router-dom'
+import { useStore } from '@/store/store'
 
 type RegisterLayoutProps = {
   children: React.ReactNode
 }
 
 const RegisterLayout = ({ children }: RegisterLayoutProps) => {
-  const [role, setRole] = useState<'TUTOR' | 'LEARNER' | null>(null)
+  const { role, setRole } = useStore((state) => state.auth)
   const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-[#f7f7f7] py-8">

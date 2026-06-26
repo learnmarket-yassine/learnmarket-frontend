@@ -5,9 +5,13 @@ import { CustomInput } from '@/components/ui/CustomInput'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useStore } from '@/store/store'
+import useSignup from '../../hooks/useSignup'
 
 const RegisterForm = () => {
   const [terms, setTerms] = useState<boolean>(false)
+  const { role } = useStore((state) => state.auth)
+  const signupQuery = useSignup()
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -16,7 +20,10 @@ const RegisterForm = () => {
 
   const { errors } = formState
 
-  const onSubmit = () => {}
+  const onSubmit = (data: SignupFormData) => {
+    if (!role) return
+    signupQuery.mutate({ ...data, role: role })
+  }
 
   return (
     <form
@@ -37,8 +44,8 @@ const RegisterForm = () => {
             label="First Name"
             className="rounded-full bg-white"
             width="w-full"
-            error={errors.firstName?.message}
-            {...register('firstName')}
+            error={errors.firstname?.message}
+            {...register('firstname')}
           />
           <CustomInput
             type="text"
@@ -48,8 +55,8 @@ const RegisterForm = () => {
             placeholder={'Ben Hadj Ali'}
             className="rounded-full bg-white"
             width="w-full"
-            error={errors.lastName?.message}
-            {...register('lastName')}
+            error={errors.lastname?.message}
+            {...register('lastname')}
           />
         </div>
         <div className="flex w-full items-center justify-between gap-12">

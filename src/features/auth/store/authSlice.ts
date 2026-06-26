@@ -11,5 +11,13 @@ export const authSlice: StateCreator<AuthSlice> = (set) => ({
           authenticationResult: auth,
         },
       })),
+    role: null,
+    setRole: (role) =>
+      set((state) => ({
+        auth: {
+          ...state.auth,
+          role: role,
+        },
+      })),
   },
 })
