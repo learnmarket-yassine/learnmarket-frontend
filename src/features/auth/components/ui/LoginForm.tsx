@@ -6,9 +6,11 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { LoginFormData, loginSchema } from '../../schemas'
 import { useState } from 'react'
+import useLogin from '../../hooks/useLogin'
 
 const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false)
+  const loginQuery = useLogin()
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
@@ -17,7 +19,9 @@ const LoginForm = () => {
 
   const { errors } = formState
 
-  const onSubmit = () => {}
+  const onSubmit = (data: LoginFormData) => {
+    loginQuery.mutate(data)
+  }
 
   return (
     <form
