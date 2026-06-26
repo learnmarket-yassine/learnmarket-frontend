@@ -10,19 +10,14 @@ export const loginSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>
 
-export enum UserRole {
-  LEARNER = 'LEARNER',
-  TUTOR = 'TUTOR',
-}
-
 export const signupSchema = z
   .object({
-    firstName: z
+    firstname: z
       .string()
       .min(1, 'First name is required')
       .min(2, 'First name must be at least 2 characters')
       .max(50, 'First name must be less than 50 characters'),
-    lastName: z
+    lastname: z
       .string()
       .min(1, 'Last name is required')
       .min(2, 'Last name must be at least 2 characters')
@@ -37,12 +32,6 @@ export const signupSchema = z
         'Password must contain uppercase, lowercase, and number'
       ),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
-    role: z.enum(['LEARNER', 'TUTOR']).refine((val) => ['LEARNER', 'TUTOR'].includes(val), {
-      message: 'Please select a role',
-    }),
-    acceptTerms: z.boolean().refine((val) => val === true, {
-      message: 'You must accept the terms',
-    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

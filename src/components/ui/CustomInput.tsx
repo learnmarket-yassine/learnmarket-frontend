@@ -38,7 +38,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               'placeholder:text-placeholder flex h-12 w-full rounded-sm px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50',
               props.passwordinput && 'pr-10',
-              props.error && 'border-red-600 outline-none focus-visible:ring-transparent',
+              props.error && 'border border-red-600 outline-none focus-visible:ring-transparent',
               className
             )}
             autoComplete={autoComplete}
@@ -66,7 +66,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, InputProps>(
           )}
           {props.error && (
             <div>
-              <p className="bg-inputBackground absolute left-2 top-3/4 block overflow-hidden text-ellipsis whitespace-normal px-1 text-xs font-normal text-red-600">
+              <p className="absolute left-2 block overflow-hidden text-ellipsis whitespace-normal px-1 text-xs font-normal text-red-600">
                 {' '}
                 {props.error}{' '}
               </p>
