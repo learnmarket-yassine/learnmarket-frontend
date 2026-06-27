@@ -19,5 +19,13 @@ export const authSlice: StateCreator<AuthSlice> = (set) => ({
           role: role,
         },
       })),
+    currentStep: 1,
+    setCurrentStep: (step) =>
+      set((state) => ({
+        auth: {
+          ...state.auth,
+          currentStep: step,
+        },
+      })),
   },
 })
