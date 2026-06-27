@@ -1,23 +1,37 @@
 import { Button } from '@/components/ui/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { VerifCodeSchema, VerifCodeValues } from '../../schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
+import useVerifyOtp from '../../hooks/useVerifyOtp'
+import { useSearchParams } from 'react-router-dom'
 
 const VerifCodeForm = () => {
   const [otpValue, setOtpValue] = useState('')
-
+  const verifyOtp = useVerifyOtp()
+  const [searchParams] = useSearchParams()
+  const email = searchParams.get('email') ?? ''
   const from = useForm<VerifCodeValues>({
     resolver: zodResolver(VerifCodeSchema),
+    defaultValues: { email, otp: '' },
   })
-  const { formState } = from
+  const { formState, handleSubmit, setValue } = from
   const { errors } = formState
+
+  const onSubmit = (data: VerifCodeValues) => {
+    verifyOtp.mutate(data)
+  }
+  useEffect(() => {
+    setValue('otp', otpValue)
+  }, [otpValue, setValue])
+
   return (
     <form
       className="flex w-full flex-col gap-3"
       onSubmit={(e) => {
         e.stopPropagation()
+        handleSubmit(onSubmit)(e)
       }}
       noValidate
     >
@@ -49,7 +63,7 @@ const VerifCodeForm = () => {
           />
         </InputOTPGroup>
       </InputOTP>
-      {errors.code && <p className="text-red-600">{errors.code.message}</p>}
+      {errors.otp && <p className="text-red-600">{errors.otp.message}</p>}
 
       <div className="mt-8 flex flex-col gap-11">
         <Button

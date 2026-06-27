@@ -3,19 +3,26 @@ import { CustomInput } from '@/components/ui/CustomInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { forgotPasswordSchema, ForgotPasswordValues } from '../../schemas'
+import useForgotPassword from '../../hooks/useForgotPassword'
 
 const ForgotPasswordForm = () => {
+  const forgotPassword = useForgotPassword()
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
   })
-  const { register, formState } = form
+  const { register, formState, handleSubmit } = form
   const { errors } = formState
+
+  const onSubmit = (data: ForgotPasswordValues) => {
+    forgotPassword.mutate(data)
+  }
 
   return (
     <form
       className="flex w-full flex-col gap-3"
       onSubmit={(e) => {
         e.stopPropagation()
+        handleSubmit(onSubmit)(e)
       }}
       noValidate
     >

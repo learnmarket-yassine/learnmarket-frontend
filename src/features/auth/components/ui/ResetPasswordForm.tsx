@@ -5,21 +5,31 @@ import { useForm, useWatch } from 'react-hook-form'
 import { resetPasswordSchema, ResetPasswordValues } from '../../schemas'
 import { usePasswordValidation } from '../../hooks/usePasswordValidation'
 import PasswordRuleItem from './PasswordRuleItem'
+import useResetPassword from '../../hooks/useResetPassword'
+import { useSearchParams } from 'react-router-dom'
 
 const ResetPasswordForm = () => {
+  const resetPassword = useResetPassword()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('token') ?? ''
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { resetToken: token, newPassword: '', confirmPassword: '' },
   })
-  const { register, formState, control } = form
-  const { errors } = formState
-  const password = useWatch({ control, name: 'password' }) ?? ''
-  const { results, isValid } = usePasswordValidation(password)
 
+  const { register, formState, control, handleSubmit } = form
+  const { errors } = formState
+  const password = useWatch({ control, name: 'newPassword' }) ?? ''
+  const { results, isValid } = usePasswordValidation(password)
+  const onSubmit = (data: ResetPasswordValues) => {
+    resetPassword.mutate(data)
+  }
   return (
     <form
       className="flex w-full flex-col gap-3"
       onSubmit={(e) => {
         e.stopPropagation()
+        handleSubmit(onSubmit)(e)
       }}
       noValidate
     >
@@ -32,8 +42,8 @@ const ResetPasswordForm = () => {
         required
         className="rounded-full bg-white"
         passwordinput
-        error={errors.password?.message}
-        {...register('password')}
+        error={errors.newPassword?.message}
+        {...register('newPassword')}
       />
       <CustomInput
         type="password"
@@ -63,6 +73,7 @@ const ResetPasswordForm = () => {
           data-mdb-button-init
           data-mdb-ripple-init
           className="h-full w-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
+          disabled={!isValid}
         >
           Save password
         </Button>
