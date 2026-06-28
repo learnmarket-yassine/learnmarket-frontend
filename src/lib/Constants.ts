@@ -1,3 +1,5 @@
+import { NavItemConfig } from '@/types/nav'
+
 // features/auth/constants/passwordRules.ts
 export const PASSWORD_RULES = [
   {
@@ -25,3 +27,38 @@ export const PASSWORD_RULES = [
     isError: true,
   },
 ] as const
+
+export const NAV_ITEMS: NavItemConfig[] = [
+  {
+    label: 'How it Works',
+    children: [
+      { label: 'For Students', href: '/how-it-works/students' },
+      { label: 'For Tutors', href: '/how-it-works/tutors' },
+      { label: 'Pricing', href: '/how-it-works/pricing' },
+    ],
+  },
+  {
+    label: 'Find Mentors',
+    children: [
+      { label: 'Browse All', href: '/mentors' },
+      { label: 'By Subject', href: '/mentors/subjects' },
+      { label: 'Top Rated', href: '/mentors/top-rated' },
+    ],
+  },
+  {
+    label: 'Become a Tutor',
+    children: [
+      { label: 'Apply Now', href: '/become-tutor/apply' },
+      { label: 'Requirements', href: '/become-tutor/requirements' },
+    ],
+  },
+  {
+    label: 'Categories',
+    children: [
+      { label: 'Mathematics', href: '/categories/math' },
+      { label: 'Sciences', href: '/categories/sciences' },
+      { label: 'Languages', href: '/categories/languages' },
+      { label: 'Programming', href: '/categories/programming' },
+    ],
+  },
+]
