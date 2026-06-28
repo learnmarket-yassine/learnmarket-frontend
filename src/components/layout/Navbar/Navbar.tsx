@@ -11,7 +11,7 @@ interface NavbarProps {
 
 function Navbar({ user, notificationCount = 0 }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50 h-28 w-full">
+    <header className="sticky top-0 z-50 h-28 w-full bg-white">
       <div className="container flex items-center justify-between py-8">
         <NavBrand />
         <NavMenu />

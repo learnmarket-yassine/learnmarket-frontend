@@ -46,7 +46,7 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
       </PopoverTrigger>
 
       {/* ── Panel ───────────────────────────────────────────────────────── */}
-      <PopoverContent align="end" sideOffset={7} className="w-64 border py-5 pl-3">
+      <PopoverContent align="end" sideOffset={7} className="w-64 border bg-white py-5 pl-3">
         {/* User info header */}
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12 after:border-none">
