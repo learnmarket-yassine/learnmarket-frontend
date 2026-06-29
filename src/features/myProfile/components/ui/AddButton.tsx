@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import PlusIcon from '@/assets/PlusIcon'
 
 interface AddButtonProps {
   label: string
@@ -14,9 +15,9 @@ function AddButton({ label, onClick, className }: AddButtonProps) {
       size="icon"
       aria-label={label}
       onClick={onClick}
-      className={`h-8 w-8 rounded-full text-muted-foreground hover:text-foreground ${className ?? ''}`}
+      className={`h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB] ${className ?? ''}`}
     >
-      <Plus className="h-4 w-4" />
+      <PlusIcon className="size-4" />
     </Button>
   )
 }

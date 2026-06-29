@@ -17,9 +17,9 @@ const AppRoutes = () => {
       <Route path="reset-password" element={<ResetPasswordPage />}></Route>
       <Route path="verif-code" element={<VerifCodePage />}></Route>
       <Route path="signup" element={<RegisterPage />}></Route>
-      <Route element={<PersistLogin />}>
-        <Route path="my-profile" element={<MyProfilePage />}></Route>
-      </Route>
+      {/* <Route element={<PersistLogin />}> */}
+      <Route path="my-profile" element={<MyProfilePage />}></Route>
+      {/* </Route> */}
     </Routes>
   )
 }

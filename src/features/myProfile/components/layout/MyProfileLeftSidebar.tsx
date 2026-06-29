@@ -1,7 +1,9 @@
-import { Plus, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TutorProfile } from '../../store/types'
 import EditButton from '../ui/EditButton'
+import PlusIcon from '@/assets/PlusIcon'
+import TrashIcon from '@/assets/TrashIcon'
 
 interface MyProfileLeftSidebarProps {
   myProfile: TutorProfile
@@ -64,9 +66,9 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
                 variant="ghost"
                 size="icon"
                 aria-label="Delete education"
-                className="h-8 w-8 rounded-full text-muted-foreground hover:text-destructive"
+                className="h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB]"
               >
-                <Trash2 className="h-4 w-4" />
+                <TrashIcon className="size-5" />
               </Button>
             </div>
           </div>
@@ -98,9 +100,9 @@ function SidebarRow({ label, children, onAdd, onEdit, addLabel, editLabel }: Sid
               size="icon"
               aria-label={addLabel ?? `Add ${label}`}
               onClick={onAdd}
-              className="h-7 w-7 rounded-full text-muted-foreground hover:text-foreground"
+              className="h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB]"
             >
-              <Plus className="h-4 w-4" />
+              <PlusIcon className="size-4" />
             </Button>
           )}
           {onEdit && <EditButton label={editLabel ?? `Edit ${label}`} onClick={onEdit} />}

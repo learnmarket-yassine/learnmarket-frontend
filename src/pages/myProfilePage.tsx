@@ -1,3 +1,5 @@
+import CertificationsSection from '@/features/myProfile/components/layout/CertificationsSection'
+import EmploymentSection from '@/features/myProfile/components/layout/EmploymentSection'
 import MyProfileHeader from '@/features/myProfile/components/layout/MyProfileHeader'
 import MyProfileLayout from '@/features/myProfile/components/layout/MyProfileLayout'
 import MyProfileLeftSidebar from '@/features/myProfile/components/layout/MyProfileLeftSidebar'
@@ -18,10 +20,9 @@ const MyProfilePage = () => {
         </div>
       </div>
 
-      {/* 3. Full-width stacked sections */}
-      {/* <TestimonialsSection testimonials={MOCK_PROFILE.testimonials} />
+      {/* <TestimonialsSection testimonials={MOCK_PROFILE.testimonials} /> */}
       <CertificationsSection certifications={MOCK_PROFILE.certifications} />
-      <EmploymentSection employment={MOCK_PROFILE.employment} /> */}
+      <EmploymentSection employment={MOCK_PROFILE.employment} />
     </MyProfileLayout>
   )
 }

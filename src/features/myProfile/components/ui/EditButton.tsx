@@ -1,5 +1,6 @@
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import EditIcon from '@/assets/EditIcon'
 
 interface EditButtonProps {
   label: string
@@ -14,9 +15,9 @@ function EditButton({ label, onClick, className }: EditButtonProps) {
       size="icon"
       aria-label={label}
       onClick={onClick}
-      className={`h-8 w-8 rounded-full text-muted-foreground hover:text-foreground ${className ?? ''}`}
+      className={`h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB] ${className ?? ''}`}
     >
-      <Pencil className="h-4 w-4" />
+      <EditIcon className="size-5" />
     </Button>
   )
 }
