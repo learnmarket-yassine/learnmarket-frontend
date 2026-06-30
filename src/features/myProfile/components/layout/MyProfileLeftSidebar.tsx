@@ -4,6 +4,9 @@ import { TutorProfile } from '../../store/types'
 import EditButton from '../ui/EditButton'
 import PlusIcon from '@/assets/PlusIcon'
 import TrashIcon from '@/assets/TrashIcon'
+import AvailabilityForm from '../ui/AvailabilityForm'
+import VideoIntroForm from '../ui/VideoIntroForm'
+import CreateLanguageForm from '../ui/CreateLanguageForm'
 
 interface MyProfileLeftSidebarProps {
   myProfile: TutorProfile
@@ -26,22 +29,25 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
       </div>
 
       {/* Video introduction */}
-      <SidebarRow label="Video introduction" addLabel="Add video introduction" onAdd={() => {}} />
-
+      <div className="flex items-center justify-between px-5 py-4">
+        <p className="text-xl font-semibold text-[#143681]">Video introduction</p>
+        <VideoIntroForm edit={false} />
+      </div>
       {/* Hours per week */}
-      <SidebarRow label="Hours per week" onEdit={() => {}} editLabel="Edit hours per week">
+      <div className="px-5 py-4">
+        <div className="flex items-center justify-between">
+          <p className="text-xl font-semibold text-[#143681]">Hours per week</p>
+          <AvailabilityForm edit />
+        </div>
         <p className="text-sm text-[#143681]">{myProfile.hoursPerWeek}</p>
-        <p className="text-sm text-[#143681]">No contract-to-hire preference set</p>
-      </SidebarRow>
+      </div>
 
       {/* Languages */}
-      <SidebarRow
-        label="Languages"
-        onAdd={() => {}}
-        onEdit={() => {}}
-        addLabel="Add language"
-        editLabel="Edit languages"
-      >
+      <div className="px-5 py-4">
+        <div className="flex items-center justify-between">
+          <p className="text-xl font-semibold text-[#143681]">Languages</p>
+          <CreateLanguageForm />
+        </div>
         <ul className="mt-1 space-y-0.5">
           {myProfile.languages.map((lang: any) => (
             <li key={lang.name} className="text-sm font-normal text-[#143681]">
@@ -49,7 +55,7 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
             </li>
           ))}
         </ul>
-      </SidebarRow>
+      </div>
 
       {/* Education */}
       <SidebarRow label="Education" onAdd={() => {}} addLabel="Add education">

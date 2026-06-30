@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { TutorProfile } from '../../store/types'
 import EditButton from '../ui/EditButton'
 import AddButton from '../ui/AddButton'
+import HeadlineForm from '../ui/HeadLineForm'
 
 interface MyProfileMainContentProps {
   myProfile: TutorProfile
@@ -16,9 +17,14 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       {/* Headline + rate */}
       <div>
         <div className="flex items-start justify-between gap-4 px-6 py-5">
-          <h2 className="flex-1 text-2xl font-semibold leading-snug text-[#143681]">
-            {myProfile.headline}
-          </h2>
+          <div className="flex items-center gap-4">
+            <h2 className="flex-1 text-2xl font-semibold leading-snug text-[#143681]">
+              {myProfile.headline}
+            </h2>
+            <div>
+              <HeadlineForm edit={true} />
+            </div>
+          </div>
           <div className="flex shrink-0 items-center gap-2">
             <span className="text-2xl font-semibold text-[#143681]">
               ${myProfile.hourlyRate}.00/hr
