@@ -19,9 +19,12 @@ export const MOCK_PROFILE: TutorProfile = {
   ],
   education: [
     {
+      id: '1',
       institution: 'Institut Supérieure de Beaux-Arts de Sousse',
       degree: 'Bachelor degree',
-      period: '2021 – 2024',
+      fieldOfStudy: 'Visual Communication',
+      startYear: 2019,
+      endYear: 2023,
     },
   ],
   skills: [

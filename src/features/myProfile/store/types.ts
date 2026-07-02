@@ -63,7 +63,7 @@ export interface TutorProfile {
   bio: string
   connects: number
   hoursPerWeek: string
-  videoIntroUrl: string
+  videoIntroUrl?: string
   languages: Language[]
   education: Education[]
   skills: Skill[]

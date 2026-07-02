@@ -33,8 +33,7 @@ function PortfolioForm(props: PortfolioFormProps) {
     resolver: zodResolver(educationSchema),
   })
 
-  const { handleSubmit, reset, formState, register } = form
-  const { errors } = formState
+  const { handleSubmit, reset } = form
 
   useEffect(() => {
     if (props.edit) {
