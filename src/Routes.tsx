@@ -9,7 +9,6 @@ import MyProfilePage from './pages/myProfilePage'
 import TutorOnboardingPage from './pages/TutorOnboardingPage'
 import RequireAuth from './RequireAuth'
 import RequireTutorProfileComplete from './RequireTutorProfileComplete'
-import RequireIncompleteTutorProfile from './RequireIncompleteTutorProfile'
 import Layout from './Layout'
 
 const AppRoutes = () => {
@@ -26,9 +25,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/profile" replace />} />
           <Route element={<RequireAuth />}>
-            <Route element={<RequireIncompleteTutorProfile />}>
-              <Route path="/onboarding" element={<TutorOnboardingPage />} />
-            </Route>
+            <Route path="/onboarding" element={<TutorOnboardingPage />} />
             <Route element={<RequireTutorProfileComplete />}>
               <Route path="/profile" element={<MyProfilePage />} />
             </Route>

@@ -1,6 +1,19 @@
 import TutorOnboardingForm from '@/features/onboarding/components/TutorOnboardingForm'
+import { useStore } from '@/store/store'
+import { Navigate } from 'react-router-dom'
 
 const TutorOnboardingPage = () => {
+  const user = useStore((state) => state.auth.user)
+
+  if (!user) return null
+
+  const isNotTutor = user.role !== 'TUTOR'
+  const isCompleted = user.isProfileCompleted
+
+  if (isNotTutor || isCompleted) {
+    return <Navigate to="/profile" replace />
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12">
       <div
@@ -20,5 +33,4 @@ const TutorOnboardingPage = () => {
     </div>
   )
 }
-
 export default TutorOnboardingPage
