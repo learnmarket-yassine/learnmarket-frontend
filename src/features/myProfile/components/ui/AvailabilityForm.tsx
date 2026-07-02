@@ -65,15 +65,15 @@ function AvailabilityForm(props: AvailabilityFormProps) {
           )}
         </DialogTrigger>
         <DialogContent
-          className="flex h-[500px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[450px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
-          <DialogHeader>
-            <DialogTitle className="mb-[20px] text-2xl font-[600] text-[#4C4C4C]">
+          <DialogHeader className="space-y-8">
+            <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-2xl font-semibold text-[#143681]">Availability</span>
+                <span className="text-4xl font-bold text-[#143681]">Availability</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -84,10 +84,10 @@ function AvailabilityForm(props: AvailabilityFormProps) {
                 </button>
               </div>
             </DialogTitle>
-            <DialogDescription className="">
-              <p className="text-lg text-[#565a60]">
-                Let learners know how many hours you're available to teach each week. We'll use this
-                information to recommend opportunities that match your schedule.{' '}
+            <DialogDescription className="space-y-2">
+              <h1 className="text-xl font-bold text-[#5E5E5E]">Hours per week</h1>
+              <p className="text-base text-[#5E5E5E]">
+                Let learners know how many hours you're available to teach each week.
               </p>
             </DialogDescription>
           </DialogHeader>
@@ -99,8 +99,8 @@ function AvailabilityForm(props: AvailabilityFormProps) {
             }}
             noValidate
           >
-            <div className="flex-1 space-y-8 overflow-y-auto">
-              <h2 className="text-lg font-semibold">I'm available to teach</h2>
+            <div className="flex-1 space-y-5 overflow-y-auto">
+              <h2 className="text-lg text-[#5E5E5E]">I'm available to teach</h2>
               <Controller
                 control={form.control}
                 name="hoursPerWeek"
@@ -112,30 +112,30 @@ function AvailabilityForm(props: AvailabilityFormProps) {
                     }}
                     className="w-fit gap-4"
                   >
-                    <div className="flex items-center gap-3 text-[#42444a]">
+                    <div className="flex items-center gap-3">
                       <RadioGroupItem value="30+" id="r1" />
-                      <Label htmlFor="r1" className="text-lg font-medium">
+                      <Label htmlFor="r1" className="text-base text-[#5E5E5E]">
                         More than 30 hrs/week
                       </Label>
                     </div>
 
-                    <div className="flex items-center gap-3 text-[#42444a]">
+                    <div className="flex items-center gap-3">
                       <RadioGroupItem value="10-30" id="r2" />
-                      <Label htmlFor="r2" className="text-lg font-medium">
+                      <Label htmlFor="r2" className="text-base text-[#5E5E5E]">
                         10-30 hrs/week
                       </Label>
                     </div>
 
-                    <div className="flex items-center gap-3 text-[#42444a]">
+                    <div className="flex items-center gap-3">
                       <RadioGroupItem value="0-10" id="r3" />
-                      <Label htmlFor="r3" className="text-lg font-medium">
+                      <Label htmlFor="r3" className="text-base text-[#5E5E5E]">
                         Less than 10 hrs/week
                       </Label>
                     </div>
 
-                    <div className="flex items-center gap-3 text-[#42444a]">
+                    <div className="flex items-center gap-3">
                       <RadioGroupItem value="0" id="r4" />
-                      <Label htmlFor="r4" className="text-lg font-medium">
+                      <Label htmlFor="r4" className="text-base text-[#5E5E5E]">
                         None
                       </Label>
                     </div>
@@ -149,7 +149,7 @@ function AvailabilityForm(props: AvailabilityFormProps) {
                 type="button"
                 data-mdb-button-init
                 data-mdb-ripple-init
-                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium"
+                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel

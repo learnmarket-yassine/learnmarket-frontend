@@ -66,15 +66,15 @@ function HeadlineForm(props: HeadlineFormProps) {
           )}
         </DialogTrigger>
         <DialogContent
-          className="flex h-[400px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[400px] min-w-[750px] flex-col space-y-9"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
-          <DialogHeader>
-            <DialogTitle className="mb-[20px] text-2xl font-[600] text-[#4C4C4C]">
+          <DialogHeader className="space-y-5">
+            <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-2xl font-semibold text-[#143681]">
+                <span className="text-4xl font-bold text-[#143681]">
                   {!props.edit ? 'Create your title' : 'Edit your title'}
                 </span>
                 <button
@@ -87,7 +87,7 @@ function HeadlineForm(props: HeadlineFormProps) {
                 </button>
               </div>
             </DialogTitle>
-            <DialogDescription className="text-lg text-[#565a60]">
+            <DialogDescription className="text-base text-[#5E5E5E]">
               Enter a single sentence description of your professional skills/experience (e.g.
               Expert Web Designer with Ajax experience)
             </DialogDescription>
@@ -100,14 +100,14 @@ function HeadlineForm(props: HeadlineFormProps) {
             }}
             noValidate
           >
-            <div className="flex flex-1 flex-col">
-              <Label htmlFor="headline" className="text-base font-semibold">
+            <div className="flex flex-1 flex-col gap-2">
+              <Label htmlFor="headline" className="text-base font-bold text-[#5E5E5E]">
                 Your title {!props.edit && <span>*</span>}
               </Label>
               <CustomInput
                 type="text"
                 id="headline"
-                placeholder="Example: UX/UI Designer"
+                placeholder="Digital Marketing | Video Editing, Video Editing & Production, Logo"
                 className="rounded-full border bg-white"
                 width="w-full"
                 error={errors.headline?.message}
@@ -120,7 +120,7 @@ function HeadlineForm(props: HeadlineFormProps) {
                 type="button"
                 data-mdb-button-init
                 data-mdb-ripple-init
-                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium"
+                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
@@ -130,7 +130,7 @@ function HeadlineForm(props: HeadlineFormProps) {
                 type="submit"
                 data-mdb-button-init
                 data-mdb-ripple-init
-                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
+                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
               >
                 Save
               </Button>

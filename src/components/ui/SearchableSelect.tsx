@@ -1,52 +1,69 @@
 import * as React from 'react'
 import { CheckIcon, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from './button'
+import { ScrollArea } from './scroll-area'
 
-export type ProficiencyOption = {
+export type SelectOption = {
   value: string
   label: string
-  description?: string
 }
 
-type ProficiencySelectProps = {
-  options: ProficiencyOption[]
+type SearchableSelectProps = {
+  options: SelectOption[]
   value?: string
-  onChange: (selected: ProficiencyOption) => void
+  onValueChange?: (v: string) => void
   className?: string
   placeholder?: string
   error?: boolean
+  disabled?: boolean
 }
 
-export const ProficiencySelect: React.FC<ProficiencySelectProps> = ({
+export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   options,
   value = '',
-  onChange,
+  onValueChange,
   className,
   placeholder,
   error,
+  disabled = false,
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
 
   const selectedOption = options.find((v) => v.value === value)
   const onOptionSelect = (option: string) => {
-    const selectedOption = options.find((v) => v.value === option)
-    if (selectedOption) onChange(selectedOption)
+    onValueChange?.(option)
     setIsPopoverOpen(false)
   }
 
   return (
-    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen} modal={true}>
+    <Popover
+      open={disabled ? false : isPopoverOpen}
+      onOpenChange={(open) => {
+        if (!disabled) {
+          setIsPopoverOpen(open)
+        }
+      }}
+      modal={true}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           type="button"
+          disabled={disabled}
           className={cn(
             'flex h-11 w-full items-center justify-between rounded-full p-1 [&_svg]:pointer-events-auto',
-            error && 'border-red-500'
+            error && 'border-red-500',
+            disabled && 'cursor-not-allowed bg-[#D9D9D9] opacity-50'
           )}
         >
           {selectedOption ? (
@@ -71,15 +88,20 @@ export const ProficiencySelect: React.FC<ProficiencySelectProps> = ({
       >
         <Command>
           <CommandList>
-            <ScrollArea className="h-72 pr-2">
+            <CommandInput
+              placeholder="Search..."
+              className="w-full rounded-full border py-2.5 pl-10 pr-4 text-sm focus:outline-none"
+            />
+            <ScrollArea className="h-72 px-3">
+              <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => {
-                  const isSelected = option.value === value
+                  const isSelected = selectedOption?.value === option.value
                   return (
                     <CommandItem
                       key={option.value}
                       onSelect={() => onOptionSelect(option.value)}
-                      className="flex w-full cursor-pointer items-center gap-4 px-3 py-2.5 text-left font-medium transition-colors data-[selected=true]:bg-[#143681] data-[selected=true]:text-white"
+                      className="flex w-full cursor-pointer items-center gap-4 rounded-full px-3 py-2.5 text-left font-medium transition-colors data-[selected=true]:bg-[#143681] data-[selected=true]:text-white"
                     >
                       <div
                         className={cn(
@@ -89,14 +111,7 @@ export const ProficiencySelect: React.FC<ProficiencySelectProps> = ({
                       >
                         <CheckIcon className="h-4 w-4" />
                       </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-semibold">{option.label}</span>
-                        {option.description && (
-                          <span className="text-xs font-normal leading-snug text-current opacity-70">
-                            {option.description}
-                          </span>
-                        )}
-                      </div>
+                      <span>{option.label}</span>
                     </CommandItem>
                   )
                 })}
@@ -108,4 +123,4 @@ export const ProficiencySelect: React.FC<ProficiencySelectProps> = ({
     </Popover>
   )
 }
-ProficiencySelect.displayName = 'ProficiencySelect'
+SearchableSelect.displayName = 'SearchableSelect'

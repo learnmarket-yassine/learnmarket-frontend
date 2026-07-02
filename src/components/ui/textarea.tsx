@@ -2,17 +2,35 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
-  return (
-    <textarea
-      data-slot="textarea"
-      className={cn(
-        'field-sizing-content focus-visible:ring-3 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 flex min-h-16 w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 dark:bg-input/30 dark:disabled:bg-input/80 md:text-sm',
-        className
-      )}
-      {...props}
-    />
-  )
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  error?: string
 }
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div className="relative">
+        <textarea
+          className={cn(
+            'border-inputBorder bg-inputBackground placeholder:text-placeholder flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300',
+            props.error && 'border-red-600 outline-none focus-visible:ring-transparent',
+            className
+          )}
+          ref={ref}
+          {...props}
+        />
+        {props.error && (
+          <div>
+            <p className="bg-inputBackground absolute bottom-[-0.4rem] left-2 block overflow-hidden text-ellipsis whitespace-nowrap px-1 text-xs font-normal text-red-600">
+              {' '}
+              {props.error}{' '}
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+Textarea.displayName = 'Textarea'
 
 export { Textarea }

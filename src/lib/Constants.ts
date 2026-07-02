@@ -101,6 +101,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
 ]
 export const LANGUAGES = [
   { value: 'afrikaans', label: 'Afrikaans' },
+  { value: 'arabic', label: 'Arabic' },
   { value: 'amharic', label: 'Amharic' },
   { value: 'assamese', label: 'Assamese' },
   { value: 'azerbaijani', label: 'Azerbaijani' },

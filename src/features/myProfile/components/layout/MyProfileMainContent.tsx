@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { TutorProfile } from '../../store/types'
 import EditButton from '../ui/EditButton'
-import AddButton from '../ui/AddButton'
 import HeadlineForm from '../ui/HeadLineForm'
+import PortfolioForm from '../ui/PortfolioForm'
+import OverviewForm from '../ui/OverviewForm'
 
 interface MyProfileMainContentProps {
   myProfile: TutorProfile
@@ -36,7 +37,7 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
 
         <div className="relative p-8">
           <div className="absolute right-4 top-4">
-            <EditButton label="Edit bio" />
+            <OverviewForm edit={true} />
           </div>
           <p className="pr-5 text-xl text-[#143681]">{myProfile.bio}</p>
         </div>
@@ -46,7 +47,7 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       <div className="p-8">
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
-          <AddButton label="Add portfolio item" />
+          <PortfolioForm edit={false} />
         </div>
       </div>
 

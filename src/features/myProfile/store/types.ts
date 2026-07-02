@@ -4,9 +4,12 @@ export interface Language {
 }
 
 export interface Education {
+  id: string
   institution: string
-  degree: string
-  period: string
+  degree?: string
+  fieldOfStudy?: string
+  startYear?: number
+  endYear?: number
 }
 
 export interface EmploymentEntry {

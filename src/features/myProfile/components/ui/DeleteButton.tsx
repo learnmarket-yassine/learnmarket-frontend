@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
-import PlusIcon from '@/assets/PlusIcon'
+import TrashIcon from '@/assets/TrashIcon'
 
-interface AddButtonProps {
+interface DeleteButtonProps {
   label: string
   onClick?: () => void
   className?: string
 }
 
-function AddButton({ label, onClick, className }: AddButtonProps) {
+function DeleteButton({ label, onClick, className }: DeleteButtonProps) {
   return (
     <Button
       variant="ghost"
@@ -16,8 +16,8 @@ function AddButton({ label, onClick, className }: AddButtonProps) {
       onClick={onClick}
       className={`h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB] ${className ?? ''}`}
     >
-      <PlusIcon className="size-4" />
+      <TrashIcon className="size-4" />
     </Button>
   )
 }
-export default AddButton
+export default DeleteButton

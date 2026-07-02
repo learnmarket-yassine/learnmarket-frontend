@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -12,44 +13,42 @@ import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useStore } from '@/store/store'
-import { VideoIntroFormData, videoIntroSchema } from '../../schemas'
+import { OverviewFormData, overviewSchema } from '../../schemas'
 import EditButton from './EditButton'
-import { CustomInput } from '@/components/ui/CustomInput'
-import AddButton from './AddButton'
+import { Textarea } from '@/components/ui/textarea'
 
-type VideoIntroFormProps = {
+type OverviewFormProps = {
   edit: boolean
   id?: string
   isLoading?: boolean
 }
 
-function VideoIntroForm(props: VideoIntroFormProps) {
+function OverviewForm(props: OverviewFormProps) {
   const [isOpen, setIsOpen] = useState(false)
-
   const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
-
-  const form = useForm<VideoIntroFormData>({
-    resolver: zodResolver(videoIntroSchema),
+  const form = useForm<OverviewFormData>({
+    resolver: zodResolver(overviewSchema),
   })
 
-  const { handleSubmit, reset, formState, register } = form
+  const { register, handleSubmit, formState, reset, watch } = form
   const { errors } = formState
+  const remaremaremainingCharacters = 5000 - (watch('bio')?.length ?? 0)
 
   useEffect(() => {
     if (props.edit) {
       reset({
-        videoIntroUrl: tutorProfile?.videoIntroUrl ?? '',
+        bio: tutorProfile?.bio ?? '',
       })
     } else reset()
   }, [props.edit, isOpen, reset, tutorProfile])
 
-  const onSubmit: SubmitHandler<VideoIntroFormData> = async (data) => {
+  const onSubmit: SubmitHandler<OverviewFormData> = async (data) => {
     if (props.edit) {
       //TODO: call the edit mutation
-      console.warn('edit', data.videoIntroUrl)
+      console.warn('edit', data.bio)
     } else {
       //Todo: call the create mutation
-      console.warn('create', data.videoIntroUrl)
+      console.warn('create', data.bio)
     }
   }
 
@@ -58,23 +57,23 @@ function VideoIntroForm(props: VideoIntroFormProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           {props.edit ? (
-            <EditButton label="edit video introduction" />
+            <EditButton label="edit overview" />
           ) : (
-            <AddButton label="create video introduction" />
+            <Button type="button" onClick={() => setIsOpen(true)}>
+              create
+            </Button>
           )}
         </DialogTrigger>
         <DialogContent
-          className="flex h-[320px] w-[400px] flex-col space-y-4 sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[600px] min-w-[650px] flex-col space-y-7"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
-          <DialogHeader>
+          <DialogHeader className="space-y-5">
             <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-4xl font-bold text-[#143681]">
-                  {props.edit ? 'Edit video introduction' : 'Add video introduction'}
-                </span>
+                <span className="text-4xl font-bold text-[#143681]">Profile Overview</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -85,29 +84,42 @@ function VideoIntroForm(props: VideoIntroFormProps) {
                 </button>
               </div>
             </DialogTitle>
+            <DialogDescription className="space-y-5 text-base text-[#5E5E5E]">
+              <p>
+                Use this space to show clients you have the skills and experience they're looking
+                for.
+              </p>
+              <ul className="list-inside list-disc space-y-2 text-[#5E5E5E]">
+                <li>Describe your strengths and skills</li>
+                <li>Highlight projects, accomplishments and education</li>
+                <li>Keep it short and make sure it's error-free</li>
+              </ul>
+              <p>Learn more about building your profile</p>
+            </DialogDescription>
           </DialogHeader>
           <form
             className="flex flex-1 flex-col"
             onSubmit={(e) => {
-              e.preventDefault()
+              e.stopPropagation()
               handleSubmit(onSubmit)(e)
             }}
             noValidate
           >
-            <div className="flex-1 space-y-4 overflow-y-auto">
-              <Label htmlFor="headline" className="text-base font-bold text-[#5E5E5E]">
-                Link to your YouTube video {!props.edit && <span>*</span>}
+            <div className="flex flex-1 flex-col gap-2">
+              <Label htmlFor="bio" className="text-base font-bold text-[#5E5E5E]">
+                Profile overview {!props.edit && <span>*</span>}
               </Label>
-              <CustomInput
-                type="text"
-                id="headline"
-                placeholder="Ex: https://youtu.be/dQw4w9WgXcQ?si=RAPuMbMiMSDsk1yp"
-                className="rounded-full border bg-white"
-                width="w-full"
-                error={errors.videoIntroUrl?.message}
-                {...register('videoIntroUrl')}
+              <Textarea
+                id="bio"
+                placeholder="Digital Marketing | Video Editing, Video Editing & Production, Logo"
+                className="h-[200px] resize-none rounded-xl border bg-white p-4"
+                error={errors.bio?.message}
+                {...register('bio')}
+                maxLength={5000}
               />
-              <p className="text-base text-[#5E5E5E]">Does your video meet Yora's guidelines?</p>
+              <div className="flex justify-end">
+                <p className="text-sm text-[#5E5E5E]">{remaremaremainingCharacters} left</p>
+              </div>
             </div>
 
             <div className="flex justify-end gap-3">
@@ -137,4 +149,4 @@ function VideoIntroForm(props: VideoIntroFormProps) {
   )
 }
 
-export default VideoIntroForm
+export default OverviewForm

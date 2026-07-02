@@ -10,26 +10,27 @@ import {
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { useStore } from '@/store/store'
-import { VideoIntroFormData, videoIntroSchema } from '../../schemas'
+import { EducationFormData, educationSchema } from '../../schemas'
 import EditButton from './EditButton'
-import { CustomInput } from '@/components/ui/CustomInput'
 import AddButton from './AddButton'
+import MediaBlock from '@/components/ui/MediaBlock'
 
-type VideoIntroFormProps = {
+type PortfolioFormProps = {
   edit: boolean
   id?: string
   isLoading?: boolean
 }
 
-function VideoIntroForm(props: VideoIntroFormProps) {
+function PortfolioForm(props: PortfolioFormProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
 
-  const form = useForm<VideoIntroFormData>({
-    resolver: zodResolver(videoIntroSchema),
+  const selectedEducation = tutorProfile?.education.find((education) => education.id === props.id)
+
+  const form = useForm<EducationFormData>({
+    resolver: zodResolver(educationSchema),
   })
 
   const { handleSubmit, reset, formState, register } = form
@@ -38,18 +39,18 @@ function VideoIntroForm(props: VideoIntroFormProps) {
   useEffect(() => {
     if (props.edit) {
       reset({
-        videoIntroUrl: tutorProfile?.videoIntroUrl ?? '',
+        institution: selectedEducation?.institution ?? '',
       })
     } else reset()
-  }, [props.edit, isOpen, reset, tutorProfile])
+  }, [props.edit, isOpen, reset, selectedEducation])
 
-  const onSubmit: SubmitHandler<VideoIntroFormData> = async (data) => {
+  const onSubmit: SubmitHandler<EducationFormData> = async (data) => {
     if (props.edit) {
       //TODO: call the edit mutation
-      console.warn('edit', data.videoIntroUrl)
+      console.warn('edit', data)
     } else {
       //Todo: call the create mutation
-      console.warn('create', data.videoIntroUrl)
+      console.warn('create', data)
     }
   }
 
@@ -58,13 +59,13 @@ function VideoIntroForm(props: VideoIntroFormProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           {props.edit ? (
-            <EditButton label="edit video introduction" />
+            <EditButton label="edit portfolio project" />
           ) : (
-            <AddButton label="create video introduction" />
+            <AddButton label="add portfolio project" />
           )}
         </DialogTrigger>
         <DialogContent
-          className="flex h-[320px] w-[400px] flex-col space-y-4 sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[500px] w-[400px] flex-col overflow-auto sm:w-[425px] sm:min-w-[750px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
@@ -73,7 +74,7 @@ function VideoIntroForm(props: VideoIntroFormProps) {
             <DialogTitle>
               <div className="flex w-full items-center justify-between">
                 <span className="text-4xl font-bold text-[#143681]">
-                  {props.edit ? 'Edit video introduction' : 'Add video introduction'}
+                  {props.edit ? 'Edit portfolio project' : 'Add a new portfolio project'}
                 </span>
                 <button
                   type="button"
@@ -94,20 +95,8 @@ function VideoIntroForm(props: VideoIntroFormProps) {
             }}
             noValidate
           >
-            <div className="flex-1 space-y-4 overflow-y-auto">
-              <Label htmlFor="headline" className="text-base font-bold text-[#5E5E5E]">
-                Link to your YouTube video {!props.edit && <span>*</span>}
-              </Label>
-              <CustomInput
-                type="text"
-                id="headline"
-                placeholder="Ex: https://youtu.be/dQw4w9WgXcQ?si=RAPuMbMiMSDsk1yp"
-                className="rounded-full border bg-white"
-                width="w-full"
-                error={errors.videoIntroUrl?.message}
-                {...register('videoIntroUrl')}
-              />
-              <p className="text-base text-[#5E5E5E]">Does your video meet Yora's guidelines?</p>
+            <div className="flex-1 space-y-5 overflow-auto">
+              <MediaBlock />
             </div>
 
             <div className="flex justify-end gap-3">
@@ -137,4 +126,4 @@ function VideoIntroForm(props: VideoIntroFormProps) {
   )
 }
 
-export default VideoIntroForm
+export default PortfolioForm

@@ -14,8 +14,8 @@ import { Label } from '@/components/ui/label'
 import { AddLanguageFormData, AddLanguageSchema } from '../../schemas'
 import AddButton from './AddButton'
 import { LANGUAGES, PROFICIENCY_LEVELS } from '@/lib/Constants'
-import LanguageSelect from '@/components/ui/LanguageDropdown'
-import ProficiencySelect from './ProficiencySelect'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
+import { ProficiencySelect } from './ProficiencySelect'
 
 function CreateLanguageForm() {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,15 +38,15 @@ function CreateLanguageForm() {
           <AddButton label="create language" />
         </DialogTrigger>
         <DialogContent
-          className="flex h-[500px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[480px] min-w-[592px] flex-col space-y-8"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
           <DialogHeader>
-            <DialogTitle className="mb-[20px] text-2xl font-[600] text-[#4C4C4C]">
+            <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-2xl font-semibold text-[#143681]">Add language</span>
+                <span className="text-4xl font-bold text-[#143681]">Add language</span>
                 <button type="button" onClick={() => setIsOpen(false)}>
                   <X className="size-9" />
                 </button>
@@ -69,15 +69,16 @@ function CreateLanguageForm() {
                   name="language"
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-2">
-                      <Label className="text-base font-semibold">Language</Label>
-                      <LanguageSelect
+                      <Label className="text-base font-bold">Language</Label>
+                      <SearchableSelect
                         placeholder="Search for language"
-                        defaultValue={field.value}
-                        onChange={(selected) => field.onChange(selected.value)}
+                        value={field.value ? field.value : undefined}
+                        onValueChange={(selected) => field.onChange(selected)}
                         options={LANGUAGES}
+                        error={!!fieldState.error}
                       />
                       {fieldState.error && (
-                        <p className="text-xs text-destructive">{fieldState.error.message}</p>
+                        <p className="text-xs text-red-600">{fieldState.error.message}</p>
                       )}
                     </div>
                   )}
@@ -87,16 +88,16 @@ function CreateLanguageForm() {
                   name="level"
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-2">
-                      <Label className="text-base font-semibold">Proficiency level</Label>
+                      <Label className="text-base font-bold">Proficiency level</Label>
                       <ProficiencySelect
                         placeholder="Search for proficiency level"
-                        defaultValue={field.value}
+                        value={field.value ? field.value : undefined}
                         onChange={(selected) => field.onChange(selected.value)}
                         options={PROFICIENCY_LEVELS}
                         error={!!fieldState.error}
                       />
                       {fieldState.error && (
-                        <p className="text-xs text-destructive">{fieldState.error.message}</p>
+                        <p className="text-xs text-red-600">{fieldState.error.message}</p>
                       )}
                     </div>
                   )}
@@ -109,7 +110,7 @@ function CreateLanguageForm() {
                 type="button"
                 data-mdb-button-init
                 data-mdb-ripple-init
-                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium"
+                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
@@ -119,7 +120,7 @@ function CreateLanguageForm() {
                 type="submit"
                 data-mdb-button-init
                 data-mdb-ripple-init
-                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
+                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
               >
                 Save
               </Button>
