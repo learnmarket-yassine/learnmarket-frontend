@@ -1,14 +1,13 @@
 import CertificationsSection from '@/features/myProfile/components/layout/CertificationsSection'
 import EmploymentSection from '@/features/myProfile/components/layout/EmploymentSection'
 import MyProfileHeader from '@/features/myProfile/components/layout/MyProfileHeader'
-import MyProfileLayout from '@/features/myProfile/components/layout/MyProfileLayout'
 import MyProfileLeftSidebar from '@/features/myProfile/components/layout/MyProfileLeftSidebar'
 import MyProfileMainContent from '@/features/myProfile/components/layout/MyProfileMainContent'
 import { MOCK_PROFILE } from '@/features/myProfile/mock'
 
 const MyProfilePage = () => {
   return (
-    <MyProfileLayout>
+    <>
       <div className="rounded-lg border border-[#D1D5DA]">
         {/* 1. Full-width profile header */}
         <MyProfileHeader profile={MOCK_PROFILE} />
@@ -23,7 +22,7 @@ const MyProfilePage = () => {
       {/* <TestimonialsSection testimonials={MOCK_PROFILE.testimonials} /> */}
       <CertificationsSection certifications={MOCK_PROFILE.certifications} />
       <EmploymentSection employment={MOCK_PROFILE.employment} />
-    </MyProfileLayout>
+    </>
   )
 }
 

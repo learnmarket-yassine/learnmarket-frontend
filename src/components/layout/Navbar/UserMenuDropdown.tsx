@@ -94,7 +94,7 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
             onClick={() => onNavigate?.('/settings')}
           />
           {/* Log out */}
-          <MenuItem icon={<LogoutIcon />} label="Log out" onClick={() => onLogout} />
+          <MenuItem icon={<LogoutIcon />} label="Log out" onClick={() => onLogout?.()} />
         </div>
         {/* Account settings */}
       </PopoverContent>

@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import AuthHeader from './AuthHeader'
 import AuthImg from '@/assets/images/login.png'
+import { useStore } from '@/store/store'
+import { useEffect } from 'react'
+import useGetUser from '../../hooks/useGetUser'
 
 type AuthLayoutProps = {
   children: React.ReactNode
@@ -8,7 +11,17 @@ type AuthLayoutProps = {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   const navigate = useNavigate()
-  return (
+  const auth = useStore((state) => state.auth.authenticationResult?.token)
+  const user = useStore((state) => state.auth.user)
+  const getUserQuery = useGetUser()
+  useEffect(() => {
+    if (auth && getUserQuery.data) {
+      navigate('/', { replace: true })
+    }
+  }, [auth, user, navigate, getUserQuery.isLoading, getUserQuery.data])
+  return auth && !user ? (
+    <div className="flex h-full w-full items-center justify-center"> ...loading</div>
+  ) : (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <img src={AuthImg} alt="" className="absolute inset-0 h-full w-full object-cover" />

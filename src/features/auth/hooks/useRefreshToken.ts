@@ -11,8 +11,9 @@ const useRefreshToken = () => {
     mutationFn: async () => {
       try {
         const response = await axios.post('/auth/refresh')
-        setAuthenticationResult(response.data?.token)
-        return response.data?.AuthenticationResult
+        const token = response.data?.token
+        setAuthenticationResult({ token })
+        return { token }
       } catch (error: unknown) {
         setAuthenticationResult(null)
         navigate('/login')
