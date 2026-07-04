@@ -1,9 +1,21 @@
-import TutorOnboardingForm from '@/features/onboarding/components/TutorOnboardingForm'
+import ImportDataStep from '@/features/onboarding/components/layout/FormSteps/ImportDataStep'
+import TutorOnboardingLayout from '@/features/onboarding/components/layout/TutorOnboardingLayout'
+import OnboardingProgress from '@/features/onboarding/components/ui/OnBoardingProgress'
 import { useStore } from '@/store/store'
 import { Navigate } from 'react-router-dom'
 
 const TutorOnboardingPage = () => {
   const user = useStore((state) => state.auth.user)
+  const steps = [
+    {
+      stepNumber: 1,
+      component: <ImportDataStep />,
+      show: true,
+      name: 'import data',
+    },
+  ]
+
+  const currentStepComponent = steps.find((step) => step.stepNumber === 1)?.component || null
 
   if (!user) return null
 
@@ -15,22 +27,12 @@ const TutorOnboardingPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12">
-      <div
-        className="flex w-full max-w-2xl flex-col gap-6 rounded-2xl bg-white p-10"
-        style={{ boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.08)' }}
-      >
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold text-[#143681]">Complete your tutor profile</h1>
-          <p className="text-base text-[#5E5E5E]">
-            Tell learners a bit about yourself before you get started. You won't be able to access
-            your dashboard until this is done.
-          </p>
-        </div>
-
-        <TutorOnboardingForm />
+    <TutorOnboardingLayout>
+      <div className="flex flex-1 flex-col">
+        <OnboardingProgress currentStep={1} totalSteps={10} />
+        <div className="flex flex-1 items-center">{currentStepComponent}</div>
       </div>
-    </div>
+    </TutorOnboardingLayout>
   )
 }
 export default TutorOnboardingPage

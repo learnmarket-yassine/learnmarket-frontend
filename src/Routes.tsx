@@ -25,11 +25,15 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/profile" replace />} />
           <Route element={<RequireAuth />}>
-            <Route path="/onboarding" element={<TutorOnboardingPage />} />
             {/* <Route element={<RequireTutorProfileComplete />}> */}
             <Route path="/profile" element={<MyProfilePage />} />
             {/* </Route> */}
           </Route>
+        </Route>
+      </Route>
+      <Route element={<PersistLogin />}>
+        <Route element={<RequireAuth />}>
+          <Route path="/onboarding" element={<TutorOnboardingPage />} />
         </Route>
       </Route>
     </Routes>
