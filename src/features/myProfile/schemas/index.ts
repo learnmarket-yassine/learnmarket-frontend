@@ -78,13 +78,98 @@ export const educationSchema = z
 
 export type EducationFormData = z.infer<typeof educationSchema>
 
-const LanguageSchema = z.object({
-  language: z.string().min(1),
-  level: z.string().min(1),
+export const LanguageLevelEnum = z.enum([
+  'BASIC',
+  'CONVERSATIONAL',
+  'FLUENT',
+  'NATIVE_OR_BILINGUAL',
+])
+
+export const LanguageRowSchema = z.object({
+  id: z.string().optional(), // if you're tracking existing rows
+  language: z.string().min(1, 'Language is required'),
+  level: LanguageLevelEnum,
 })
 
 export const EditLanguagesSchema = z.object({
-  languages: z.array(LanguageSchema),
+  languages: z.array(LanguageRowSchema),
 })
 
 export type EditLanguagesFormData = z.infer<typeof EditLanguagesSchema>
+
+export const employmentSchema = z
+  .object({
+    company: z
+      .string()
+      .trim()
+      .min(1, "L'établissement est obligatoire")
+      .max(150, "Le nom de l'établissement est trop long"),
+
+    jobTitle: z
+      .string()
+      .trim()
+      .min(1, 'Le poste est obligatoire')
+      .max(100, 'Le titre du poste est trop long'),
+    city: z
+      .string()
+      .trim()
+      .min(1, 'La ville est obligatoire')
+      .max(100, 'Nom de ville trop long')
+      .optional(),
+
+    country: z
+      .string()
+      .trim()
+      .min(1, 'Le pays est obligatoire')
+      .max(100, 'Nom de pays trop long')
+      .optional(),
+
+    description: z.string().trim().max(1000, 'La description est trop longue').optional(),
+
+    startDate: z.date({
+      error: 'La date de début est obligatoire',
+    }),
+
+    current: z.boolean(),
+
+    endDate: z.date().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.current && !data.endDate) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['endDate'],
+        message: "La date de fin est obligatoire si ce n'est pas un emploi actuel",
+      })
+    }
+
+    if (data.endDate && data.endDate < data.startDate) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['endDate'],
+        message: 'La date de fin doit être supérieure ou égale à la date de début',
+      })
+    }
+  })
+
+export type EmploymentFormData = z.infer<typeof employmentSchema>
+
+export const skillsSchema = z.object({
+  skills: z
+    .array(z.string().min(1).max(30))
+    .min(1, 'Add at least one skill')
+    .max(10, 'You can add up to 10 skills'),
+})
+
+export type SkillsFormValues = z.infer<typeof skillsSchema>
+
+export const hourlyRateSchema = z.object({
+  hourlyRate: z
+    .number({
+      error: 'Hourly rate is required',
+    })
+    .min(0, 'Hourly rate cannot be negative')
+    .max(10000, 'Hourly rate is too high'),
+})
+
+export type HourlyRateFormData = z.infer<typeof hourlyRateSchema>

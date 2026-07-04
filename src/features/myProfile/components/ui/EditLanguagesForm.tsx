@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import {
   Dialog,
@@ -14,43 +14,49 @@ import { Label } from '@/components/ui/label'
 import { EditLanguagesSchema, EditLanguagesFormData } from '../../schemas'
 import { LANGUAGES, PROFICIENCY_LEVELS } from '@/lib/Constants'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
-import { ProficiencySelect } from './ProficiencySelect'
+import { LanguageLevel, ProficiencySelect } from './ProficiencySelect'
 import EditButton from './EditButton'
-import DeleteButton from './DeleteButton'
+import useEditLanguage from '../../hooks/useEditLanguage'
+import { useStore } from '@/store/store'
+import ConfirmModal from '@/components/layout/ConfirmModal'
+import useDeleteLanguage from '../../hooks/useDeleteLanguage'
 
 function EditLanguagesForm() {
   const [isOpen, setIsOpen] = useState(false)
+  const { mutateAsync: editLanguageMutation, isPending } = useEditLanguage()
+  const { handleDeleteLanguage, isPending: DeleteLoading } = useDeleteLanguage()
 
+  const user = useStore((state) => state.auth.user)
   const form = useForm<EditLanguagesFormData>({
     resolver: zodResolver(EditLanguagesSchema),
-    defaultValues: {
-      languages: [
-        {
-          language: 'english',
-          level: 'conversational',
-        },
-        {
-          language: 'french',
-          level: 'conversational',
-        },
-        {
-          language: 'arabic',
-          level: 'fluent',
-        },
-      ],
-    },
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, reset } = form
+
+  useEffect(() => {
+    reset({
+      languages: user?.tutorProfile?.languages ?? [],
+    })
+  }, [isOpen, reset, user])
 
   const { fields } = useFieldArray({
     control,
     name: 'languages',
+    keyName: 'fieldId',
   })
 
   const onSubmit: SubmitHandler<EditLanguagesFormData> = async (data) => {
-    //Todo: call the create mutation
-    console.warn('edit', data)
+    await Promise.all(
+      data.languages
+        .filter((row) => !!row.id)
+        .map((row) =>
+          editLanguageMutation({
+            id: row.id as string,
+            payload: { language: row.language, level: row.level },
+          })
+        )
+    )
+    setIsOpen(false)
   }
 
   return (
@@ -87,7 +93,10 @@ function EditLanguagesForm() {
             <div className="flex-1 overflow-y-auto">
               <div className="flex flex-col gap-6">
                 {fields.map((field, index) => (
-                  <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] items-center gap-4">
+                  <div
+                    key={field.fieldId}
+                    className="grid grid-cols-[1fr_1fr_auto] items-center gap-4"
+                  >
                     <Controller
                       control={control}
                       name={`languages.${index}.language`}
@@ -118,7 +127,7 @@ function EditLanguagesForm() {
                           <Label>Proficiency</Label>
 
                           <ProficiencySelect
-                            value={field.value}
+                            value={field.value as LanguageLevel}
                             onChange={(value) => field.onChange(value.value)}
                             options={PROFICIENCY_LEVELS}
                             placeholder="Select level"
@@ -133,7 +142,17 @@ function EditLanguagesForm() {
                     />
                     <div className="flex flex-col gap-2">
                       <Label className="invisible">Delete</Label>
-                      <DeleteButton label="Delete" onClick={() => {}} />
+                      {field.id && (
+                        <ConfirmModal
+                          name="language"
+                          type="delete"
+                          title={'Delete language'}
+                          description={'Are you sure you want to delete this language ?'}
+                          handleConfirm={() => handleDeleteLanguage(field.id as string)}
+                          buttonClassName="border-none"
+                          isLoading={DeleteLoading}
+                        />
+                      )}
                     </div>
                   </div>
                 ))}
@@ -156,6 +175,7 @@ function EditLanguagesForm() {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
+                disabled={isPending}
               >
                 Save
               </Button>

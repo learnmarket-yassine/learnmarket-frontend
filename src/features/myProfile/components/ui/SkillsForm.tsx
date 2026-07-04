@@ -1,60 +1,64 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CustomInput } from '@/components/ui/CustomInput'
 import { Label } from '@/components/ui/label'
 import { useStore } from '@/store/store'
-import { HeadLineFormData, headlineSchema } from '../../schemas'
+import { SkillsFormValues, skillsSchema } from '../../schemas'
 import EditButton from './EditButton'
-import useEditUserInfo from '../../hooks/useEditUser'
+import SkillsInput from '@/components/ui/SkillInput'
+import useEditTutorProfile from '../../hooks/useEditTutorProfile'
 
-function HeadlineForm() {
+function SkillsForm() {
   const [isOpen, setIsOpen] = useState(false)
+  const { mutate: editTutorProfileMutation, isPending: editLoading } = useEditTutorProfile()
+
   const user = useStore((state) => state.auth.user)
-  const { mutate: editUserMutation, isPending } = useEditUserInfo()
-  const form = useForm<HeadLineFormData>({
-    resolver: zodResolver(headlineSchema),
+
+  const selectedSkills = user?.tutorProfile?.skills
+
+  const form = useForm<SkillsFormValues>({
+    resolver: zodResolver(skillsSchema),
   })
 
-  const { register, handleSubmit, formState, reset } = form
+  const { handleSubmit, formState, control, reset } = form
   const { errors } = formState
 
   useEffect(() => {
     reset({
-      headline: user?.headline ?? '',
+      skills: selectedSkills ?? [],
     })
-  }, [isOpen, reset, user])
+  }, [isOpen, reset, selectedSkills])
 
-  const onSubmit: SubmitHandler<HeadLineFormData> = async (data) => {
-    editUserMutation(data)
+  const onSubmit: SubmitHandler<SkillsFormValues> = async (data) => {
+    //   //TODO: call the edit mutation
+    editTutorProfileMutation(data)
   }
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <EditButton label="edit headline" />
+          <EditButton label="edit employment" />
         </DialogTrigger>
         <DialogContent
-          className="flex h-[400px] min-w-[750px] flex-col space-y-9"
+          className="flex min-h-[350px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
-          <DialogHeader className="space-y-5">
+          <DialogHeader>
             <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-4xl font-bold text-[#143681]">Edit your title</span>
+                <span className="text-4xl font-bold text-[#143681]">Edit Skills</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -65,34 +69,40 @@ function HeadlineForm() {
                 </button>
               </div>
             </DialogTitle>
-            <DialogDescription className="text-base text-[#5E5E5E]">
-              Enter a single sentence description of your professional skills/experience (e.g.
-              Expert Web Designer with Ajax experience)
-            </DialogDescription>
           </DialogHeader>
           <form
-            className="flex flex-1 flex-col"
+            className="flex flex-1 flex-col gap-2"
             onSubmit={(e) => {
-              e.stopPropagation()
+              e.preventDefault()
               handleSubmit(onSubmit)(e)
             }}
             noValidate
           >
-            <div className="flex flex-1 flex-col gap-2">
-              <Label htmlFor="headline" className="text-base font-bold text-[#5E5E5E]">
-                Your title
-              </Label>
-              <CustomInput
-                type="text"
-                id="headline"
-                placeholder="Digital Marketing | Video Editing, Video Editing & Production, Logo"
-                className="rounded-full border bg-white"
-                width="w-full"
-                error={errors.headline?.message}
-                {...register('headline')}
-              />
+            <div className="flex-1 overflow-auto">
+              <div>
+                <Controller
+                  name="skills"
+                  control={control}
+                  rules={{
+                    validate: (v) => v.length > 0 || 'Add at least one skill',
+                  }}
+                  render={({ field }) => (
+                    <div className="space-y-2">
+                      <Label htmlFor="company" className="text-sm font-semibold text-[#1F2937]">
+                        Skills
+                      </Label>
+                      <SkillsInput
+                        className="rounded-full"
+                        error={errors.skills?.message}
+                        value={field.value}
+                        onChange={field.onChange}
+                        maxSkills={10}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
             </div>
-
             <div className="flex justify-end gap-3">
               <Button
                 type="button"
@@ -109,7 +119,7 @@ function HeadlineForm() {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
-                disabled={isPending}
+                disabled={editLoading}
               >
                 Save
               </Button>
@@ -121,4 +131,4 @@ function HeadlineForm() {
   )
 }
 
-export default HeadlineForm
+export default SkillsForm

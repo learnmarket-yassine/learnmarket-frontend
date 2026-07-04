@@ -1,10 +1,19 @@
+export enum LanguageLevel {
+  BASIC = 'BASIC',
+  CONVERSATIONAL = 'CONVERSATIONAL',
+  FLUENT = 'FLUENT',
+  NATIVE_OR_BILINGUAL = 'NATIVE_OR_BILINGUAL',
+}
 export interface Language {
-  name: string
-  level: string
+  id?: string
+  profileId?: string
+  language: string
+  level: LanguageLevel
 }
 
 export interface Education {
-  id: string
+  id?: string
+  profileId?: string
   institution: string
   degree?: string
   fieldOfStudy?: string
@@ -13,36 +22,35 @@ export interface Education {
 }
 
 export interface EmploymentEntry {
-  id: string
-  title: string
+  id?: string
+  profileId?: string
+  jobTitle: string
   company: string
-  period: string
-  description: string
+  description?: string
+  startDate: string
+  endDate?: string
+  current?: boolean
+  country?: string
+  city?: string
 }
 
 export interface PortfolioItem {
-  id: string
+  id?: string
+  profileId?: string
   title: string
+  description?: string
   imageUrl?: string
-}
-
-export interface Skill {
-  id: string
-  label: string
-}
-
-export interface Testimonial {
-  id: string
-  author: string
-  content: string
-  rating: number
+  createdAt?: string
 }
 
 export interface Certification {
-  id: string
+  id?: string
+  pofileId?: string
   title: string
   issuer: string
-  date: string
+  issuedAt?: string
+  expiresAt?: string
+  credentialUrl?: string
 }
 
 export interface WorkHistoryTab {
@@ -53,22 +61,14 @@ export interface WorkHistoryTab {
 
 export interface TutorProfile {
   id: string
-  name: string
+  hourlyRate?: number
+  hoursPerWeek?: string
+  videoIntroUrl?: string | null
   isVerified: boolean
-  location: string
-  localTime: string
-  avatarUrl?: string
-  headline: string
-  hourlyRate: number
-  bio: string
-  connects: number
-  hoursPerWeek: string
-  videoIntroUrl?: string
   languages: Language[]
   education: Education[]
-  skills: Skill[]
+  skills: string[]
   portfolio: PortfolioItem[]
-  testimonials: Testimonial[]
   certifications: Certification[]
   employment: EmploymentEntry[]
   completedJobs: number

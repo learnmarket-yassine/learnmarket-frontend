@@ -1,15 +1,15 @@
 import { MapPin, BadgeCheck } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { TutorProfile } from '../../store/types'
 import AvatarImg from '@/assets/images/avatar.png'
+import { AuthUser } from '@/features/auth/store/types'
 
 interface ProfileHeaderProps {
-  profile: TutorProfile
+  profile: AuthUser
 }
 
 function MyProfileHeader({ profile }: ProfileHeaderProps) {
-  const initials = profile.name
+  const initials = `${profile.firstname} ${profile.lastname}`
     .split(' ')
     .map((n) => n[0])
     .join('')
@@ -21,7 +21,7 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
       {/* Left: avatar + info */}
       <div className="flex items-start gap-4">
         <Avatar className="h-16 w-16 shrink-0 after:border-none">
-          <AvatarImage src={AvatarImg} alt={profile.name} />
+          <AvatarImage src={AvatarImg} alt={initials} />
           <AvatarFallback className="bg-blue-600 text-lg font-semibold text-white">
             {initials}
           </AvatarFallback>
@@ -29,21 +29,32 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
 
         <div className="space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold text-[#143681]">{profile.name}</h1>
-            {profile.isVerified && (
-              <BadgeCheck className="h-5 w-5 text-[#102A63]" aria-label="Identity verified" />
+            <h1 className="text-2xl font-bold text-[#143681]">
+              {profile.firstname} {profile.lastname}
+            </h1>
+            {profile?.tutorProfile?.isVerified && (
+              <>
+                <BadgeCheck className="h-5 w-5 text-[#102A63]" aria-label="Identity verified" />
+                <a href="#verify" className="text-sm text-[#225AD6] underline underline-offset-2">
+                  Verify your identity
+                </a>
+              </>
             )}
-            <a href="#verify" className="text-sm text-[#225AD6] underline underline-offset-2">
-              Verify your identity
-            </a>
           </div>
           <div className="flex flex-wrap items-center gap-1 text-base text-[#143681]">
             <span className="flex items-center gap-1">
               <MapPin className="h-4 w-4" aria-hidden="true" />
-              {profile.location}
+              {profile.country}
             </span>
             <span>-</span>
-            <span className="flex items-center gap-1">{profile.localTime}</span>
+            <span className="flex items-center gap-1">
+              {new Date().toLocaleTimeString('en-US', {
+                timeZone: 'UTC',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}{' '}
+              UTC
+            </span>
           </div>
         </div>
       </div>

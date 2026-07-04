@@ -22,7 +22,7 @@ const useGetUser = () => {
     if (getUserQuery.data) {
       setUser(getUserQuery.data)
     }
-  }, [getUserQuery.data])
+  }, [getUserQuery.data, setUser])
   return getUserQuery
 }
 
