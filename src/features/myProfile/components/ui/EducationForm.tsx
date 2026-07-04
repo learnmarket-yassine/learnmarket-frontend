@@ -17,23 +17,28 @@ import EditButton from './EditButton'
 import { CustomInput } from '@/components/ui/CustomInput'
 import AddButton from './AddButton'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
+import useEditEducation from '../../hooks/useEditEducation'
+import useCreateEducation from '../../hooks/useCreateEducation'
 
 type EducationFormProps = {
   edit: boolean
   id?: string
-  isLoading?: boolean
 }
 
 function EducationForm(props: EducationFormProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { mutate: editEducationMutation, isPending: editLoading } = useEditEducation()
+  const { mutate: createEducationMutation, isPending: createLoading } = useCreateEducation()
   const YEARS = Array.from({ length: new Date().getFullYear() - 1970 + 1 }, (_, i) => {
     const year = String(new Date().getFullYear() - i)
     return { label: year, value: year }
   })
 
-  const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
+  const user = useStore((state) => state.auth.user)
 
-  const selectedEducation = tutorProfile?.education.find((education) => education.id === props.id)
+  const selectedEducation = (user?.tutorProfile?.education ?? []).find(
+    (education) => education.id === props.id
+  )
 
   const form = useForm<EducationFormData>({
     resolver: zodResolver(educationSchema),
@@ -46,17 +51,21 @@ function EducationForm(props: EducationFormProps) {
     if (props.edit) {
       reset({
         institution: selectedEducation?.institution ?? '',
+        startYear: selectedEducation?.startYear,
+        endYear: selectedEducation?.endYear,
+        degree: selectedEducation?.degree,
+        fieldOfStudy: selectedEducation?.fieldOfStudy,
       })
     } else reset()
   }, [props.edit, isOpen, reset, selectedEducation])
 
   const onSubmit: SubmitHandler<EducationFormData> = async (data) => {
-    if (props.edit) {
+    if (props.edit && props.id) {
       //TODO: call the edit mutation
-      console.warn('edit', data)
+      editEducationMutation({ payload: data, id: props.id })
     } else {
       //Todo: call the create mutation
-      console.warn('create', data)
+      createEducationMutation(data)
     }
   }
 
@@ -67,15 +76,15 @@ function EducationForm(props: EducationFormProps) {
           {props.edit ? <EditButton label="edit education" /> : <AddButton label="Add education" />}
         </DialogTrigger>
         <DialogContent
-          className="flex h-[500px] w-[400px] flex-col overflow-auto sm:w-[425px] sm:min-w-[750px]"
+          className="flex h-[500px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[600px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
         >
           <DialogHeader>
-            <DialogTitle className="mb-[20px] text-2xl font-[600] text-[#4C4C4C]">
+            <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-2xl font-semibold text-[#143681]">
+                <span className="text-4xl font-bold text-[#143681]">
                   {props.edit ? 'Edit education' : 'Add education'}
                 </span>
                 <button
@@ -99,21 +108,23 @@ function EducationForm(props: EducationFormProps) {
           >
             <div className="flex-1 space-y-5 overflow-auto">
               <div>
-                <Label htmlFor="institution" className="text-base font-semibold">
+                <Label htmlFor="institution" className="text-sm font-semibold text-[#1F2937]">
                   School {!props.edit && <span>*</span>}
                 </Label>
                 <CustomInput
                   type="text"
                   id="institution"
                   placeholder="Ex: Northwestern University"
-                  className="rounded-full border bg-white"
+                  className="rounded-full border border-[#6B7280] bg-white"
                   width="w-full"
                   error={errors.institution?.message}
                   {...register('institution')}
                 />
               </div>
               <div className="space-y-3">
-                <Label className="text-base font-semibold">Dates Attended (Optional)</Label>
+                <Label className="text-sm font-semibold text-[#1F2937]">
+                  Dates Attended (Optional)
+                </Label>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <Controller
                     control={form.control}
@@ -154,28 +165,28 @@ function EducationForm(props: EducationFormProps) {
                 </div>
               </div>
               <div>
-                <Label htmlFor="degree" className="text-base font-semibold">
+                <Label htmlFor="degree" className="text-sm font-semibold text-[#1F2937]">
                   Degree (Optional) {!props.edit && <span>*</span>}
                 </Label>
                 <CustomInput
                   type="text"
                   id="degree"
                   placeholder="Ex: Northwestern University"
-                  className="rounded-full border bg-white"
+                  className="rounded-full border border-[#6B7280] bg-white"
                   width="w-full"
                   error={errors.degree?.message}
                   {...register('degree')}
                 />
               </div>
               <div>
-                <Label htmlFor="fieldOfStudy" className="text-base font-semibold">
+                <Label htmlFor="fieldOfStudy" className="text-sm font-semibold text-[#1F2937]">
                   Area of Study (Optional) {!props.edit && <span>*</span>}
                 </Label>
                 <CustomInput
                   type="text"
                   id="fieldOfStudy"
                   placeholder="Ex: Computer Science"
-                  className="rounded-full border bg-white"
+                  className="rounded-full border border-[#6B7280] bg-white"
                   width="w-full"
                   error={errors.fieldOfStudy?.message}
                   {...register('fieldOfStudy')}
@@ -199,6 +210,7 @@ function EducationForm(props: EducationFormProps) {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
+                disabled={editLoading || createLoading}
               >
                 Save
               </Button>

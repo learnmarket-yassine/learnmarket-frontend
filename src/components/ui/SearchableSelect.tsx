@@ -61,7 +61,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
           type="button"
           disabled={disabled}
           className={cn(
-            'flex h-11 w-full items-center justify-between rounded-full p-1 [&_svg]:pointer-events-auto',
+            'flex h-11 w-full items-center justify-between rounded-full border border-[#6B7280] p-1 [&_svg]:pointer-events-auto',
             error && 'border-red-500',
             disabled && 'cursor-not-allowed bg-[#D9D9D9] opacity-50'
           )}

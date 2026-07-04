@@ -8,7 +8,7 @@ import VerifCodePage from './pages/VerifCodePage'
 import MyProfilePage from './pages/myProfilePage'
 import TutorOnboardingPage from './pages/TutorOnboardingPage'
 import RequireAuth from './RequireAuth'
-import RequireTutorProfileComplete from './RequireTutorProfileComplete'
+// import RequireTutorProfileComplete from './RequireTutorProfileComplete'
 import Layout from './Layout'
 
 const AppRoutes = () => {
@@ -26,9 +26,9 @@ const AppRoutes = () => {
           <Route index element={<Navigate to="/profile" replace />} />
           <Route element={<RequireAuth />}>
             <Route path="/onboarding" element={<TutorOnboardingPage />} />
-            <Route element={<RequireTutorProfileComplete />}>
-              <Route path="/profile" element={<MyProfilePage />} />
-            </Route>
+            {/* <Route element={<RequireTutorProfileComplete />}> */}
+            <Route path="/profile" element={<MyProfilePage />} />
+            {/* </Route> */}
           </Route>
         </Route>
       </Route>

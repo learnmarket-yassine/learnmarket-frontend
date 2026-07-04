@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { TutorProfile } from '../../store/types'
-import EditButton from '../ui/EditButton'
 import HeadlineForm from '../ui/HeadLineForm'
 import PortfolioForm from '../ui/PortfolioForm'
 import OverviewForm from '../ui/OverviewForm'
+import { AuthUser } from '@/features/auth/store/types'
+import SkillsForm from '../ui/SkillsForm'
+import HourlyRateForm from '../ui/HourlyRateForm'
 
 interface MyProfileMainContentProps {
-  myProfile: TutorProfile
+  myProfile: AuthUser
 }
 
 function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
@@ -19,27 +20,27 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       <div>
         <div className="flex items-start justify-between gap-4 px-6 py-5">
           <div className="flex items-center gap-4">
-            <h2 className="flex-1 text-2xl font-semibold leading-snug text-[#143681]">
+            <h2 className="max-w-4xl flex-1 text-2xl font-semibold leading-snug text-[#143681]">
               {myProfile.headline}
             </h2>
             <div>
-              <HeadlineForm edit={true} />
+              <HeadlineForm />
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <span className="text-2xl font-semibold text-[#143681]">
-              ${myProfile.hourlyRate}.00/hr
+              ${myProfile.tutorProfile?.hourlyRate}.00/hr
             </span>
-            <EditButton label="Edit headline and rate" />
+            <HourlyRateForm />
           </div>
         </div>
         {/* Bio */}
 
         <div className="relative p-8">
           <div className="absolute right-4 top-4">
-            <OverviewForm edit={true} />
+            <OverviewForm />
           </div>
-          <p className="pr-5 text-xl text-[#143681]">{myProfile.bio}</p>
+          <p className="max-w-5xl pr-5 text-xl text-[#143681]">{myProfile.bio}</p>
         </div>
       </div>
 
@@ -57,12 +58,12 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
         {/* Tabs */}
         <div className="flex gap-4">
           <WorkHistoryTab
-            label={`Completed jobs (${myProfile.completedJobs})`}
+            label={`Completed jobs (${myProfile.tutorProfile?.completedJobs})`}
             active={activeWorkTab === 'completed'}
             onClick={() => setActiveWorkTab('completed')}
           />
           <WorkHistoryTab
-            label={`In progress (${myProfile.inProgressJobs})`}
+            label={`In progress (${myProfile.tutorProfile?.inProgressJobs})`}
             active={activeWorkTab === 'in_progress'}
             onClick={() => setActiveWorkTab('in_progress')}
           />
@@ -73,16 +74,16 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       <div className="space-y-5 p-8">
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-semibold text-[#143681]">Skills</h3>
-          <EditButton label="Edit skills" />
+          <SkillsForm />
         </div>
         <div className="flex flex-wrap gap-2">
-          {myProfile.skills.map((skill) => (
+          {myProfile.tutorProfile?.skills.map((skill, index) => (
             <Badge
-              key={skill.id}
+              key={index}
               variant="secondary"
               className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
             >
-              {skill.label}
+              {skill}
             </Badge>
           ))}
         </div>

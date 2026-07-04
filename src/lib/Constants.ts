@@ -1,4 +1,5 @@
 import { FooterColumn } from '@/components/layout/Footer/FooterColumn'
+import { LanguageLevel } from '@/features/myProfile/store/types'
 import { NavItemConfig } from '@/types/nav'
 
 // features/auth/constants/passwordRules.ts
@@ -180,25 +181,39 @@ export const LANGUAGES = [
 ]
 export const PROFICIENCY_LEVELS = [
   {
-    value: 'basic',
+    value: 'BASIC',
     label: 'Basic',
     description: 'I am only able to communicate in this language through written communication',
   },
   {
-    value: 'conversational',
+    value: 'CONVERSATIONAL',
     label: 'Conversational',
     description:
       'I know this language well enough to verbally discuss project details with a client',
   },
   {
-    value: 'fluent',
+    value: 'FLUENT',
     label: 'Fluent',
     description: 'I have complete command of this language with perfect grammar',
   },
   {
-    value: 'native',
+    value: 'NATIVE_OR_BILINGUAL',
     label: 'Native or Bilingual',
     description:
       'I have complete command of this language, including breadth of vocabulary, idioms, and colloquialisms',
   },
 ]
+
+export const languageLevelLabels: Record<LanguageLevel, string> = {
+  BASIC: 'basic',
+  CONVERSATIONAL: 'conversational',
+  FLUENT: 'fluent',
+  NATIVE_OR_BILINGUAL: 'native',
+}
+
+export const hoursPerWeekLabels: Record<string, string> = {
+  '30+': 'More than 30 hrs/week',
+  '10-30': '10-30 hrs/week',
+  '0-10': 'Less than 10 hrs/week',
+  '0': 'None',
+}

@@ -15,7 +15,8 @@ import { AddLanguageFormData, AddLanguageSchema } from '../../schemas'
 import AddButton from './AddButton'
 import { LANGUAGES, PROFICIENCY_LEVELS } from '@/lib/Constants'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
-import { ProficiencySelect } from './ProficiencySelect'
+import { LanguageLevel, ProficiencySelect } from './ProficiencySelect'
+import useCreateLanguage from '../../hooks/useCreateLanguages'
 
 function CreateLanguageForm() {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,11 +25,13 @@ function CreateLanguageForm() {
     resolver: zodResolver(AddLanguageSchema),
   })
 
+  const { mutate: createLanguageMutate, isPending } = useCreateLanguage()
+
   const { handleSubmit, control } = form
 
   const onSubmit: SubmitHandler<AddLanguageFormData> = async (data) => {
     //Todo: call the create mutation
-    console.warn('create', data)
+    createLanguageMutate(data)
   }
 
   return (
@@ -91,7 +94,7 @@ function CreateLanguageForm() {
                       <Label className="text-base font-bold">Proficiency level</Label>
                       <ProficiencySelect
                         placeholder="Search for proficiency level"
-                        value={field.value ? field.value : undefined}
+                        value={field.value as LanguageLevel}
                         onChange={(selected) => field.onChange(selected.value)}
                         options={PROFICIENCY_LEVELS}
                         error={!!fieldState.error}
@@ -121,6 +124,7 @@ function CreateLanguageForm() {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
+                disabled={isPending}
               >
                 Save
               </Button>

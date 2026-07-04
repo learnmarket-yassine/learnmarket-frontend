@@ -16,6 +16,7 @@ import { VideoIntroFormData, videoIntroSchema } from '../../schemas'
 import EditButton from './EditButton'
 import { CustomInput } from '@/components/ui/CustomInput'
 import AddButton from './AddButton'
+import useEditTutorProfile from '../../hooks/useEditTutorProfile'
 
 type VideoIntroFormProps = {
   edit: boolean
@@ -25,7 +26,7 @@ type VideoIntroFormProps = {
 
 function VideoIntroForm(props: VideoIntroFormProps) {
   const [isOpen, setIsOpen] = useState(false)
-
+  const { mutate: editTutorProfile, isPending } = useEditTutorProfile()
   const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
 
   const form = useForm<VideoIntroFormData>({
@@ -44,13 +45,7 @@ function VideoIntroForm(props: VideoIntroFormProps) {
   }, [props.edit, isOpen, reset, tutorProfile])
 
   const onSubmit: SubmitHandler<VideoIntroFormData> = async (data) => {
-    if (props.edit) {
-      //TODO: call the edit mutation
-      console.warn('edit', data.videoIntroUrl)
-    } else {
-      //Todo: call the create mutation
-      console.warn('create', data.videoIntroUrl)
-    }
+    editTutorProfile(data)
   }
 
   return (
@@ -126,6 +121,7 @@ function VideoIntroForm(props: VideoIntroFormProps) {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
+                disabled={isPending}
               >
                 Save
               </Button>

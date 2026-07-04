@@ -16,17 +16,12 @@ import { useStore } from '@/store/store'
 import { AvailabilityFormData, availabilitySchema } from '../../schemas'
 import EditButton from './EditButton'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import useEditTutorProfile from '../../hooks/useEditTutorProfile'
 
-type AvailabilityFormProps = {
-  edit: boolean
-  id?: string
-  isLoading?: boolean
-}
-
-function AvailabilityForm(props: AvailabilityFormProps) {
+function AvailabilityForm() {
   const [isOpen, setIsOpen] = useState(false)
-
-  const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
+  const { mutate: editTutorProfile, isPending } = useEditTutorProfile()
+  const user = useStore((state) => state.auth.user)
 
   const form = useForm<AvailabilityFormData>({
     resolver: zodResolver(availabilitySchema),
@@ -35,34 +30,20 @@ function AvailabilityForm(props: AvailabilityFormProps) {
   const { handleSubmit, reset } = form
 
   useEffect(() => {
-    if (props.edit) {
-      reset({
-        hoursPerWeek: tutorProfile?.hoursPerWeek ?? '0',
-      })
-    } else reset()
-  }, [props.edit, isOpen, reset, tutorProfile])
+    reset({
+      hoursPerWeek: user?.tutorProfile?.hoursPerWeek ?? '0',
+    })
+  }, [isOpen, reset, user])
 
   const onSubmit: SubmitHandler<AvailabilityFormData> = async (data) => {
-    if (props.edit) {
-      //TODO: call the edit mutation
-      console.warn('edit', data.hoursPerWeek)
-    } else {
-      //Todo: call the create mutation
-      console.warn('create', data.hoursPerWeek)
-    }
+    editTutorProfile(data)
   }
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          {props.edit ? (
-            <EditButton label="edit availability" />
-          ) : (
-            <Button type="button" onClick={() => setIsOpen(true)}>
-              create
-            </Button>
-          )}
+          <EditButton label="edit availability" />
         </DialogTrigger>
         <DialogContent
           className="flex h-[450px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
@@ -85,10 +66,12 @@ function AvailabilityForm(props: AvailabilityFormProps) {
               </div>
             </DialogTitle>
             <DialogDescription className="space-y-2">
-              <h1 className="text-xl font-bold text-[#5E5E5E]">Hours per week</h1>
-              <p className="text-base text-[#5E5E5E]">
-                Let learners know how many hours you're available to teach each week.
-              </p>
+              <div>
+                <span className="text-xl font-bold text-[#5E5E5E]">Hours per week</span>
+                <p className="text-base text-[#5E5E5E]">
+                  Let learners know how many hours you're available to teach each week.
+                </p>
+              </div>
             </DialogDescription>
           </DialogHeader>
           <form
@@ -160,6 +143,7 @@ function AvailabilityForm(props: AvailabilityFormProps) {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
+                disabled={isPending}
               >
                 Save
               </Button>

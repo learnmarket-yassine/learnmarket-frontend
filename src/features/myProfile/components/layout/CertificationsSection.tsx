@@ -18,7 +18,7 @@ function CertificationsSection({ certifications }: CertificationsSectionProps) {
           <li key={cert.id} className="border-t border-border pt-4">
             <p className="text-sm font-semibold text-foreground">{cert.title}</p>
             <p className="text-xs text-muted-foreground">
-              {cert.issuer} · {cert.date}
+              {cert.issuer} · {cert.issuedAt}
             </p>
           </li>
         ))}

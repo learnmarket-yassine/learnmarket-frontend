@@ -6,14 +6,15 @@ type Auth = {
 
 type Role = 'TUTOR' | 'LEARNER'
 
-type AuthUser = {
+export type AuthUser = {
   id: string
   email: string
   firstname: string
   lastname: string
   avatar: string | null
-  location: string | null
-  phone: string | null
+  bio?: string
+  country?: string
+  headline?: string
   role: Role
   isOnlineForMsg: boolean
   isProfileCompleted: boolean

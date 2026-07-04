@@ -12,9 +12,11 @@ export type ProficiencyOption = {
   description?: string
 }
 
+export type LanguageLevel = 'BASIC' | 'CONVERSATIONAL' | 'FLUENT' | 'NATIVE_OR_BILINGUAL'
+
 type ProficiencySelectProps = {
   options: ProficiencyOption[]
-  value?: string
+  value?: LanguageLevel
   onChange: (selected: ProficiencyOption) => void
   className?: string
   placeholder?: string

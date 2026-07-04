@@ -16,16 +16,12 @@ import { useStore } from '@/store/store'
 import { OverviewFormData, overviewSchema } from '../../schemas'
 import EditButton from './EditButton'
 import { Textarea } from '@/components/ui/textarea'
+import useEditUserInfo from '../../hooks/useEditUser'
 
-type OverviewFormProps = {
-  edit: boolean
-  id?: string
-  isLoading?: boolean
-}
-
-function OverviewForm(props: OverviewFormProps) {
+function OverviewForm() {
   const [isOpen, setIsOpen] = useState(false)
-  const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
+  const { mutate: editUserMutation, isPending } = useEditUserInfo()
+  const user = useStore((state) => state.auth.user)
   const form = useForm<OverviewFormData>({
     resolver: zodResolver(overviewSchema),
   })
@@ -35,34 +31,20 @@ function OverviewForm(props: OverviewFormProps) {
   const remaremaremainingCharacters = 5000 - (watch('bio')?.length ?? 0)
 
   useEffect(() => {
-    if (props.edit) {
-      reset({
-        bio: tutorProfile?.bio ?? '',
-      })
-    } else reset()
-  }, [props.edit, isOpen, reset, tutorProfile])
+    reset({
+      bio: user?.bio ?? '',
+    })
+  }, [isOpen, reset, user])
 
   const onSubmit: SubmitHandler<OverviewFormData> = async (data) => {
-    if (props.edit) {
-      //TODO: call the edit mutation
-      console.warn('edit', data.bio)
-    } else {
-      //Todo: call the create mutation
-      console.warn('create', data.bio)
-    }
+    editUserMutation(data)
   }
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          {props.edit ? (
-            <EditButton label="edit overview" />
-          ) : (
-            <Button type="button" onClick={() => setIsOpen(true)}>
-              create
-            </Button>
-          )}
+          <EditButton label="edit overview" />
         </DialogTrigger>
         <DialogContent
           className="flex h-[600px] min-w-[650px] flex-col space-y-7"
@@ -107,7 +89,7 @@ function OverviewForm(props: OverviewFormProps) {
           >
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="bio" className="text-base font-bold text-[#5E5E5E]">
-                Profile overview {!props.edit && <span>*</span>}
+                Profile overview
               </Label>
               <Textarea
                 id="bio"
@@ -138,6 +120,7 @@ function OverviewForm(props: OverviewFormProps) {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
+                disabled={isPending}
               >
                 Save
               </Button>

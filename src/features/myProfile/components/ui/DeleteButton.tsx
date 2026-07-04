@@ -10,6 +10,7 @@ interface DeleteButtonProps {
 function DeleteButton({ label, onClick, className }: DeleteButtonProps) {
   return (
     <Button
+      type="button"
       variant="ghost"
       size="icon"
       aria-label={label}
