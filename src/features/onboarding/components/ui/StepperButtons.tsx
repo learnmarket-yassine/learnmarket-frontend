@@ -1,6 +1,11 @@
 import { useStore } from '@/store/store'
-import { JSX } from 'react'
+import { JSX, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import useUpdateOnboardingStep from '../../hooks/useUpdateOnboardingStep'
+
+export type StepHandle = {
+  submit: () => Promise<boolean>
+}
 
 export type StepProps = {
   stepNumber: number
@@ -12,13 +17,23 @@ export type StepProps = {
 
 type StepperButtonsProps = {
   steps: StepProps[]
-  onNextStep: () => Promise<void> | void
+  onNextStep: () => Promise<boolean>
   onSkip?: () => void
+  onComplete?: () => void
+  isNextDisabled?: boolean
 }
 
-const StepperButtons = ({ onNextStep, onSkip, steps }: StepperButtonsProps) => {
+const StepperButtons = ({
+  onNextStep,
+  onSkip,
+  onComplete,
+  steps,
+  isNextDisabled,
+}: StepperButtonsProps) => {
   const formStep = useStore((state) => state.onBoarding.formStep)
   const setFormStep = useStore((state) => state.onBoarding.setFormStep)
+  const { mutate: updateOnboardingStep } = useUpdateOnboardingStep()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Find the index of the current form step in the visible steps
   const currentStepIndex = steps.findIndex((step) => step.stepNumber === formStep)
@@ -32,17 +47,30 @@ const StepperButtons = ({ onNextStep, onSkip, steps }: StepperButtonsProps) => {
 
   const prevStepNumber = currentStepIndex > 0 ? steps[currentStepIndex - 1]?.stepNumber : undefined
 
+  const goToStep = (step: number) => {
+    setFormStep(step)
+    updateOnboardingStep(step)
+  }
+
   const handleNextStep = async () => {
-    if (typeof onNextStep === 'function' && nextStepNumber) {
-      //   await onNextStep()
-      setFormStep(nextStepNumber)
+    setIsSubmitting(true)
+    try {
+      const canProceed = await onNextStep()
+      if (!canProceed) return
+      if (nextStepNumber) {
+        goToStep(nextStepNumber)
+      } else {
+        onComplete?.()
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   const handleSkip = () => {
     onSkip?.()
     if (nextStepNumber) {
-      setFormStep(nextStepNumber)
+      goToStep(nextStepNumber)
     }
   }
 
@@ -54,7 +82,7 @@ const StepperButtons = ({ onNextStep, onSkip, steps }: StepperButtonsProps) => {
         className="h-full rounded-full border-[#D1D5DB] px-8 py-[10px] font-semibold text-[#143681] hover:text-[#143681]"
         onClick={() => {
           if (prevStepNumber) {
-            setFormStep(prevStepNumber)
+            goToStep(prevStepNumber)
           }
         }}
       >
@@ -72,10 +100,11 @@ const StepperButtons = ({ onNextStep, onSkip, steps }: StepperButtonsProps) => {
         )}
         <Button
           type="button"
-          className="h-full rounded-full bg-[#2563EB] px-8 py-[10px] font-semibold text-white hover:bg-[#2563EB] hover:text-white"
+          disabled={isSubmitting || isNextDisabled}
+          className="h-full rounded-full bg-[#2563EB] px-8 py-[10px] font-semibold text-white hover:bg-[#2563EB] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleNextStep}
         >
-          {isLastStep ? 'Submit' : `Next, ${nextStepTitle}`}
+          {isSubmitting ? 'Saving...' : isLastStep ? 'Submit' : `Next, ${nextStepTitle}`}
         </Button>
       </div>
     </div>

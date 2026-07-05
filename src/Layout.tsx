@@ -2,6 +2,7 @@ import Footer from './components/layout/Footer/Footer'
 import Navbar from './components/layout/Navbar/Navbar'
 import { useStore } from './store/store'
 import { Outlet } from 'react-router-dom'
+import { getAssetUrl } from './lib/utils'
 
 const Layout = () => {
   const user = useStore((state) => state.auth.user)
@@ -14,6 +15,7 @@ const Layout = () => {
             name: `${user.firstname} ${user.lastname}`,
             role: user?.role,
             isOnline: user?.isOnlineForMsg,
+            avatarUrl: getAssetUrl(user?.avatar),
           }}
           notificationCount={2}
         />

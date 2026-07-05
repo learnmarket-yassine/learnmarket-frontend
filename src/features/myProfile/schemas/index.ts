@@ -92,7 +92,7 @@ export const LanguageRowSchema = z.object({
 })
 
 export const EditLanguagesSchema = z.object({
-  languages: z.array(LanguageRowSchema),
+  languages: z.array(LanguageRowSchema).min(1, 'Add at least one language'),
 })
 
 export type EditLanguagesFormData = z.infer<typeof EditLanguagesSchema>

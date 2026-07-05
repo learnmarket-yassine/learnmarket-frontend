@@ -1,33 +1,37 @@
 import { z } from 'zod'
 import { isValidPhoneNumber, CountryCode } from 'libphonenumber-js'
 
-export const tutorOnboardingSchema = z.object({
-  headline: z.string().trim().min(1, 'Ce champ est obligatoire').max(150, 'Le titre est trop long'),
-  bio: z
-    .string()
-    .trim()
-    .min(1, 'Ce champ est obligatoire')
-    .max(5000, 'Le bio ne doit pas dépasser 5000 caractères'),
-  hourlyRate: z
-    .number({ error: 'Ce champ est obligatoire' })
-    .positive('Le tarif horaire doit être supérieur à 0'),
+export const onboardingSkillsSchema = z.object({
+  skills: z
+    .array(z.string().min(1).max(30))
+    .min(1, 'Add at least one skill')
+    .max(20, 'You can add up to 20 skills'),
 })
 
-export type TutorOnboardingFormData = z.infer<typeof tutorOnboardingSchema>
+export type OnboardingSkillsFormData = z.infer<typeof onboardingSkillsSchema>
 
-export const userSchema = z
+export const userInfoSchema = z
   .object({
+    dateOfBirth: z.date({ error: 'Date of birth is required' }).max(new Date(), {
+      message: 'Date of birth cannot be in the future',
+    }),
+    country: z.string().trim().min(1, 'Country is required'),
+    address: z.string().trim().min(1, 'Street address is required').max(255),
+    city: z.string().trim().min(1, 'City is required').max(100),
+    state: z.string().trim().max(100).optional(),
+    postalCode: z.string().trim().max(20).optional(),
     phone: z.string().optional(),
     countryCode: z.string().optional(),
   })
   .refine(
     (data) => {
-      if (!data.phone) return true // Skip validation if phone is empty
+      if (!data.phone) return false
       return isValidPhoneNumber(data.phone, data.countryCode as CountryCode)
     },
     {
-      message: 'invalid phone number',
-      path: ['phone'], // This will show the error on the phone field
+      message: 'Invalid phone number',
+      path: ['phone'],
     }
   )
-export type UserFormData = z.infer<typeof userSchema>
+
+export type UserInfoFormData = z.infer<typeof userInfoSchema>

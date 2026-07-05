@@ -12,6 +12,7 @@ import PlusIcon from '@/assets/PlusIcon'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useStore } from '@/store/store'
 import { cn } from '@/lib/utils'
+import useUploadAvatar from '../../hooks/useUploadAvatar'
 
 const MIN_DIMENSION = 250
 const MAX_FILE_SIZE_MB = 5
@@ -26,6 +27,7 @@ function UploadImageForm() {
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const user = useStore((state) => state.auth.user)
+  const { mutateAsync: uploadAvatar, isPending: isUploading } = useUploadAvatar()
 
   useEffect(() => {
     return () => {
@@ -86,9 +88,14 @@ function UploadImageForm() {
     setIsOpen(false)
   }
 
-  const handleAttach = () => {
+  const handleAttach = async () => {
     if (!file) return
-    handleClose()
+    try {
+      await uploadAvatar(file)
+      handleClose()
+    } catch {
+      setError('Failed to upload the image. Please try again.')
+    }
   }
 
   return (
@@ -229,9 +236,9 @@ function UploadImageForm() {
               data-mdb-ripple-init
               className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
               onClick={handleAttach}
-              disabled={!file}
+              disabled={!file || isUploading}
             >
-              Attach photo
+              {isUploading ? 'Uploading...' : 'Attach photo'}
             </Button>
           </div>
         </DialogContent>

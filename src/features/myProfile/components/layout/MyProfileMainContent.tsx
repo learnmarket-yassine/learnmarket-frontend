@@ -40,7 +40,9 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
           <div className="absolute right-4 top-4">
             <OverviewForm />
           </div>
-          <p className="max-w-5xl pr-5 text-xl text-[#143681]">{myProfile.bio}</p>
+          <p className="max-w-5xl whitespace-pre-wrap break-words pr-5 text-xl text-[#143681]">
+            {myProfile.bio}
+          </p>
         </div>
       </div>
 

@@ -1,7 +1,10 @@
 import EmploymentForm from '@/features/myProfile/components/ui/EmploymentForm'
 import EmptyBox from '../../ui/EmptyBox'
+import { useStore } from '@/store/store'
+import EmploymentBox from '../../ui/EmploymentBox'
 
 const ExperienceStep = () => {
+  const user = useStore((state) => state.auth.user)
   return (
     <div className="space-y-10">
       <div className="space-y-6">
@@ -13,10 +16,23 @@ const ExperienceStep = () => {
           starting out, you can still create a great profile. Just head on to the next page.
         </p>
       </div>
-      <div>
-        <EmptyBox title="Add experience">
-          <EmploymentForm edit={false} />
-        </EmptyBox>
+      <div className="flex items-center gap-6">
+        {(user?.tutorProfile?.employment ?? []).length > 0 ? (
+          <div>
+            <EmploymentForm edit={false} />
+          </div>
+        ) : null}
+        <div className="flex flex-1 items-center gap-4">
+          {(user?.tutorProfile?.employment ?? []).length > 0 ? (
+            (user?.tutorProfile?.employment ?? []).map((employment) => (
+              <EmploymentBox {...employment} />
+            ))
+          ) : (
+            <EmptyBox title="Add experience">
+              <EmploymentForm edit={false} />
+            </EmptyBox>
+          )}
+        </div>
       </div>
     </div>
   )

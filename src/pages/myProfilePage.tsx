@@ -16,7 +16,7 @@ const MyProfilePage = () => {
         <MyProfileHeader profile={myProfile} />
 
         {/* 2. Two-column section: sidebar left, main content right */}
-        <div className="grid grid-cols-1 gap-5 border-t border-[#D1D5DA] lg:grid-cols-[1fr_2fr]">
+        <div className="grid grid-cols-1 border-t border-[#D1D5DA] lg:grid-cols-[1fr_2fr]">
           <MyProfileLeftSidebar myProfile={myProfile} />
           <MyProfileMainContent myProfile={myProfile} />
         </div>

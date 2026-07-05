@@ -1,10 +1,51 @@
+import { forwardRef, useEffect, useImperativeHandle } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import MentorAvatar from '@/assets/images/onboarding-avatar.png'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { StarIcon, UserIcon } from 'lucide-react'
+import { useStore } from '@/store/store'
+import { OverviewFormData, overviewSchema } from '@/features/myProfile/schemas'
+import useEditUserInfo from '@/features/myProfile/hooks/useEditUser'
+import { StepHandle } from '../../ui/StepperButtons'
 
-const OverviewStep = () => {
+type OverviewStepProps = {
+  onValidityChange?: (isValid: boolean) => void
+}
+
+const OverviewStep = forwardRef<StepHandle, OverviewStepProps>(({ onValidityChange }, ref) => {
+  const user = useStore((state) => state.auth.user)
+  const { mutateAsync: editUserMutation } = useEditUserInfo()
+
+  const form = useForm<OverviewFormData>({
+    resolver: zodResolver(overviewSchema),
+    mode: 'onChange',
+    defaultValues: {
+      bio: user?.bio ?? '',
+    },
+  })
+
+  const { register, handleSubmit, formState, watch } = form
+  const { errors, isValid } = formState
+  const remainingCharacters = 5000 - (watch('bio')?.length ?? 0)
+
+  useEffect(() => {
+    onValidityChange?.(isValid)
+  }, [isValid, onValidityChange])
+
+  useImperativeHandle(ref, () => ({
+    submit: async () => {
+      let succeeded = false
+      await handleSubmit(async (data) => {
+        await editUserMutation({ bio: data.bio })
+        succeeded = true
+      })()
+      return succeeded
+    },
+  }))
+
   return (
     <div className="flex w-full items-start justify-between">
       <div className="space-y-6">
@@ -24,10 +65,12 @@ const OverviewStep = () => {
             id="bio"
             placeholder="Describe your strengths, skills and experience"
             className="h-[160px] resize-none rounded-xl border bg-white p-4"
+            error={errors.bio?.message}
             maxLength={5000}
+            {...register('bio')}
           />
           <div className="flex justify-end">
-            <p className="text-sm text-[#5E5E5E]">left</p>
+            <p className="text-sm text-[#5E5E5E]">{remainingCharacters} left</p>
           </div>
         </div>
       </div>
@@ -66,6 +109,8 @@ const OverviewStep = () => {
       </div>
     </div>
   )
-}
+})
+
+OverviewStep.displayName = 'OverviewStep'
 
 export default OverviewStep

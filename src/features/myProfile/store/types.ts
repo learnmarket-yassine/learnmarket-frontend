@@ -12,7 +12,7 @@ export interface Language {
 }
 
 export interface Education {
-  id?: string
+  id: string
   profileId?: string
   institution: string
   degree?: string
@@ -22,7 +22,7 @@ export interface Education {
 }
 
 export interface EmploymentEntry {
-  id?: string
+  id: string
   profileId?: string
   jobTitle: string
   company: string

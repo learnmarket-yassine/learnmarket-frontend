@@ -4,7 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import MentorAvatar from '@/assets/images/onboarding-avatar.png'
 
-const ImportDataStep = () => {
+type ImportDataStepProps = {
+  onContinue: () => void
+}
+
+const ImportDataStep = ({ onContinue }: ImportDataStepProps) => {
   return (
     <div className="flex w-full items-start justify-between">
       <div className="space-y-6">
@@ -17,27 +21,35 @@ const ImportDataStep = () => {
         </p>
         <div className="space-y-4">
           <Button
+            type="button"
             variant={'outline'}
             data-mdb-button-init
             data-mdb-ripple-init
-            className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white"
+            disabled
+            title="Coming soon"
+            className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white disabled:opacity-50"
           >
             <LinkedinIcon />
             <span className="text-base font-semibold text-[#2563EB]">Import from LinkedIn</span>
           </Button>
           <Button
+            type="button"
             variant={'outline'}
             data-mdb-button-init
             data-mdb-ripple-init
-            className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white"
+            disabled
+            title="Coming soon"
+            className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white disabled:opacity-50"
           >
             <UploadIcon />
             <span className="text-base font-semibold text-[#2563EB]">Upload your resume</span>
           </Button>
           <Button
+            type="button"
             variant={'outline'}
             data-mdb-button-init
             data-mdb-ripple-init
+            onClick={onContinue}
             className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white"
           >
             <span className="text-base font-semibold text-[#2563EB]">

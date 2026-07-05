@@ -1,5 +1,6 @@
 import Navbar from '@/components/layout/Navbar/Navbar'
 import { useStore } from '@/store/store'
+import { getAssetUrl } from '@/lib/utils'
 
 type TutorOnboardingLayoutProps = {
   children: React.ReactNode
@@ -16,6 +17,7 @@ const TutorOnboardingLayout = ({ children }: TutorOnboardingLayoutProps) => {
             name: `${user.firstname} ${user.lastname}`,
             role: user?.role,
             isOnline: user?.isOnlineForMsg,
+            avatarUrl: getAssetUrl(user?.avatar),
           }}
           notificationCount={2}
         />

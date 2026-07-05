@@ -1,7 +1,10 @@
+import { useStore } from '@/store/store'
 import EmptyBox from '../../ui/EmptyBox'
 import EducationForm from '@/features/myProfile/components/ui/EducationForm'
+import EducationBox from '../../ui/EducationBox'
 
 const EducationStep = () => {
+  const user = useStore((state) => state.auth.user)
   return (
     <div className="space-y-10">
       <div className="space-y-6">
@@ -13,10 +16,16 @@ const EducationStep = () => {
           more visible.
         </p>
       </div>
-      <div>
-        <EmptyBox title="Add Education">
-          <EducationForm edit={false} />
-        </EmptyBox>
+      <div className="space-y-4">
+        {(user?.tutorProfile?.education ?? []).length > 0 ? (
+          (user?.tutorProfile?.education ?? []).map((education) => (
+            <EducationBox key={education.id} {...education} />
+          ))
+        ) : (
+          <EmptyBox title="Add education">
+            <EducationForm edit={false} />
+          </EmptyBox>
+        )}
       </div>
     </div>
   )

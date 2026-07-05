@@ -1,9 +1,49 @@
+import { forwardRef, useEffect, useImperativeHandle } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import MentorAvatar from '@/assets/images/onboarding-avatar.png'
 import { Label } from '@/components/ui/label'
 import SkillsInput from '@/components/ui/SkillInput'
+import { useStore } from '@/store/store'
+import { OnboardingSkillsFormData, onboardingSkillsSchema } from '../../../schemas'
+import useEditTutorProfile from '@/features/myProfile/hooks/useEditTutorProfile'
+import { StepHandle } from '../../ui/StepperButtons'
 
-const SkillsStep = () => {
+type SkillsStepProps = {
+  onValidityChange?: (isValid: boolean) => void
+}
+
+const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }, ref) => {
+  const user = useStore((state) => state.auth.user)
+  const { mutateAsync: editTutorProfileMutation } = useEditTutorProfile()
+
+  const form = useForm<OnboardingSkillsFormData>({
+    resolver: zodResolver(onboardingSkillsSchema),
+    mode: 'onChange',
+    defaultValues: {
+      skills: user?.tutorProfile?.skills ?? [],
+    },
+  })
+
+  const { handleSubmit, formState, control } = form
+  const { errors, isValid } = formState
+
+  useEffect(() => {
+    onValidityChange?.(isValid)
+  }, [isValid, onValidityChange])
+
+  useImperativeHandle(ref, () => ({
+    submit: async () => {
+      let succeeded = false
+      await handleSubmit(async (data) => {
+        await editTutorProfileMutation({ skills: data.skills })
+        succeeded = true
+      })()
+      return succeeded
+    },
+  }))
+
   return (
     <div className="flex w-full items-start justify-between">
       <div className="space-y-10">
@@ -22,7 +62,19 @@ const SkillsStep = () => {
           <Label htmlFor="skills" className="text-sm font-semibold text-[#374151]">
             Your skills
           </Label>
-          <SkillsInput className="h-20 rounded-lg" value={[]} onChange={() => {}} maxSkills={20} />
+          <Controller
+            name="skills"
+            control={control}
+            render={({ field }) => (
+              <SkillsInput
+                className="h-full rounded-lg"
+                value={field.value}
+                onChange={field.onChange}
+                maxSkills={20}
+                error={errors.skills?.message}
+              />
+            )}
+          />
         </div>
       </div>
       <div className="space-y-4 rounded-3xl bg-[#F3F3FE] p-8">
@@ -40,6 +92,8 @@ const SkillsStep = () => {
       </div>
     </div>
   )
-}
+})
+
+SkillsStep.displayName = 'SkillsStep'
 
 export default SkillsStep
