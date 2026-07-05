@@ -10,6 +10,7 @@ interface AddButtonProps {
 function AddButton({ label, onClick, className }: AddButtonProps) {
   return (
     <Button
+      type="button"
       variant="ghost"
       size="icon"
       aria-label={label}

@@ -17,8 +17,13 @@ import { LANGUAGES, PROFICIENCY_LEVELS } from '@/lib/Constants'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { LanguageLevel, ProficiencySelect } from './ProficiencySelect'
 import useCreateLanguage from '../../hooks/useCreateLanguages'
+import PlusIcon from '@/assets/PlusIcon'
 
-function CreateLanguageForm() {
+type CreateLanguageFormProps = {
+  onboarding?: boolean
+}
+
+function CreateLanguageForm({ onboarding }: CreateLanguageFormProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const form = useForm<AddLanguageFormData>({
@@ -38,7 +43,18 @@ function CreateLanguageForm() {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <AddButton label="create language" />
+          {onboarding ? (
+            <Button
+              type="button"
+              variant={'outline'}
+              className="flex h-full items-center gap-3 rounded-full border border-[#004AC6] px-8 py-3 text-base text-[#004AC6] hover:text-[#004AC6]"
+            >
+              <PlusIcon className="size-4" />
+              Add a language
+            </Button>
+          ) : (
+            <AddButton label="create language" />
+          )}
         </DialogTrigger>
         <DialogContent
           className="flex h-[480px] min-w-[592px] flex-col space-y-8"

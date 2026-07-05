@@ -6,7 +6,7 @@ import MentorAvatar from '@/assets/images/onboarding-avatar.png'
 
 const ImportDataStep = () => {
   return (
-    <div className="container flex w-full items-start justify-between">
+    <div className="flex w-full items-start justify-between">
       <div className="space-y-6">
         <h1 className="max-w-[400px] text-4xl font-bold text-[#1E293B]">
           How would you like to tell us about yourself?
