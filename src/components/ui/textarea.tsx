@@ -21,7 +21,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
         {props.error && (
           <div>
-            <p className="bg-inputBackground absolute bottom-[-0.4rem] left-2 block overflow-hidden text-ellipsis whitespace-nowrap px-1 text-xs font-normal text-red-600">
+            <p className="absolute left-2 block overflow-hidden text-ellipsis whitespace-nowrap px-1 text-xs font-normal text-red-600">
               {' '}
               {props.error}{' '}
             </p>

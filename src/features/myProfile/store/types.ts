@@ -34,12 +34,24 @@ export interface EmploymentEntry {
   city?: string
 }
 
+export type PortfolioMediaType = 'IMAGE' | 'VIDEO_FILE' | 'VIDEO_LINK' | 'LINK'
+
+export interface PortfolioMedia {
+  id: string
+  type: PortfolioMediaType
+  key?: string | null
+  url: string | null
+  position: number
+}
+
 export interface PortfolioItem {
   id?: string
   profileId?: string
   title: string
+  role?: string
   description?: string
-  imageUrl?: string
+  skills?: string[]
+  media?: PortfolioMedia[]
   createdAt?: string
 }
 

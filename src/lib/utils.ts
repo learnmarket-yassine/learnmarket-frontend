@@ -19,3 +19,15 @@ export function getYoutubeThumbnailUrl(url: string): string | undefined {
   const videoId = match?.[1]
   return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : undefined
 }
+
+export const getDomain = (url: string) => {
+  try {
+    const parsed = new URL(
+      url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`
+    )
+
+    return parsed.hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}

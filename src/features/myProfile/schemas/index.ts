@@ -163,6 +163,29 @@ export const skillsSchema = z.object({
 
 export type SkillsFormValues = z.infer<typeof skillsSchema>
 
+export const portfolioSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, 'Project title is required')
+    .max(150, 'Project title is too long'),
+
+  role: z.string().trim().max(100, 'Role is too long').optional(),
+
+  description: z
+    .string()
+    .trim()
+    .min(1, 'Project description is required')
+    .max(5000, 'Project description is too long'),
+
+  skills: z
+    .array(z.string().min(1).max(30))
+    .min(1, 'Add at least one skill')
+    .max(5, 'You can add up to 5 skills'),
+})
+
+export type PortfolioFormValues = z.infer<typeof portfolioSchema>
+
 export const hourlyRateSchema = z.object({
   hourlyRate: z
     .number({

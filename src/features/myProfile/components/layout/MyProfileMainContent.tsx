@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import HeadlineForm from '../ui/HeadLineForm'
 import PortfolioForm from '../ui/PortfolioForm'
+import PortfolioList from '../ui/PortfolioList'
 import OverviewForm from '../ui/OverviewForm'
 import { AuthUser } from '@/features/auth/store/types'
 import SkillsForm from '../ui/SkillsForm'
@@ -47,11 +48,12 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       </div>
 
       {/* Portfolio */}
-      <div className="p-8">
+      <div className="space-y-5 p-8">
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
           <PortfolioForm edit={false} />
         </div>
+        <PortfolioList portfolio={myProfile.tutorProfile?.portfolio ?? []} />
       </div>
 
       {/* Work history */}

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import {
   Dialog,
@@ -12,14 +12,20 @@ import {
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useStore } from '@/store/store'
-import { EducationFormData, educationSchema } from '../../schemas'
+import { PortfolioFormValues, portfolioSchema } from '../../schemas'
 import EditButton from './EditButton'
 import AddButton from './AddButton'
-import MediaBlock from '@/components/ui/MediaBlock'
+import MediaBlock, { ContentItem } from '@/components/ui/MediaBlock'
 import { Label } from '@/components/ui/label'
 import { CustomInput } from '@/components/ui/CustomInput'
 import { Textarea } from '@/components/ui/textarea'
 import SkillsInput from '@/components/ui/SkillInput'
+import useCreatePortfolio from '../../hooks/useCreatePortfolio'
+import useEditPortfolio from '../../hooks/useEditPortfolio'
+import useAddPortfolioMedia from '../../hooks/useAddPortfolioMedia'
+import useRemovePortfolioMedia from '../../hooks/useRemovePortfolioMedia'
+import { mediaToContentItem } from '../../utils/portfolioMedia'
+import EditIcon from '@/assets/EditIcon'
 
 type PortfolioFormProps = {
   edit: boolean
@@ -29,13 +35,25 @@ type PortfolioFormProps = {
 
 function PortfolioForm(props: PortfolioFormProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [mediaItems, setMediaItems] = useState<ContentItem[]>([])
 
-  const tutorProfile = useStore((state) => state.myProfile.tutorProfile)
+  const tutorProfile = useStore((state) => state.auth.user?.tutorProfile)
 
-  const selectedEducation = tutorProfile?.education.find((education) => education.id === props.id)
+  const selectedPortfolio = tutorProfile?.portfolio.find((project) => project.id === props.id)
 
-  const form = useForm<EducationFormData>({
-    resolver: zodResolver(educationSchema),
+  const createPortfolio = useCreatePortfolio()
+  const editPortfolio = useEditPortfolio()
+  const addPortfolioMedia = useAddPortfolioMedia()
+  const removePortfolioMedia = useRemovePortfolioMedia()
+
+  const initialMediaItems = useMemo(
+    () => (selectedPortfolio?.media ?? []).map(mediaToContentItem),
+    [selectedPortfolio]
+  )
+
+  const form = useForm<PortfolioFormValues>({
+    resolver: zodResolver(portfolioSchema),
   })
 
   const { handleSubmit, reset, formState, register, control } = form
@@ -44,18 +62,38 @@ function PortfolioForm(props: PortfolioFormProps) {
   useEffect(() => {
     if (props.edit) {
       reset({
-        institution: selectedEducation?.institution ?? '',
+        title: selectedPortfolio?.title ?? '',
+        description: selectedPortfolio?.description ?? '',
+        role: selectedPortfolio?.role ?? '',
+        skills: selectedPortfolio?.skills ?? [],
       })
-    } else reset()
-  }, [props.edit, isOpen, reset, selectedEducation])
+    } else reset({ title: '', description: '', role: '', skills: [] })
+  }, [props.edit, isOpen, reset, selectedPortfolio])
 
-  const onSubmit: SubmitHandler<EducationFormData> = async (data) => {
-    if (props.edit) {
-      //TODO: call the edit mutation
-      console.warn('edit', data)
-    } else {
-      //Todo: call the create mutation
-      console.warn('create', data)
+  const handleRemoveMediaItem = (item: ContentItem) => {
+    if (item.mediaId && props.id) {
+      removePortfolioMedia.mutate({ itemId: props.id, mediaId: item.mediaId })
+    }
+  }
+
+  const onSubmit: SubmitHandler<PortfolioFormValues> = async (data) => {
+    setIsSubmitting(true)
+    try {
+      const itemId =
+        props.edit && props.id
+          ? (await editPortfolio.mutateAsync({ id: props.id, payload: data })).id!
+          : (await createPortfolio.mutateAsync(data)).id!
+
+      const newMediaItems = mediaItems.filter((item) => !item.mediaId)
+      await Promise.all(
+        newMediaItems.map((item) => addPortfolioMedia.mutateAsync({ itemId, item }))
+      )
+
+      setIsOpen(false)
+    } catch (error) {
+      console.error('Failed to save the portfolio project', error)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -64,13 +102,20 @@ function PortfolioForm(props: PortfolioFormProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           {props.edit ? (
-            <EditButton label="edit portfolio project" />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 rounded-full border border-[#2563EB] text-[#2563EB]`}
+            >
+              <EditIcon className="size-4" />
+            </Button>
           ) : (
             <AddButton label="add portfolio project" />
           )}
         </DialogTrigger>
         <DialogContent
-          className="flex w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[1200px]"
+          className="flex max-h-[90vh] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[1200px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
@@ -98,14 +143,14 @@ function PortfolioForm(props: PortfolioFormProps) {
             </DialogDescription>
           </DialogHeader>
           <form
-            className="flex flex-1 flex-col gap-2"
+            className="flex min-h-0 flex-1 flex-col gap-2"
             onSubmit={(e) => {
               e.preventDefault()
               handleSubmit(onSubmit)(e)
             }}
             noValidate
           >
-            <div className="flex-1 space-y-6 overflow-auto">
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto">
               <div>
                 <Label htmlFor="title" className="text-base font-bold text-[#5E5E5E]">
                   Project title {!props.edit && <span>*</span>}
@@ -116,12 +161,12 @@ function PortfolioForm(props: PortfolioFormProps) {
                   placeholder="Digital Marketing | Video Editing, Video Editing & Production, Logo"
                   className="rounded-full border border-[#6B7280] bg-white"
                   width="w-full"
-                  error={errors.institution?.message}
-                  {...register('institution')}
+                  error={errors.title?.message}
+                  {...register('title')}
                 />
               </div>
-              <div className="flex w-full items-center gap-16">
-                <div className="w-full space-y-3">
+              <div className="grid w-full grid-cols-5 items-start gap-16">
+                <div className="col-span-2 space-y-3">
                   <div>
                     <Label htmlFor="role" className="text-base font-bold text-[#5E5E5E]">
                       Your role (optional)
@@ -132,8 +177,8 @@ function PortfolioForm(props: PortfolioFormProps) {
                       placeholder="e.g., English teacher"
                       className="rounded-full border border-[#6B7280] bg-white"
                       width="w-full"
-                      error={errors.institution?.message}
-                      {...register('institution')}
+                      error={errors.role?.message}
+                      {...register('role')}
                     />
                   </div>
                   <div>
@@ -144,18 +189,15 @@ function PortfolioForm(props: PortfolioFormProps) {
                       id="description"
                       placeholder="Brief description"
                       className="h-20 resize-none rounded-xl border border-[#6B7280] bg-white p-4"
-                      error={errors.degree?.message}
-                      {...register('degree')}
+                      error={errors.description?.message}
+                      {...register('description')}
                       maxLength={5000}
                     />
                   </div>
                   <div>
                     <Controller
-                      name="institution"
+                      name="skills"
                       control={control}
-                      rules={{
-                        validate: (v) => v.length > 0 || 'Add at least one skill',
-                      }}
                       render={({ field }) => (
                         <div className="space-y-2">
                           <Label htmlFor="skills" className="text-base font-bold text-[#5E5E5E]">
@@ -163,8 +205,8 @@ function PortfolioForm(props: PortfolioFormProps) {
                           </Label>
                           <SkillsInput
                             className="rounded-full"
-                            error={errors.institution?.message}
-                            value={[]}
+                            error={errors.skills?.message}
+                            value={field.value ?? []}
                             onChange={field.onChange}
                             maxSkills={5}
                           />
@@ -173,7 +215,14 @@ function PortfolioForm(props: PortfolioFormProps) {
                     />
                   </div>
                 </div>
-                <MediaBlock />
+                <div className="col-span-3">
+                  <MediaBlock
+                    key={isOpen ? 'open' : 'closed'}
+                    initialItems={initialMediaItems}
+                    onChange={setMediaItems}
+                    onRemoveItem={handleRemoveMediaItem}
+                  />
+                </div>
               </div>
             </div>
             <div className="flex justify-end gap-3">
@@ -192,7 +241,7 @@ function PortfolioForm(props: PortfolioFormProps) {
                 data-mdb-button-init
                 data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
-                disabled={false}
+                disabled={isSubmitting}
               >
                 Save
               </Button>
