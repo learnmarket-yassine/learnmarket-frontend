@@ -7,6 +7,11 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import VerifCodePage from './pages/VerifCodePage'
 import MyProfilePage from './pages/myProfilePage'
 import TutorOnboardingPage from './pages/TutorOnboardingPage'
+import ConnectsPage from './pages/ConnectsPage'
+import ConnectsPurchaseSuccessPage from './pages/ConnectsPurchaseSuccessPage'
+import ConnectsPurchaseCancelledPage from './pages/ConnectsPurchaseCancelledPage'
+import AnnoncesPage from './pages/AnnoncesPage'
+import MyProposalsPage from './pages/MyProposalsPage'
 import RequireAuth from './RequireAuth'
 // import RequireTutorProfileComplete from './RequireTutorProfileComplete'
 import Layout from './Layout'
@@ -35,6 +40,11 @@ const AppRoutes = () => {
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
           <Route path="/onboarding" element={<TutorOnboardingPage />} />
+          <Route path="/annonces" element={<AnnoncesPage />} />
+          <Route path="/proposals" element={<MyProposalsPage />} />
+          <Route path="/connects" element={<ConnectsPage />} />
+          <Route path="/connects/purchase/success" element={<ConnectsPurchaseSuccessPage />} />
+          <Route path="/connects/purchase/cancelled" element={<ConnectsPurchaseCancelledPage />} />
         </Route>
       </Route>
     </Routes>
