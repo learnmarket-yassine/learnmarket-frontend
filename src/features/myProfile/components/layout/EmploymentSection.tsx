@@ -16,7 +16,7 @@ function EmploymentSection({ employment }: EmploymentSectionProps) {
 
       <div className="space-y-6 divide-y divide-[#D1D5DA] divide-border">
         {employment.map((job) => (
-          <EmploymentItem key={job.id} id={job.id ?? ''} {...job} />
+          <EmploymentItem key={job.id} {...job} />
         ))}
       </div>
     </div>

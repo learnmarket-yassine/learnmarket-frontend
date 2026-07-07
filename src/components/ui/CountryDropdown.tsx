@@ -1,4 +1,4 @@
-import React, { useCallback, useState, forwardRef, useEffect } from 'react'
+import React, { useCallback, useState, forwardRef } from 'react'
 import {
   Command,
   CommandEmpty,

@@ -10,6 +10,7 @@ const FolderIcon = ({ className, ...props }: IconProps) => (
     fill="none"
     viewBox="0 0 35 30"
     className={cn('size-6', className)}
+    {...props}
   >
     <path
       fill="#fff"
