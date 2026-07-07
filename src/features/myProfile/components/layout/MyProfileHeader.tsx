@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
+import { getAssetUrl } from '@/lib/utils'
 
 interface ProfileHeaderProps {
   profile: AuthUser
@@ -21,7 +22,7 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
       {/* Left: avatar + info */}
       <div className="flex items-start gap-4">
         <Avatar className="h-16 w-16 shrink-0 after:border-none">
-          <AvatarImage src={AvatarImg} alt={initials} />
+          <AvatarImage src={getAssetUrl(profile.avatar) || AvatarImg} alt={initials} />
           <AvatarFallback className="bg-blue-600 text-lg font-semibold text-white">
             {initials}
           </AvatarFallback>

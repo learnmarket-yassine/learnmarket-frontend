@@ -15,9 +15,17 @@ export type AuthUser = {
   bio?: string
   country?: string
   headline?: string
+  phone?: string
+  phoneCountryCode?: string
+  dateOfBirth?: string
+  address?: string
+  city?: string
+  state?: string
+  postalCode?: string
   role: Role
   isOnlineForMsg: boolean
   isProfileCompleted: boolean
+  onboardingStep: number
   tutorProfile: TutorProfile | null
 }
 

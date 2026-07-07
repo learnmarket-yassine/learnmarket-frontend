@@ -37,7 +37,7 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
           className="rounded-full focus-visible:outline-none"
         >
           <Avatar className="h-10 w-10 cursor-pointer after:border-none">
-            <AvatarImage src={AvatarImg} alt={user.name} />
+            <AvatarImage src={user.avatarUrl || AvatarImg} alt={user.name} />
             <AvatarFallback className="bg-[#2563EB] text-sm font-semibold text-white">
               {initials}
             </AvatarFallback>
@@ -50,7 +50,7 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
         {/* User info header */}
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12 after:border-none">
-            <AvatarImage src={AvatarImg} alt={user.name} />
+            <AvatarImage src={user.avatarUrl || AvatarImg} alt={user.name} />
             <AvatarFallback className="bg-[#2563EB] text-sm font-semibold text-white">
               {initials}
             </AvatarFallback>

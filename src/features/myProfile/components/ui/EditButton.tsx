@@ -10,6 +10,7 @@ interface EditButtonProps {
 function EditButton({ label, onClick, className }: EditButtonProps) {
   return (
     <Button
+      type="button"
       variant="ghost"
       size="icon"
       aria-label={label}

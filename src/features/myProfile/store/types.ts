@@ -12,7 +12,7 @@ export interface Language {
 }
 
 export interface Education {
-  id?: string
+  id: string
   profileId?: string
   institution: string
   degree?: string
@@ -22,7 +22,7 @@ export interface Education {
 }
 
 export interface EmploymentEntry {
-  id?: string
+  id: string
   profileId?: string
   jobTitle: string
   company: string
@@ -34,12 +34,24 @@ export interface EmploymentEntry {
   city?: string
 }
 
+export type PortfolioMediaType = 'IMAGE' | 'VIDEO_FILE' | 'VIDEO_LINK' | 'LINK'
+
+export interface PortfolioMedia {
+  id: string
+  type: PortfolioMediaType
+  key?: string | null
+  url: string | null
+  position: number
+}
+
 export interface PortfolioItem {
   id?: string
   profileId?: string
   title: string
+  role?: string
   description?: string
-  imageUrl?: string
+  skills?: string[]
+  media?: PortfolioMedia[]
   createdAt?: string
 }
 
