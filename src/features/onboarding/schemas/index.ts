@@ -3,7 +3,7 @@ import { isValidPhoneNumber, CountryCode } from 'libphonenumber-js'
 
 export const onboardingSkillsSchema = z.object({
   skills: z
-    .array(z.string().min(1).max(30))
+    .array(z.object({ id: z.string(), name: z.string() }))
     .min(1, 'Add at least one skill')
     .max(20, 'You can add up to 20 skills'),
 })

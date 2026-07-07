@@ -81,13 +81,13 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
           <SkillsForm />
         </div>
         <div className="flex flex-wrap gap-2">
-          {myProfile.tutorProfile?.skills.map((skill, index) => (
+          {myProfile.tutorProfile?.skills.map((skill) => (
             <Badge
-              key={index}
+              key={skill.id}
               variant="secondary"
               className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
             >
-              {skill}
+              {skill.name}
             </Badge>
           ))}
         </div>

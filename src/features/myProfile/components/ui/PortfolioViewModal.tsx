@@ -72,13 +72,13 @@ function PortfolioViewModal({ item }: PortfolioViewModalProps) {
                 <p className="font-medium text-[#42444a]">Skills and deliverables</p>
                 {item.skills && item.skills.length > 0 && (
                   <div className="flex flex-wrap gap-3">
-                    {item.skills.map((skill, index) => (
+                    {item.skills.map((skill) => (
                       <Badge
-                        key={index}
+                        key={skill.id}
                         variant="secondary"
                         className="h-9 rounded-lg border-none bg-[#1a46a7] px-4 py-2 text-base text-white"
                       >
-                        {skill}
+                        {skill.name}
                       </Badge>
                     ))}
                   </div>

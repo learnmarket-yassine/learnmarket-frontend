@@ -14,12 +14,13 @@ import { Label } from '@/components/ui/label'
 import { useStore } from '@/store/store'
 import { SkillsFormValues, skillsSchema } from '../../schemas'
 import EditButton from './EditButton'
-import SkillsInput from '@/components/ui/SkillInput'
-import useEditTutorProfile from '../../hooks/useEditTutorProfile'
+import useReplaceTutorSkills from '../../hooks/useReplaceTutorSkills'
+import SkillsInput from './Skills/SkillsInput'
 
 function SkillsForm() {
   const [isOpen, setIsOpen] = useState(false)
-  const { mutate: editTutorProfileMutation, isPending: editLoading } = useEditTutorProfile()
+  const { mutateAsync: replaceTutorSkillsMutation, isPending: editLoading } =
+    useReplaceTutorSkills()
 
   const user = useStore((state) => state.auth.user)
 
@@ -39,8 +40,12 @@ function SkillsForm() {
   }, [isOpen, reset, selectedSkills])
 
   const onSubmit: SubmitHandler<SkillsFormValues> = async (data) => {
-    //   //TODO: call the edit mutation
-    editTutorProfileMutation(data)
+    try {
+      await replaceTutorSkillsMutation(data.skills)
+      setIsOpen(false)
+    } catch (error) {
+      console.error('Failed to save skills', error)
+    }
   }
 
   return (
