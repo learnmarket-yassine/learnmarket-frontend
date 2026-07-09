@@ -10,24 +10,23 @@ import {
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { useStore } from '@/store/store'
-import { SkillsFormValues, skillsSchema } from '../../schemas'
+import { SpecialtiesFormValues, specialtiesSchema } from '../../schemas'
 import EditButton from './EditButton'
-import useReplaceTutorSkills from '../../hooks/useReplaceTutorSkills'
-import SkillsInput from './Skills/SkillsInput'
+import useReplaceTutorSpecialties from '../../hooks/useReplaceTutorSpecialties'
+import CategorySpecialtyPicker from './Specialties/CategorySpecialtyPicker'
 
-function SkillsForm() {
+function SpecialtiesForm() {
   const [isOpen, setIsOpen] = useState(false)
-  const { mutateAsync: replaceTutorSkillsMutation, isPending: editLoading } =
-    useReplaceTutorSkills()
+  const { mutateAsync: replaceTutorSpecialtiesMutation, isPending: editLoading } =
+    useReplaceTutorSpecialties()
 
   const user = useStore((state) => state.auth.user)
 
-  const selectedSkills = user?.tutorProfile?.skills
+  const selectedSpecialties = user?.tutorProfile?.specialties
 
-  const form = useForm<SkillsFormValues>({
-    resolver: zodResolver(skillsSchema),
+  const form = useForm<SpecialtiesFormValues>({
+    resolver: zodResolver(specialtiesSchema),
   })
 
   const { handleSubmit, formState, control, reset } = form
@@ -35,16 +34,16 @@ function SkillsForm() {
 
   useEffect(() => {
     reset({
-      skills: selectedSkills ?? [],
+      specialties: selectedSpecialties ?? [],
     })
-  }, [isOpen, reset, selectedSkills])
+  }, [isOpen, reset, selectedSpecialties])
 
-  const onSubmit: SubmitHandler<SkillsFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<SpecialtiesFormValues> = async (data) => {
     try {
-      await replaceTutorSkillsMutation(data.skills)
+      await replaceTutorSpecialtiesMutation(data.specialties)
       setIsOpen(false)
     } catch (error) {
-      console.error('Failed to save skills', error)
+      console.error('Failed to save specialties', error)
     }
   }
 
@@ -52,10 +51,10 @@ function SkillsForm() {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <EditButton label="edit employment" />
+          <EditButton label="edit specialties" />
         </DialogTrigger>
         <DialogContent
-          className="flex min-h-[350px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
+          className="flex w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[750px]"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
@@ -63,7 +62,7 @@ function SkillsForm() {
           <DialogHeader>
             <DialogTitle>
               <div className="flex w-full items-center justify-between">
-                <span className="text-4xl font-bold text-[#143681]">Edit Skills</span>
+                <span className="text-4xl font-bold text-[#143681]">Edit Specialties</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -76,37 +75,25 @@ function SkillsForm() {
             </DialogTitle>
           </DialogHeader>
           <form
-            className="flex flex-1 flex-col gap-2"
+            className="flex min-h-0 flex-1 flex-col gap-2"
             onSubmit={(e) => {
               e.preventDefault()
               handleSubmit(onSubmit)(e)
             }}
             noValidate
           >
-            <div className="flex-1 overflow-auto">
-              <div>
-                <Controller
-                  name="skills"
-                  control={control}
-                  rules={{
-                    validate: (v) => v.length > 0 || 'Add at least one skill',
-                  }}
-                  render={({ field }) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="company" className="text-sm font-semibold text-[#1F2937]">
-                        Skills
-                      </Label>
-                      <SkillsInput
-                        className="rounded-full"
-                        error={errors.skills?.message}
-                        value={field.value}
-                        onChange={field.onChange}
-                        maxSkills={10}
-                      />
-                    </div>
-                  )}
-                />
-              </div>
+            <div className="min-h-0 flex-1 overflow-auto">
+              <Controller
+                name="specialties"
+                control={control}
+                render={({ field }) => (
+                  <CategorySpecialtyPicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.specialties?.message}
+                  />
+                )}
+              />
             </div>
             <div className="flex justify-end gap-3">
               <Button
@@ -136,4 +123,4 @@ function SkillsForm() {
   )
 }
 
-export default SkillsForm
+export default SpecialtiesForm

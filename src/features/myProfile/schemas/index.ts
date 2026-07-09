@@ -154,14 +154,34 @@ export const employmentSchema = z
 
 export type EmploymentFormData = z.infer<typeof employmentSchema>
 
+const skillSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+
 export const skillsSchema = z.object({
   skills: z
-    .array(z.string().min(1).max(30))
+    .array(skillSchema)
     .min(1, 'Add at least one skill')
     .max(10, 'You can add up to 10 skills'),
 })
 
 export type SkillsFormValues = z.infer<typeof skillsSchema>
+
+const specialtySchema = z.object({
+  id: z.string(),
+  categoryId: z.string(),
+  name: z.string(),
+})
+
+export const specialtiesSchema = z.object({
+  specialties: z
+    .array(specialtySchema)
+    .min(1, 'Select at least one specialty')
+    .max(5, 'You can select up to 3 specialties'),
+})
+
+export type SpecialtiesFormValues = z.infer<typeof specialtiesSchema>
 
 export const portfolioSchema = z.object({
   title: z
@@ -179,7 +199,7 @@ export const portfolioSchema = z.object({
     .max(5000, 'Project description is too long'),
 
   skills: z
-    .array(z.string().min(1).max(30))
+    .array(skillSchema)
     .min(1, 'Add at least one skill')
     .max(5, 'You can add up to 5 skills'),
 })

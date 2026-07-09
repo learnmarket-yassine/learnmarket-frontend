@@ -4,11 +4,11 @@ import { Controller, useForm } from 'react-hook-form'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import MentorAvatar from '@/assets/images/onboarding-avatar.png'
 import { Label } from '@/components/ui/label'
-import SkillsInput from '@/components/ui/SkillInput'
 import { useStore } from '@/store/store'
 import { OnboardingSkillsFormData, onboardingSkillsSchema } from '../../../schemas'
-import useEditTutorProfile from '@/features/myProfile/hooks/useEditTutorProfile'
+import useReplaceTutorSkills from '@/features/myProfile/hooks/useReplaceTutorSkills'
 import { StepHandle } from '../../ui/StepperButtons'
+import SkillsInput from '@/features/myProfile/components/ui/Skills/SkillsInput'
 
 type SkillsStepProps = {
   onValidityChange?: (isValid: boolean) => void
@@ -16,7 +16,7 @@ type SkillsStepProps = {
 
 const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }, ref) => {
   const user = useStore((state) => state.auth.user)
-  const { mutateAsync: editTutorProfileMutation } = useEditTutorProfile()
+  const { mutateAsync: replaceTutorSkillsMutation } = useReplaceTutorSkills()
 
   const form = useForm<OnboardingSkillsFormData>({
     resolver: zodResolver(onboardingSkillsSchema),
@@ -37,7 +37,7 @@ const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }
     submit: async () => {
       let succeeded = false
       await handleSubmit(async (data) => {
-        await editTutorProfileMutation({ skills: data.skills })
+        await replaceTutorSkillsMutation(data.skills)
         succeeded = true
       })()
       return succeeded

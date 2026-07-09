@@ -1,3 +1,6 @@
+import { Skill } from '@/types/skill'
+import { Specialty } from '@/types/category'
+
 export enum LanguageLevel {
   BASIC = 'BASIC',
   CONVERSATIONAL = 'CONVERSATIONAL',
@@ -50,7 +53,7 @@ export interface PortfolioItem {
   title: string
   role?: string
   description?: string
-  skills?: string[]
+  skills?: Skill[]
   media?: PortfolioMedia[]
   createdAt?: string
 }
@@ -79,7 +82,8 @@ export interface TutorProfile {
   isVerified: boolean
   languages: Language[]
   education: Education[]
-  skills: string[]
+  skills: Skill[]
+  specialties: Specialty[]
   portfolio: PortfolioItem[]
   certifications: Certification[]
   employment: EmploymentEntry[]

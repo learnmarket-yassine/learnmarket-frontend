@@ -18,13 +18,13 @@ import MediaBlock, { ContentItem } from '@/components/ui/MediaBlock'
 import { Label } from '@/components/ui/label'
 import { CustomInput } from '@/components/ui/CustomInput'
 import { Textarea } from '@/components/ui/textarea'
-import SkillsInput from '@/components/ui/SkillInput'
 import useCreatePortfolio from '../../hooks/useCreatePortfolio'
 import useEditPortfolio from '../../hooks/useEditPortfolio'
 import useAddPortfolioMedia from '../../hooks/useAddPortfolioMedia'
 import useRemovePortfolioMedia from '../../hooks/useRemovePortfolioMedia'
 import { mediaToContentItem } from '../../utils/portfolioMedia'
 import EditIcon from '@/assets/EditIcon'
+import SkillsInput from './Skills/SkillsInput'
 
 type PortfolioFormProps = {
   edit: boolean

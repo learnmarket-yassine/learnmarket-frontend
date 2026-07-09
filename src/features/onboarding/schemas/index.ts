@@ -3,12 +3,21 @@ import { isValidPhoneNumber, CountryCode } from 'libphonenumber-js'
 
 export const onboardingSkillsSchema = z.object({
   skills: z
-    .array(z.string().min(1).max(30))
+    .array(z.object({ id: z.string(), name: z.string() }))
     .min(1, 'Add at least one skill')
     .max(20, 'You can add up to 20 skills'),
 })
 
 export type OnboardingSkillsFormData = z.infer<typeof onboardingSkillsSchema>
+
+export const onboardingSpecialtiesSchema = z.object({
+  specialties: z
+    .array(z.object({ id: z.string(), categoryId: z.string(), name: z.string() }))
+    .min(1, 'Select at least one specialty')
+    .max(5, 'You can select up to 3 specialties'),
+})
+
+export type OnboardingSpecialtiesFormData = z.infer<typeof onboardingSpecialtiesSchema>
 
 export const userInfoSchema = z
   .object({
