@@ -10,6 +10,15 @@ export const onboardingSkillsSchema = z.object({
 
 export type OnboardingSkillsFormData = z.infer<typeof onboardingSkillsSchema>
 
+export const onboardingSpecialtiesSchema = z.object({
+  specialties: z
+    .array(z.object({ id: z.string(), categoryId: z.string(), name: z.string() }))
+    .min(1, 'Select at least one specialty')
+    .max(5, 'You can select up to 3 specialties'),
+})
+
+export type OnboardingSpecialtiesFormData = z.infer<typeof onboardingSpecialtiesSchema>
+
 export const userInfoSchema = z
   .object({
     dateOfBirth: z.date({ error: 'Date of birth is required' }).max(new Date(), {

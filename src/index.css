@@ -14,6 +14,22 @@ body {
   font-size: 1rem;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e8e8e8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #143681;
+  width: 2px;
+}
+
 *,
 *::after,
 *::before {

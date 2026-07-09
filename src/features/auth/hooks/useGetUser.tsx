@@ -4,6 +4,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useEffect } from 'react'
 import { AuthUser } from '../store/types'
 import { flattenSkills } from '@/features/myProfile/utils/normalizeSkills'
+import { flattenSpecialties } from '@/features/myProfile/utils/normalizeSpecialties'
 
 const useGetUser = () => {
   const setUser = useStore((state) => state.auth.setUser)
@@ -20,6 +21,7 @@ const useGetUser = () => {
         tutorProfile: {
           ...data.tutorProfile,
           skills: flattenSkills(data.tutorProfile.skills),
+          specialties: flattenSpecialties(data.tutorProfile.specialties),
           portfolio: (data.tutorProfile.portfolio ?? []).map(
             (item: (typeof data.tutorProfile.portfolio)[number]) => ({
               ...item,

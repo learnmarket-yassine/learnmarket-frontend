@@ -51,6 +51,7 @@
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.79.0",
+    "react-intersection-observer": "^10.0.3",
     "react-phone-number-input": "^3.4.17",
     "react-player": "^2.16.1",
     "react-router-dom": "^7.18.0",

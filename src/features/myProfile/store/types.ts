@@ -1,4 +1,5 @@
 import { Skill } from '@/types/skill'
+import { Specialty } from '@/types/category'
 
 export enum LanguageLevel {
   BASIC = 'BASIC',
@@ -82,6 +83,7 @@ export interface TutorProfile {
   languages: Language[]
   education: Education[]
   skills: Skill[]
+  specialties: Specialty[]
   portfolio: PortfolioItem[]
   certifications: Certification[]
   employment: EmploymentEntry[]

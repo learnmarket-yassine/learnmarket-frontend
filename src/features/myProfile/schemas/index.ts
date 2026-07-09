@@ -168,6 +168,21 @@ export const skillsSchema = z.object({
 
 export type SkillsFormValues = z.infer<typeof skillsSchema>
 
+const specialtySchema = z.object({
+  id: z.string(),
+  categoryId: z.string(),
+  name: z.string(),
+})
+
+export const specialtiesSchema = z.object({
+  specialties: z
+    .array(specialtySchema)
+    .min(1, 'Select at least one specialty')
+    .max(5, 'You can select up to 3 specialties'),
+})
+
+export type SpecialtiesFormValues = z.infer<typeof specialtiesSchema>
+
 export const portfolioSchema = z.object({
   title: z
     .string()
