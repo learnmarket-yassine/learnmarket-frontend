@@ -1,11 +1,13 @@
 import axios from '@/lib/api/client'
 import { useStore } from '@/store/store'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
 const useLogout = () => {
   const setUser = useStore((state) => state.auth.setUser)
   const setAuthenticationResult = useStore((state) => state.auth.setAuthenticationResult)
+  const setFormStep = useStore((state) => state.onBoarding.setFormStep)
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   return useMutation({
@@ -24,6 +26,8 @@ const useLogout = () => {
     onSuccess: () => {
       setUser(null)
       setAuthenticationResult(null)
+      setFormStep(1)
+      queryClient.clear()
       navigate('/')
     },
   })

@@ -80,8 +80,6 @@ export interface TutorProfile {
   hoursPerWeek?: string
   videoIntroUrl?: string | null
   isVerified: boolean
-  languages: Language[]
-  education: Education[]
   skills: Skill[]
   specialties: Specialty[]
   portfolio: PortfolioItem[]
@@ -89,6 +87,20 @@ export interface TutorProfile {
   employment: EmploymentEntry[]
   completedJobs: number
   inProgressJobs: number
+}
+
+export type AvailabilityDay = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'
+export type AvailabilitySlotTime = 'MORNING' | 'AFTERNOON' | 'EVENING'
+
+export interface AvailabilitySlotValue {
+  day: AvailabilityDay
+  slot: AvailabilitySlotTime
+}
+
+export interface LearnerProfile {
+  id: string
+  availability: AvailabilitySlotValue[]
+  interests: Specialty[]
 }
 
 type MyProfileState = {

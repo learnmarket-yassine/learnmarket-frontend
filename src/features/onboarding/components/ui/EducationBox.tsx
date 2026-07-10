@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 import EducationForm from '@/features/myProfile/components/ui/EducationForm'
 import useDeleteEducation from '@/features/myProfile/hooks/useDeleteEducation'
@@ -13,6 +14,7 @@ type EducationBoxProps = {
 
 const EducationBox = ({ id, degree, institution, startYear, endYear }: EducationBoxProps) => {
   const { handleDeleteEducation, isPending } = useDeleteEducation()
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean | null>(false)
 
   return (
     <div className="flex h-[200px] items-start justify-between gap-6 rounded-2xl border border-[#E5E7EB] p-8">
@@ -33,9 +35,14 @@ const EducationBox = ({ id, degree, institution, startYear, endYear }: Education
           type="delete"
           title={'Delete education'}
           description={'Are you sure you want to delete this education ?'}
-          handleConfirm={() => handleDeleteEducation(id ?? '')}
+          handleConfirm={async () => {
+            await handleDeleteEducation(id ?? '')
+            setIsDeleteOpen(false)
+          }}
           buttonClassName="border-none"
           isLoading={isPending}
+          isOpen={!!isDeleteOpen}
+          setIsOpen={setIsDeleteOpen}
         />
       </div>
     </div>

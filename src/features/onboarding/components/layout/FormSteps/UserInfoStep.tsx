@@ -221,10 +221,14 @@ const UserInfoStep = forwardRef<StepHandle, UserInfoStepProps>(({ onValidityChan
             isEdit={true}
             error={errors.phone?.message}
             onChange={(value) => {
-              setValue('phone', value ?? '')
+              setValue('phone', value ?? '', {
+                shouldValidate: true,
+                shouldDirty: true,
+                shouldTouch: true,
+              })
             }}
             onCountryChange={(country) => {
-              setValue('countryCode', country ?? 'FR')
+              setValue('countryCode', country ?? 'FR', { shouldValidate: true, shouldDirty: true })
             }}
           />
         </div>

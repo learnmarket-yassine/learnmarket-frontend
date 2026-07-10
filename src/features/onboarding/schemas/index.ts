@@ -19,6 +19,27 @@ export const onboardingSpecialtiesSchema = z.object({
 
 export type OnboardingSpecialtiesFormData = z.infer<typeof onboardingSpecialtiesSchema>
 
+export const onboardingInterestsSchema = z.object({
+  interests: z
+    .array(z.object({ id: z.string(), categoryId: z.string(), name: z.string() }))
+    .min(1, 'Select at least one interest')
+    .max(20, 'You can select up to 20 interests'),
+})
+
+export type OnboardingInterestsFormData = z.infer<typeof onboardingInterestsSchema>
+
+export const availabilityDayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'])
+export const availabilitySlotEnum = z.enum(['MORNING', 'AFTERNOON', 'EVENING'])
+
+export const learnerAvailabilitySchema = z.object({
+  slots: z
+    .array(z.object({ day: availabilityDayEnum, slot: availabilitySlotEnum }))
+    .min(1, 'Select at least one time slot')
+    .max(21, 'You can select up to 21 time slots'),
+})
+
+export type LearnerAvailabilityFormData = z.infer<typeof learnerAvailabilitySchema>
+
 export const userInfoSchema = z
   .object({
     dateOfBirth: z.date({ error: 'Date of birth is required' }).max(new Date(), {

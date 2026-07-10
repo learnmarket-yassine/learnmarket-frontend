@@ -15,21 +15,36 @@ const useGetUser = () => {
     queryFn: async (): Promise<AuthUser> => {
       const response = await axiosPrivate.get('/users/me')
       const data = response.data
-      if (!data.tutorProfile) return data
-      return {
-        ...data,
-        tutorProfile: {
-          ...data.tutorProfile,
-          skills: flattenSkills(data.tutorProfile.skills),
-          specialties: flattenSpecialties(data.tutorProfile.specialties),
-          portfolio: (data.tutorProfile.portfolio ?? []).map(
-            (item: (typeof data.tutorProfile.portfolio)[number]) => ({
-              ...item,
-              skills: flattenSkills(item.skills),
-            })
-          ),
-        },
+      let result = data
+
+      if (data.tutorProfile) {
+        result = {
+          ...result,
+          tutorProfile: {
+            ...data.tutorProfile,
+            skills: flattenSkills(data.tutorProfile.skills),
+            specialties: flattenSpecialties(data.tutorProfile.specialties),
+            portfolio: (data.tutorProfile.portfolio ?? []).map(
+              (item: (typeof data.tutorProfile.portfolio)[number]) => ({
+                ...item,
+                skills: flattenSkills(item.skills),
+              })
+            ),
+          },
+        }
       }
+
+      if (data.learnerProfile) {
+        result = {
+          ...result,
+          learnerProfile: {
+            ...data.learnerProfile,
+            interests: flattenSpecialties(data.learnerProfile.interests),
+          },
+        }
+      }
+
+      return result
     },
     enabled: !!auth?.authenticationResult?.token,
     refetchOnMount: true,

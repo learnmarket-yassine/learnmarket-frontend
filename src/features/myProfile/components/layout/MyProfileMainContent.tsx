@@ -17,7 +17,7 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
   const [activeWorkTab, setActiveWorkTab] = useState<'completed' | 'in_progress'>('completed')
 
   return (
-    <div className="flex flex-col divide-y-[0.5px] divide-[#E0E2E6] divide-border border-l border-l-[#E0E2E6] bg-white">
+    <div className="flex flex-col divide-y-[0.5px] divide-[#E0E2E6] border-l border-l-[#E0E2E6] bg-white">
       {/* Headline + rate */}
       <div>
         <div className="flex items-start justify-between gap-4 px-6 py-5">

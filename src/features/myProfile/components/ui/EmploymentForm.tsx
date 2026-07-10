@@ -77,11 +77,9 @@ function EmploymentForm(props: EducationFormProps) {
 
   const onSubmit: SubmitHandler<EmploymentFormData> = async (data) => {
     if (props.edit && props.id) {
-      //TODO: call the edit mutation
-      editEmploymentMutation({ payload: data, id: props.id })
+      editEmploymentMutation({ payload: data, id: props.id }, { onSuccess: () => setIsOpen(false) })
     } else {
-      //Todo: call the create mutation
-      createEmploymentMutation(data)
+      createEmploymentMutation(data, { onSuccess: () => setIsOpen(false) })
     }
   }
 

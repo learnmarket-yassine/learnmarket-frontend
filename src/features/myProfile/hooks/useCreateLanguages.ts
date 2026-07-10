@@ -9,7 +9,7 @@ const useCreateLanguage = () => {
   const authenticationResult = useStore((state) => state.auth.authenticationResult)
   return useMutation({
     mutationFn: async (payload: AddLanguageFormData): Promise<AddLanguageFormData> => {
-      const response = await axiosPrivate.post(`/tutor/languages`, payload, {
+      const response = await axiosPrivate.post(`/users/me/languages`, payload, {
         headers: {
           Authorization: `Bearer ${authenticationResult?.token}`,
         },

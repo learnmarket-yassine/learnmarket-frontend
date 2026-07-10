@@ -9,7 +9,7 @@ const useCreateEducation = () => {
   const authenticationResult = useStore((state) => state.auth.authenticationResult)
   return useMutation({
     mutationFn: async (payload: EducationFormData): Promise<EducationFormData> => {
-      const response = await axiosPrivate.post(`/tutor/education`, payload, {
+      const response = await axiosPrivate.post(`/users/me/education`, payload, {
         headers: {
           Authorization: `Bearer ${authenticationResult?.token}`,
         },

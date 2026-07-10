@@ -183,6 +183,27 @@ export const specialtiesSchema = z.object({
 
 export type SpecialtiesFormValues = z.infer<typeof specialtiesSchema>
 
+export const learnerInterestsSchema = z.object({
+  interests: z
+    .array(specialtySchema)
+    .min(1, 'Select at least one interest')
+    .max(20, 'You can select up to 20 interests'),
+})
+
+export type LearnerInterestsFormValues = z.infer<typeof learnerInterestsSchema>
+
+export const availabilityDayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'])
+export const availabilitySlotEnum = z.enum(['MORNING', 'AFTERNOON', 'EVENING'])
+
+export const learnerAvailabilitySchema = z.object({
+  slots: z
+    .array(z.object({ day: availabilityDayEnum, slot: availabilitySlotEnum }))
+    .min(1, 'Select at least one time slot')
+    .max(21, 'You can select up to 21 time slots'),
+})
+
+export type LearnerAvailabilityFormValues = z.infer<typeof learnerAvailabilitySchema>
+
 export const portfolioSchema = z.object({
   title: z
     .string()

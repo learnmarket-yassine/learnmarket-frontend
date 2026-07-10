@@ -10,7 +10,8 @@ const RequireAuth = () => {
   if (!auth?.token) {
     return <Navigate to="login" state={{ from: location }} replace />
   }
-  if (getUserQuery.isPending || getUserQuery.isFetching) {
+
+  if (getUserQuery.isPending) {
     return <h1>loading...</h1>
   }
 

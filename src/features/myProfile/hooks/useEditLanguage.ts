@@ -14,7 +14,7 @@ const useEditLanguage = () => {
   const authenticationResult = useStore((state) => state.auth.authenticationResult)
   return useMutation({
     mutationFn: async ({ payload, id }: EditLanguageVariables): Promise<AddLanguageFormData> => {
-      const response = await axiosPrivate.patch(`/tutor/languages/${id}`, payload, {
+      const response = await axiosPrivate.patch(`/users/me/languages/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${authenticationResult?.token}`,
         },

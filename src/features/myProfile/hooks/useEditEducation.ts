@@ -17,7 +17,7 @@ const useEditEducation = () => {
       payload,
       id,
     }: EditEducationVariables): Promise<EditEducationVariables> => {
-      const response = await axiosPrivate.patch(`/tutor/education/${id}`, payload, {
+      const response = await axiosPrivate.patch(`/users/me/education/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${authenticationResult?.token}`,
         },

@@ -1,35 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import LearnerAvailabilityStep from '@/features/onboarding/components/layout/FormSteps/LearnerAvailabilityStep'
 import EducationStep from '@/features/onboarding/components/layout/FormSteps/EducationStep'
-import ExperienceStep from '@/features/onboarding/components/layout/FormSteps/ExperienceStep'
-import HeadlineStep from '@/features/onboarding/components/layout/FormSteps/HeadlineStep'
-import ImportDataStep from '@/features/onboarding/components/layout/FormSteps/ImportDataStep'
+import LearnerInterestsStep from '@/features/onboarding/components/layout/FormSteps/LearnerInterestsStep'
 import LanguagesStep from '@/features/onboarding/components/layout/FormSteps/LanguagesStep'
-import SkillsStep from '@/features/onboarding/components/layout/FormSteps/SkillsStep'
-import SpecialtiesStep from '@/features/onboarding/components/layout/FormSteps/SpecialtiesStep'
+import HeadlineStep from '@/features/onboarding/components/layout/FormSteps/HeadlineStep'
+import OverviewStep from '@/features/onboarding/components/layout/FormSteps/OverviewStep'
+import UserInfoStep from '@/features/onboarding/components/layout/FormSteps/UserInfoStep'
 import TutorOnboardingLayout from '@/features/onboarding/components/layout/TutorOnboardingLayout'
 import OnboardingProgress from '@/features/onboarding/components/ui/OnBoardingProgress'
 import StepperButtons, { StepHandle } from '@/features/onboarding/components/ui/StepperButtons'
 import { useStore } from '@/store/store'
 import { Navigate, useNavigate } from 'react-router-dom'
-import OverviewStep from '@/features/onboarding/components/layout/FormSteps/OverviewStep'
-import HourlyRateStep from '@/features/onboarding/components/layout/FormSteps/HourlyRateStep'
-import UserInfoStep from '@/features/onboarding/components/layout/FormSteps/UserInfoStep'
 
 // Steps gated behind their own form validation before "Next" is enabled
-const VALIDATED_STEPS = new Set([2, 3, 4, 6, 7, 8, 9, 10])
+const VALIDATED_STEPS = new Set([1, 2, 3, 5, 6, 7])
 
-const TutorOnboardingPage = () => {
+const LearnerOnboardingPage = () => {
   const user = useStore((state) => state.auth.user)
   const formStep = useStore((state) => state.onBoarding.formStep)
   const setFormStep = useStore((state) => state.onBoarding.setFormStep)
   const navigate = useNavigate()
 
-  const specialtiesRef = useRef<StepHandle>(null)
-  const skillsRef = useRef<StepHandle>(null)
+  const interestsRef = useRef<StepHandle>(null)
+  const availabilityRef = useRef<StepHandle>(null)
   const headlineRef = useRef<StepHandle>(null)
   const languagesRef = useRef<StepHandle>(null)
   const overviewRef = useRef<StepHandle>(null)
-  const hourlyRateRef = useRef<StepHandle>(null)
   const userInfoRef = useRef<StepHandle>(null)
 
   const [stepValidity, setStepValidity] = useState<Record<number, boolean>>({})
@@ -51,7 +47,7 @@ const TutorOnboardingPage = () => {
   const educationCount = user?.education.length ?? 0
 
   const isCurrentStepValid =
-    formStep === 6
+    formStep === 4
       ? educationCount > 0
       : VALIDATED_STEPS.has(formStep)
         ? !!stepValidity[formStep]
@@ -59,19 +55,17 @@ const TutorOnboardingPage = () => {
 
   const handleSaveCurrentStep = async (): Promise<boolean> => {
     switch (formStep) {
+      case 1:
+        return (await interestsRef.current?.submit()) ?? true
       case 2:
-        return (await specialtiesRef.current?.submit()) ?? true
+        return (await availabilityRef.current?.submit()) ?? true
       case 3:
-        return (await skillsRef.current?.submit()) ?? true
-      case 4:
         return (await headlineRef.current?.submit()) ?? true
-      case 7:
+      case 5:
         return (await languagesRef.current?.submit()) ?? true
-      case 8:
+      case 6:
         return (await overviewRef.current?.submit()) ?? true
-      case 9:
-        return (await hourlyRateRef.current?.submit()) ?? true
-      case 10:
+      case 7:
         return (await userInfoRef.current?.submit()) ?? true
       default:
         return true
@@ -81,74 +75,70 @@ const TutorOnboardingPage = () => {
   const steps = [
     {
       stepNumber: 1,
-      component: <ImportDataStep onContinue={() => setFormStep(2)} />,
+      component: (
+        <LearnerInterestsStep ref={interestsRef} onValidityChange={(v) => setStepValid(1, v)} />
+      ),
       show: true,
-      name: 'import your data',
+      name: '',
       canSkip: false,
     },
     {
       stepNumber: 2,
       component: (
-        <SpecialtiesStep ref={specialtiesRef} onValidityChange={(v) => setStepValid(2, v)} />
+        <LearnerAvailabilityStep
+          ref={availabilityRef}
+          onValidityChange={(v) => setStepValid(2, v)}
+        />
       ),
       show: true,
-      name: 'add your specialties',
+      name: 'set your availability',
       canSkip: false,
     },
     {
       stepNumber: 3,
-      component: <SkillsStep ref={skillsRef} onValidityChange={(v) => setStepValid(3, v)} />,
-      show: true,
-      name: 'add your skills',
-      canSkip: false,
-    },
-    {
-      stepNumber: 4,
-      component: <HeadlineStep ref={headlineRef} onValidityChange={(v) => setStepValid(4, v)} />,
+      component: <HeadlineStep ref={headlineRef} onValidityChange={(v) => setStepValid(3, v)} />,
       show: true,
       name: 'add your title',
       canSkip: false,
     },
     {
-      stepNumber: 5,
-      component: <ExperienceStep />,
+      stepNumber: 4,
+      component: (
+        <EducationStep
+          title="Tutors like to know what you know - add your education here."
+          description="You don't have to have a degree. Adding any relevant education helps your tutors get to know you."
+        />
+      ),
       show: true,
-      name: 'add your experience',
-      canSkip: true,
-    },
-    {
-      stepNumber: 6,
-      component: <EducationStep />,
-      show: true,
+
       name: 'add your education',
       canSkip: false,
     },
     {
-      stepNumber: 7,
-      component: <LanguagesStep ref={languagesRef} onValidityChange={(v) => setStepValid(7, v)} />,
+      stepNumber: 5,
+      component: (
+        <LanguagesStep
+          ref={languagesRef}
+          onValidityChange={(v) => setStepValid(5, v)}
+          description="Yora is global, so tutors are often interested to know what languages you speak. English is a must, but do you speak any other languages?"
+        />
+      ),
       show: true,
+
       name: 'add your languages',
       canSkip: false,
     },
     {
-      stepNumber: 8,
-      component: <OverviewStep ref={overviewRef} onValidityChange={(v) => setStepValid(8, v)} />,
+      stepNumber: 6,
+      component: <OverviewStep ref={overviewRef} onValidityChange={(v) => setStepValid(6, v)} />,
       show: true,
-      name: 'write an overview',
+
+      name: 'write a bio',
       canSkip: false,
     },
     {
-      stepNumber: 9,
-      component: (
-        <HourlyRateStep ref={hourlyRateRef} onValidityChange={(v) => setStepValid(9, v)} />
-      ),
-      show: true,
-      name: 'set your rate',
-      canSkip: false,
-    },
-    {
-      stepNumber: 10,
-      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(10, v)} />,
+      stepNumber: 7,
+      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(7, v)} />,
       show: true,
       name: 'add your photo and location',
       canSkip: false,
@@ -162,10 +152,10 @@ const TutorOnboardingPage = () => {
 
   if (!user) return null
 
-  const isNotTutor = user.role !== 'TUTOR'
+  const isNotLearner = user.role !== 'LEARNER'
   const isCompleted = user.isProfileCompleted
 
-  if (isNotTutor || isCompleted) {
+  if (isNotLearner || isCompleted) {
     return <Navigate to="/profile" replace />
   }
 
@@ -180,16 +170,14 @@ const TutorOnboardingPage = () => {
           <OnboardingProgress currentStep={formStep} totalSteps={visibleSteps.length} />
           <div className="flex flex-1">{currentStepComponent}</div>
         </div>
-        {formStep !== 1 && (
-          <StepperButtons
-            onNextStep={handleSaveCurrentStep}
-            onComplete={() => navigate('/profile', { replace: true })}
-            isNextDisabled={!isCurrentStepValid}
-            steps={visibleSteps}
-          />
-        )}
+        <StepperButtons
+          onNextStep={handleSaveCurrentStep}
+          onComplete={() => navigate('/profile', { replace: true })}
+          isNextDisabled={!isCurrentStepValid}
+          steps={visibleSteps}
+        />
       </form>
     </TutorOnboardingLayout>
   )
 }
-export default TutorOnboardingPage
+export default LearnerOnboardingPage

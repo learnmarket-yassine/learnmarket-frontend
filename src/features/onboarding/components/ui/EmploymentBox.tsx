@@ -4,6 +4,7 @@ import EmploymentForm from '@/features/myProfile/components/ui/EmploymentForm'
 import useDeleteEmployment from '@/features/myProfile/hooks/useDeleteEmployment'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { useState } from 'react'
 
 type EmploymentBoxProps = {
   id: string
@@ -29,6 +30,7 @@ const EmploymentBox = ({
   country,
 }: EmploymentBoxProps) => {
   const { handleDeleteEmployment, isPending } = useDeleteEmployment()
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean | null>(false)
 
   return (
     <div className="h-[200px] w-[500px] rounded-3xl border border-[#E5E7EB] p-8">
@@ -62,9 +64,14 @@ const EmploymentBox = ({
             type="delete"
             title={'Delete employment'}
             description={'Are you sure you want to delete this employment experience ?'}
-            handleConfirm={() => handleDeleteEmployment(id)}
+            handleConfirm={async () => {
+              await handleDeleteEmployment(id)
+              setIsDeleteOpen(false)
+            }}
             buttonClassName="border-none"
             isLoading={isPending}
+            isOpen={!!isDeleteOpen}
+            setIsOpen={setIsDeleteOpen}
           />
         </div>
       </div>
