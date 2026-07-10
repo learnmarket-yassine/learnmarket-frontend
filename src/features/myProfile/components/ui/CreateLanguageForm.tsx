@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import {
   Dialog,
@@ -32,11 +32,15 @@ function CreateLanguageForm({ onboarding }: CreateLanguageFormProps) {
 
   const { mutate: createLanguageMutate, isPending } = useCreateLanguage()
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, reset } = form
+
+  useEffect(() => {
+    reset()
+  }, [isOpen, reset])
 
   const onSubmit: SubmitHandler<AddLanguageFormData> = async (data) => {
     //Todo: call the create mutation
-    createLanguageMutate(data)
+    createLanguageMutate(data, { onSuccess: () => setIsOpen(false) })
   }
 
   return (

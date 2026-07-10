@@ -84,11 +84,11 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
           <p className="text-xl font-semibold text-[#143681]">Languages</p>
           <div className="flex gap-1">
             <CreateLanguageForm />
-            {(myProfile.tutorProfile?.languages ?? []).length > 0 && <EditLanguagesForm />}
+            {(myProfile.languages ?? []).length > 0 && <EditLanguagesForm />}
           </div>
         </div>
         <ul className="mt-1 space-y-0.5">
-          {myProfile.tutorProfile?.languages.map((lang: Language) => (
+          {myProfile.languages.map((lang: Language) => (
             <li key={lang.language} className="text-sm font-normal text-[#143681]">
               <span className="font-semibold">{lang.language}</span>:{' '}
               {languageLevelLabels[lang.level] ?? lang.level}
@@ -103,8 +103,8 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
           <p className="text-xl font-semibold text-[#143681]">Education</p>
           <EducationForm edit={false} />
         </div>
-        {myProfile.tutorProfile?.education.map((edu: Education) => (
-          <div key={edu.institution} className="flex items-center justify-between">
+        {myProfile.education.map((edu: Education) => (
+          <div key={edu.id} className="flex items-center justify-between">
             <div className="text-sm font-normal text-[#143681]">
               <p className="font-semibold">{edu.institution}</p>
               <p>{edu.degree}</p>

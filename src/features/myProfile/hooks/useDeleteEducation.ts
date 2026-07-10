@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 
 const deleteEducation = async (id: string, axiosPrivate: AxiosInstance) => {
-  const response = await axiosPrivate.delete(`/tutor/education/${id}`)
+  const response = await axiosPrivate.delete(`/users/me/education/${id}`)
   return response.data
 }
 

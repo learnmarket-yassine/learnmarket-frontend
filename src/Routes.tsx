@@ -6,11 +6,10 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import VerifCodePage from './pages/VerifCodePage'
 import MyProfilePage from './pages/myProfilePage'
-import TutorOnboardingPage from './pages/TutorOnboardingPage'
+import OnboardingPage from './pages/OnboardingPage'
 import RequireAuth from './RequireAuth'
-// import RequireTutorProfileComplete from './RequireTutorProfileComplete'
 import Layout from './Layout'
-import RequireTutorProfileComplete from './RequireTutorProfileComplete'
+import RequireProfileComplete from './RequireProfileComplete'
 
 const AppRoutes = () => {
   return (
@@ -26,7 +25,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/profile" replace />} />
           <Route element={<RequireAuth />}>
-            <Route element={<RequireTutorProfileComplete />}>
+            <Route element={<RequireProfileComplete />}>
               <Route path="/profile" element={<MyProfilePage />} />
             </Route>
           </Route>
@@ -34,7 +33,7 @@ const AppRoutes = () => {
       </Route>
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
-          <Route path="/onboarding" element={<TutorOnboardingPage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
         </Route>
       </Route>
     </Routes>

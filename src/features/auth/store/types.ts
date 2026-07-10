@@ -1,4 +1,4 @@
-import { TutorProfile } from '@/features/myProfile/store/types'
+import { Education, Language, LearnerProfile, TutorProfile } from '@/features/myProfile/store/types'
 
 type Auth = {
   token: string
@@ -26,7 +26,10 @@ export type AuthUser = {
   isOnlineForMsg: boolean
   isProfileCompleted: boolean
   onboardingStep: number
+  education: Education[]
+  languages: Language[]
   tutorProfile: TutorProfile | null
+  learnerProfile: LearnerProfile | null
 }
 
 type AuthState = {

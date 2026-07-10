@@ -36,9 +36,7 @@ function EducationForm(props: EducationFormProps) {
 
   const user = useStore((state) => state.auth.user)
 
-  const selectedEducation = (user?.tutorProfile?.education ?? []).find(
-    (education) => education.id === props.id
-  )
+  const selectedEducation = (user?.education ?? []).find((education) => education.id === props.id)
 
   const form = useForm<EducationFormData>({
     resolver: zodResolver(educationSchema),
@@ -61,11 +59,9 @@ function EducationForm(props: EducationFormProps) {
 
   const onSubmit: SubmitHandler<EducationFormData> = async (data) => {
     if (props.edit && props.id) {
-      //TODO: call the edit mutation
-      editEducationMutation({ payload: data, id: props.id })
+      editEducationMutation({ payload: data, id: props.id }, { onSuccess: () => setIsOpen(false) })
     } else {
-      //Todo: call the create mutation
-      createEducationMutation(data)
+      createEducationMutation(data, { onSuccess: () => setIsOpen(false) })
     }
   }
 

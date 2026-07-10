@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 
 const deleteLanguage = async (id: string, axiosPrivate: AxiosInstance) => {
-  const response = await axiosPrivate.delete(`/tutor/languages/${id}`)
+  const response = await axiosPrivate.delete(`/users/me/languages/${id}`)
   return response.data
 }
 

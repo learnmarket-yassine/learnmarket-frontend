@@ -35,7 +35,7 @@ function EditLanguagesForm() {
 
   useEffect(() => {
     reset({
-      languages: user?.tutorProfile?.languages ?? [],
+      languages: user?.languages ?? [],
     })
   }, [isOpen, reset, user])
 

@@ -1,7 +1,6 @@
 import { useStore } from '@/store/store'
 import { JSX, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import useUpdateOnboardingStep from '../../hooks/useUpdateOnboardingStep'
 
 export type StepHandle = {
   submit: () => Promise<boolean>
@@ -32,7 +31,6 @@ const StepperButtons = ({
 }: StepperButtonsProps) => {
   const formStep = useStore((state) => state.onBoarding.formStep)
   const setFormStep = useStore((state) => state.onBoarding.setFormStep)
-  const { mutate: updateOnboardingStep } = useUpdateOnboardingStep()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Find the index of the current form step in the visible steps
@@ -47,9 +45,11 @@ const StepperButtons = ({
 
   const prevStepNumber = currentStepIndex > 0 ? steps[currentStepIndex - 1]?.stepNumber : undefined
 
+  // Navigation is local-only now: the backend derives the resume step live
+  // from actual saved data (see users.service.ts), so there's nothing to
+  // persist on next/back — only each step's own save call matters.
   const goToStep = (step: number) => {
     setFormStep(step)
-    updateOnboardingStep(step)
   }
 
   const handleNextStep = async () => {
