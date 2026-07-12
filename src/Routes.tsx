@@ -10,6 +10,9 @@ import OnboardingPage from './pages/OnboardingPage'
 import RequireAuth from './RequireAuth'
 import Layout from './Layout'
 import RequireProfileComplete from './RequireProfileComplete'
+import RequireRole from './RequireRole'
+import TutorAvailabilityPage from './pages/TutorAvailabilityPage'
+import BookingFlowPage from './pages/BookingFlowPage'
 
 const AppRoutes = () => {
   return (
@@ -27,6 +30,12 @@ const AppRoutes = () => {
           <Route element={<RequireAuth />}>
             <Route element={<RequireProfileComplete />}>
               <Route path="/profile" element={<MyProfilePage />} />
+              <Route element={<RequireRole role="TUTOR" />}>
+                <Route path="/availability" element={<TutorAvailabilityPage />} />
+              </Route>
+              <Route element={<RequireRole role="LEARNER" />}>
+                <Route path="/proposals/:proposalId/book" element={<BookingFlowPage />} />
+              </Route>
             </Route>
           </Route>
         </Route>
