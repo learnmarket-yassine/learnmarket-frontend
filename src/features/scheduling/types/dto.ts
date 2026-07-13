@@ -7,14 +7,10 @@ import type {
   ProposalStatus,
 } from './enums'
 
-// --- Availability rules: /tutor/availability/rules ---
-
 export interface AvailabilityRule {
   id: string
   tutorId: string
-  /** 0 = Sunday ... 6 = Saturday, matches JS Date.getDay() */
   dayOfWeek: number
-  /** Minutes since midnight, local to `timezone` */
   startTime: number
   endTime: number
   timezone: string
@@ -32,16 +28,11 @@ export interface CreateAvailabilityRuleInput {
 }
 
 export type UpdateAvailabilityRuleInput = Partial<CreateAvailabilityRuleInput>
-
-// --- Availability exceptions: /tutor/availability/exceptions ---
-
 export interface AvailabilityException {
   id: string
   tutorId: string
-  /** ISO date string (date-only) */
   date: string
   type: ExceptionType
-  /** Both null together means "whole day" */
   startTime: number | null
   endTime: number | null
   reason: string | null
@@ -60,9 +51,6 @@ export interface CreateAvailabilityExceptionInput {
 }
 
 export type UpdateAvailabilityExceptionInput = Partial<CreateAvailabilityExceptionInput>
-
-// --- Available slots: /tutors/:tutorId/available-slots ---
-
 export interface AvailableSlotsQuery {
   fromDate: string
   toDate: string
@@ -70,11 +58,8 @@ export interface AvailableSlotsQuery {
 }
 
 export interface AvailableSlotsResponse {
-  /** ISO datetime start times only; end = start + durationMinutes */
   slots: string[]
 }
-
-// --- Conflict payload: 409 thrown by rule/exception writes ---
 
 export interface AffectedSession {
   bookingId: string
@@ -87,8 +72,6 @@ export interface AvailabilityConflictPayload {
   message: string
   affectedSessions: AffectedSession[]
 }
-
-// --- Holds: /holds ---
 
 export interface SlotHold {
   id: string
@@ -107,9 +90,6 @@ export interface CreateHoldInput {
   startTime: string
   endTime: string
 }
-
-// --- Bookings: /bookings ---
-
 export interface Booking {
   id: string
   tutorId: string
@@ -122,8 +102,6 @@ export interface Booking {
   createdAt: string
   updatedAt: string
 }
-
-// --- Job requests / proposals ---
 
 export interface JobRequest {
   id: string
@@ -138,7 +116,6 @@ export interface JobRequest {
 export interface ProposalSession {
   id: string
   proposalId: string
-  /** Always 1 for ONE_TIME proposals; 1..totalSessions for COURSE */
   sessionNumber: number
   title: string
   objective: string | null
@@ -158,6 +135,5 @@ export interface Proposal {
   createdAt: string
   updatedAt: string
   sessions: ProposalSession[]
-  /** Only present on GET /proposals/:id, not on the list endpoint */
   jobRequest?: JobRequest
 }

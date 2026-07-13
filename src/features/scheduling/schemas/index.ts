@@ -39,3 +39,18 @@ export const weeklyHoursSchema = z.object({
 export type TimeSlotFormValue = z.infer<typeof timeSlotSchema>
 export type WeeklyDayFormValue = z.infer<typeof weeklyDaySchema>
 export type WeeklyHoursFormValues = z.infer<typeof weeklyHoursSchema>
+
+export const overrideEntrySchema = z
+  .object({
+    type: z.enum(['BLOCKED', 'ADDED']),
+    mode: z.enum(['full', 'custom']),
+    start: z.number().min(0).max(1440),
+    end: z.number().min(0).max(1440),
+    reason: z.string().max(200).optional(),
+  })
+  .refine((value) => value.mode !== 'custom' || value.end > value.start, {
+    message: 'End time must be after start time',
+    path: ['end'],
+  })
+
+export type OverrideEntryFormValues = z.infer<typeof overrideEntrySchema>

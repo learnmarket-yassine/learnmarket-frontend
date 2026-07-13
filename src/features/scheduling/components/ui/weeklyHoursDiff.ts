@@ -1,9 +1,9 @@
+import { WeeklyHoursFormValues } from '../../schemas'
 import type {
   AvailabilityRule,
   CreateAvailabilityRuleInput,
   UpdateAvailabilityRuleInput,
-} from '../types/dto'
-import type { WeeklyHoursFormValues } from './schemas'
+} from '../../types/dto'
 
 export interface WeeklyHoursMutations {
   toCreate: CreateAvailabilityRuleInput[]

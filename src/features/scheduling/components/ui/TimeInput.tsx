@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import * as React from 'react'
-import { minutesToTimeString, timeStringToMinutes } from '../utils/time'
+import { minutesToTimeString, timeStringToMinutes } from '../../utils/time'
 
 export interface TimeInputProps {
   value: number

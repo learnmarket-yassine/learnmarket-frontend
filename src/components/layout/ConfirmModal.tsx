@@ -38,29 +38,34 @@ const ConfirmModal = (props: Props) => {
   return (
     <div>
       <Dialog open={props?.isOpen} onOpenChange={props.setIsOpen} key={props.description}>
-        <DialogTrigger asChild type="button">
-          <button
-            type="button"
-            className={'flex rounded-md'}
-            disabled={props?.disabledConfirmModal}
-            onClick={(e) => {
-              e.stopPropagation()
-              if (props?.onClick) {
-                props.onClick(e)
-              }
-            }}
-          >
-            {props.type === 'delete' ? (
-              <DeleteButton label="delete" />
-            ) : props.buttonTitle ? (
-              <Button type="button" className={`relative px-8 py-4 text-lg ${props.saveClassName}`}>
-                {props.buttonTitle}
-              </Button>
-            ) : (
-              <Button className={`relative ${props.saveClassName || ''}`}>save</Button>
-            )}
-          </button>
-        </DialogTrigger>
+        {props.name !== 'Event Exception Modal' && (
+          <DialogTrigger asChild type="button">
+            <button
+              type="button"
+              className={'flex rounded-md'}
+              disabled={props?.disabledConfirmModal}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (props?.onClick) {
+                  props.onClick(e)
+                }
+              }}
+            >
+              {props.type === 'delete' ? (
+                <DeleteButton label="delete" />
+              ) : props.buttonTitle ? (
+                <Button
+                  type="button"
+                  className={`relative px-8 py-4 text-lg ${props.saveClassName}`}
+                >
+                  {props.buttonTitle}
+                </Button>
+              ) : (
+                <Button className={`relative ${props.saveClassName || ''}`}>save</Button>
+              )}
+            </button>
+          </DialogTrigger>
+        )}
         <DialogContent className="flex max-w-[300px] flex-wrap justify-center py-[2rem] sm:max-w-[335px] lg:max-h-[650px] lg:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex justify-center">

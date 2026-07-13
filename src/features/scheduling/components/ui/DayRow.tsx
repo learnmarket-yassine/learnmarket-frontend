@@ -2,20 +2,18 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Plus, Trash2 } from 'lucide-react'
 import { Controller, useFieldArray, useFormState, useWatch, type Control } from 'react-hook-form'
-import TimeInput from '../../components/TimeInput'
+import TimeInput from './TimeInput'
 import { dayLabel } from '../../utils/time'
-import type { WeeklyHoursFormValues } from '../schemas'
-import CopyToPopover from './CopyToPopover'
+import { WeeklyHoursFormValues } from '../../schemas'
 
 interface DayRowProps {
   control: Control<WeeklyHoursFormValues>
   dayIndex: number
-  onCopyTo: (targetDayIndexes: number[]) => void
 }
 
 const DEFAULT_SLOT_LENGTH_MINUTES = 60
 
-const DayRow = ({ control, dayIndex, onCopyTo }: DayRowProps) => {
+const DayRow = ({ control, dayIndex }: DayRowProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `days.${dayIndex}.slots`,
@@ -35,14 +33,14 @@ const DayRow = ({ control, dayIndex, onCopyTo }: DayRowProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-start">
-      <div className="flex w-28 shrink-0 items-center gap-3">
+    <div className="flex flex-row items-start gap-10 py-4">
+      <div className="flex shrink-0 items-center gap-4">
         <Controller
           control={control}
           name={`days.${dayIndex}.enabled`}
           render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} />}
         />
-        <span className="font-medium">{dayLabel(dayOfWeek)}</span>
+        <span className="font-bold">{dayLabel(dayOfWeek)}</span>
       </div>
 
       {enabled ? (
@@ -64,7 +62,7 @@ const DayRow = ({ control, dayIndex, onCopyTo }: DayRowProps) => {
                       />
                     )}
                   />
-                  <span className="text-muted-foreground">–</span>
+                  <span>-</span>
                   <Controller
                     control={control}
                     name={`days.${dayIndex}.slots.${slotIndex}.end`}
@@ -91,15 +89,19 @@ const DayRow = ({ control, dayIndex, onCopyTo }: DayRowProps) => {
             )
           })}
 
-          <div className="flex items-center gap-1">
-            <Button type="button" variant="outline" size="sm" onClick={handleAddSlot}>
-              <Plus /> Add slot
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="default"
+              onClick={handleAddSlot}
+              className="p-0 font-semibold text-[#102A63]"
+            >
+              <Plus className="size-5" /> <span>Add slot </span>
             </Button>
-            <CopyToPopover dayIndex={dayIndex} onCopy={onCopyTo} />
           </div>
         </div>
       ) : (
-        <span className="pt-1.5 text-sm text-muted-foreground">Unavailable</span>
+        <span className="text-base">Unavailable</span>
       )}
     </div>
   )

@@ -1,14 +1,14 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { useAvailabilityRules } from '../hooks/useAvailabilityRules'
+import useGetAvailabilityRules from '../../hooks/useGetAvailabilityRules'
 import WeeklyHoursForm from './WeeklyHoursForm'
+import { Skeleton } from '@/components/ui/skeleton'
 
-export interface WeeklyHoursProps {
+type WeeklyHoursNavProps = {
   timezone: string
   onConflict: (error: unknown) => boolean
 }
 
-const WeeklyHours = ({ timezone, onConflict }: WeeklyHoursProps) => {
-  const rulesQuery = useAvailabilityRules()
+const WeeklyHours = ({ timezone, onConflict }: WeeklyHoursNavProps) => {
+  const rulesQuery = useGetAvailabilityRules()
 
   if (rulesQuery.isPending) {
     return (
@@ -21,7 +21,7 @@ const WeeklyHours = ({ timezone, onConflict }: WeeklyHoursProps) => {
   }
 
   if (rulesQuery.isError) {
-    return <p className="py-4 text-sm text-destructive">Couldn&apos;t load your weekly hours.</p>
+    return <p className="py-4 text-sm text-destructive">Couldn't load your weekly hours.</p>
   }
 
   const rules = rulesQuery.data

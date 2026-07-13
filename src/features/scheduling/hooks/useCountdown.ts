@@ -14,9 +14,6 @@ function msUntil(expiresAt: string): number {
 
 export function useCountdown(expiresAt: string | null): CountdownState {
   const [, forceTick] = useState(0)
-
-  // Re-baseline `totalMs` whenever `expiresAt` changes, without an effect
-  // (React's documented pattern for deriving state from a changed prop).
   const [trackedExpiresAt, setTrackedExpiresAt] = useState(expiresAt)
   const [totalMs, setTotalMs] = useState(() => (expiresAt ? msUntil(expiresAt) : 0))
   if (expiresAt !== trackedExpiresAt) {

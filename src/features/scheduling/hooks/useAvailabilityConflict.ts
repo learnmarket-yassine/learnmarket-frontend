@@ -1,12 +1,7 @@
 import { useCallback, useState } from 'react'
-import type { AvailabilityConflictPayload } from '../../types/dto'
-import { getAvailabilityConflict } from '../../utils/errors'
+import { getAvailabilityConflict } from '../utils/errors'
+import { AvailabilityConflictPayload } from '../types/dto'
 
-/**
- * Rule/exception writes 409 whenever they'd strand a confirmed booking.
- * `handleError` returns true when it recognized and captured that shape,
- * so callers know not to also show a generic error toast.
- */
 export function useAvailabilityConflict() {
   const [conflict, setConflict] = useState<AvailabilityConflictPayload | null>(null)
 

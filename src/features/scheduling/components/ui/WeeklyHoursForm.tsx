@@ -2,14 +2,13 @@ import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import type { AvailabilityRule } from '../../types/dto'
-import {
-  useCreateAvailabilityRule,
-  useDeleteAvailabilityRule,
-  useUpdateAvailabilityRule,
-} from '../hooks/useAvailabilityRules'
-import { weeklyHoursSchema, type WeeklyHoursFormValues } from '../schemas'
-import { diffWeeklyHours } from '../weeklyHoursDiff'
+
+import { diffWeeklyHours } from './weeklyHoursDiff'
 import DayRow from './DayRow'
+import useCreateAvailabilityRule from '../../hooks/useCreateAvailabilityRules'
+import useUpdateAvailabilityRule from '../../hooks/useUpdateAvailabilityRules'
+import useDeleteAvailabilityRule from '../../hooks/useDeleteAvailabilityRule'
+import { type WeeklyHoursFormValues, weeklyHoursSchema } from '../../schemas'
 
 interface WeeklyHoursFormProps {
   rules: AvailabilityRule[]
@@ -30,15 +29,15 @@ function buildDefaultValues(rules: AvailabilityRule[]): WeeklyHoursFormValues {
 }
 
 const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) => {
-  const { control, handleSubmit, formState, getValues, setValue } = useForm<WeeklyHoursFormValues>({
+  const { control, handleSubmit, formState } = useForm<WeeklyHoursFormValues>({
     resolver: zodResolver(weeklyHoursSchema),
     defaultValues: buildDefaultValues(rules),
   })
 
   const createRule = useCreateAvailabilityRule()
   const updateRule = useUpdateAvailabilityRule()
-  const deleteRule = useDeleteAvailabilityRule()
-  const isSaving = createRule.isPending || updateRule.isPending || deleteRule.isPending
+  const { handleDeleteAvailabilityRule, isPending: isDeletePending } = useDeleteAvailabilityRule()
+  const isSaving = createRule.isPending || updateRule.isPending || isDeletePending
 
   const onSubmit = async (values: WeeklyHoursFormValues) => {
     const { toCreate, toUpdate, toDelete } = diffWeeklyHours(rules, values, timezone)
@@ -46,41 +45,37 @@ const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) 
       await Promise.all([
         ...toCreate.map((input) => createRule.mutateAsync(input)),
         ...toUpdate.map(({ id, input }) => updateRule.mutateAsync({ id, input })),
-        ...toDelete.map((id) => deleteRule.mutateAsync(id)),
+        ...toDelete.map((id) => handleDeleteAvailabilityRule(id)),
       ])
     } catch (error) {
       if (!onConflict(error)) console.error(error)
     }
   }
 
-  const handleCopyTo = (dayIndex: number, targetIndexes: number[]) => {
-    const sourceSlots = getValues(`days.${dayIndex}.slots`).map(({ start, end }) => ({
-      start,
-      end,
-    }))
-    for (const target of targetIndexes) {
-      setValue(`days.${target}.enabled`, true, { shouldDirty: true })
-      setValue(`days.${target}.slots`, sourceSlots, { shouldDirty: true })
-    }
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 pb-20">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-2">
       {Array.from({ length: 7 }, (_, dayIndex) => (
-        <DayRow
-          key={dayIndex}
-          control={control}
-          dayIndex={dayIndex}
-          onCopyTo={(targets) => handleCopyTo(dayIndex, targets)}
-        />
+        <DayRow key={dayIndex} control={control} dayIndex={dayIndex} />
       ))}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background p-4 sm:sticky">
-        <div className="mx-auto flex max-w-3xl justify-end">
-          <Button type="submit" disabled={!formState.isDirty || isSaving}>
-            {isSaving ? 'Saving…' : 'Save changes'}
-          </Button>
-        </div>
+      <div className="flex justify-end gap-3">
+        <Button
+          type="button"
+          data-mdb-button-init
+          data-mdb-ripple-init
+          className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          data-mdb-button-init
+          data-mdb-ripple-init
+          className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB] disabled:cursor-not-allowed"
+          disabled={!formState.isDirty || isSaving}
+        >
+          {isSaving ? 'Saving…' : 'Save changes'}
+        </Button>
       </div>
     </form>
   )
