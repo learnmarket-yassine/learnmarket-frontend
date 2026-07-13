@@ -68,7 +68,6 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
             checked={isOnline}
             onCheckedChange={setIsOnline}
             aria-label="Toggle online status"
-            className="data-[state=checked]:bg-[#2563EB]"
           />
         </div>
         {/* Navigation items */}

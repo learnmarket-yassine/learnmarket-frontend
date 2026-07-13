@@ -1,0 +1,100 @@
+.date-overrides-calendar {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--muted);
+  --fc-today-bg-color: transparent;
+  --fc-non-business-color: color-mix(in oklab, var(--muted-foreground) 32%, transparent);
+  font-size: 0.875rem;
+}
+
+.date-overrides-calendar .fc {
+  color: var(--foreground);
+}
+
+.date-overrides-calendar .fc .fc-toolbar-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.date-overrides-calendar .fc .fc-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  box-shadow: none;
+  padding: 0.25rem 0.5rem;
+}
+
+.date-overrides-calendar .fc .fc-button:hover {
+  background: var(--muted);
+}
+
+.date-overrides-calendar .fc .fc-button:disabled {
+  opacity: 0.5;
+}
+
+.date-overrides-calendar .fc .fc-col-header-cell-cushion {
+  padding: 0.5rem 0;
+}
+
+.date-overrides-calendar .fc .fc-timegrid-slot,
+.date-overrides-calendar .fc .fc-timegrid-col-frame {
+  cursor: pointer;
+}
+
+.date-overrides-calendar .fc-timegrid-col-events {
+  margin: 0;
+}
+
+.date-overrides-calendar .fc-event.date-overrides-event-blocked {
+  background: #631e22;
+  border-color: #631e22;
+  color: white;
+}
+
+.date-overrides-calendar .fc-event.date-overrides-event-added {
+  background: #154c22;
+  border-color: #154c22;
+  color: white;
+}
+
+/* Legend */
+.date-overrides-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.date-overrides-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.date-overrides-legend-swatch {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+}
+
+.date-overrides-legend-open {
+  background: var(--background);
+}
+
+.date-overrides-legend-recurring {
+  background: var(
+    --fc-non-business-color,
+    color-mix(in oklab, var(--muted-foreground) 32%, transparent)
+  );
+}
+
+.date-overrides-legend-extra {
+  background: #154c22;
+}
+
+.date-overrides-legend-blocked {
+  background: #631e22;
+}
