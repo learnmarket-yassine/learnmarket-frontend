@@ -95,16 +95,16 @@ function CategorySpecialtyPicker({
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
-      <div className="grid h-full grid-cols-12 gap-5">
+      <div className="grid h-full grid-cols-12 gap-8">
         <div className="col-span-4 flex flex-col gap-5">
           <p className="text-xs font-bold uppercase text-[#9CA3AF]">SELECT CATEGORY</p>
           <div className="flex flex-1 flex-col">
             {isLoading ? (
-              <div className="flex flex-1 items-center justify-center">
+              <div className="flex flex-1 items-center">
                 <Loader2 className="size-5 animate-spin text-[#5E5E5E]" aria-hidden="true" />
               </div>
             ) : loadError ? (
-              <div className="flex flex-1 items-center justify-center">
+              <div className="flex flex-1 items-center">
                 <p className="text-sm text-red-600" role="alert">
                   {loadError}
                 </p>
@@ -132,15 +132,15 @@ function CategorySpecialtyPicker({
             Select {minSpecialties} to {maxSpecialties} specialties
           </p>
           {!selectedCategoryId ? (
-            <div className="flex flex-1 items-center justify-center">
+            <div className="flex flex-1 items-center">
               <p className="text-sm text-[#5E5E5E]">Select a category to see its specialties</p>
             </div>
           ) : isLoadingSpecialties ? (
-            <div className="flex flex-1 items-center justify-center">
+            <div className="flex flex-1 items-center">
               <Loader2 className="size-5 animate-spin text-[#5E5E5E]" aria-hidden="true" />
             </div>
           ) : specialtiesLoadError ? (
-            <div className="flex flex-1 items-center justify-center">
+            <div className="flex flex-1 items-center">
               <p className="text-sm text-red-600" role="alert">
                 {specialtiesLoadError}
               </p>

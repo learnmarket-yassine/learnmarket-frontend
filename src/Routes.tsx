@@ -13,6 +13,7 @@ import RequireProfileComplete from './RequireProfileComplete'
 import RequireRole from './RequireRole'
 import TutorAvailabilityPage from './pages/TutorAvailabilityPage'
 import BookingFlowPage from './pages/BookingFlowPage'
+import CreateLearnRequestPage from './pages/CreateLearnRequestPage'
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,14 @@ const AppRoutes = () => {
                 <Route path="/proposals/:proposalId/book" element={<BookingFlowPage />} />
               </Route>
             </Route>
+          </Route>
+        </Route>
+      </Route>
+      <Route element={<PersistLogin />}>
+        <Route element={<RequireAuth />}>
+          <Route element={<RequireProfileComplete />}>
+            <Route path="/learn-request/create" element={<CreateLearnRequestPage />} />
+            <Route path="/learn-request/edit/:id" element={<CreateLearnRequestPage />} />
           </Route>
         </Route>
       </Route>
