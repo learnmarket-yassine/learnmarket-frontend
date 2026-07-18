@@ -11,17 +11,7 @@ import {
   PublishErrorField,
 } from '@/features/learn-requests/validation'
 import WizardFooter from '../../ui/WizardFooter'
-
-const TYPE_LABELS: Record<string, string> = {
-  ONE_TIME: 'One-time session',
-  COURSE: 'Ongoing course',
-}
-
-const LEVEL_LABELS: Record<string, string> = {
-  BEGINNER: 'Beginner',
-  INTERMEDIATE: 'Intermediate',
-  ADVANCED: 'Advanced',
-}
+import { TYPE_LABELS, LEVEL_LABELS } from '@/features/learn-requests/constants/labels'
 
 const STEP = {
   FORMAT: 0,
