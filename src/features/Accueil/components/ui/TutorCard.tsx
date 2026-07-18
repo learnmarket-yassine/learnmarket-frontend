@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { getAssetUrl } from '@/lib/utils'
 import { MessageCircle, Star } from 'lucide-react'
 
@@ -15,7 +14,6 @@ export type TutorPreview = {
 }
 
 const TutorCard: React.FC<TutorPreview> = ({
-  id,
   name,
   avatar,
   country,
