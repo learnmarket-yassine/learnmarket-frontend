@@ -20,6 +20,7 @@ export interface LearnRequest {
   budgetMin: string | number | null
   budgetMax: string | number | null
   skills: { skill: Skill }[]
+  actionNeeded: boolean
   createdAt: string
   updatedAt: string
 }
