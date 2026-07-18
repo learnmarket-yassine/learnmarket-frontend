@@ -25,6 +25,7 @@ import useRemovePortfolioMedia from '../../hooks/useRemovePortfolioMedia'
 import { mediaToContentItem } from '../../utils/portfolioMedia'
 import EditIcon from '@/assets/EditIcon'
 import SkillsInput from './Skills/SkillsInput'
+import SkillChip from './Skills/SkillChip'
 
 type PortfolioFormProps = {
   edit: boolean
@@ -198,17 +199,36 @@ function PortfolioForm(props: PortfolioFormProps) {
                       name="skills"
                       control={control}
                       render={({ field }) => (
-                        <div className="space-y-2">
-                          <Label htmlFor="skills" className="text-base font-bold text-[#5E5E5E]">
-                            Skills and deliverables {!props.edit && <span>*</span>}
-                          </Label>
-                          <SkillsInput
-                            className="rounded-full"
-                            error={errors.skills?.message}
-                            value={field.value ?? []}
-                            onChange={field.onChange}
-                            maxSkills={5}
-                          />
+                        <div className="space-y-5">
+                          <div className="space-y-2">
+                            <Label htmlFor="skills" className="text-base font-bold text-[#5E5E5E]">
+                              Skills and deliverables {!props.edit && <span>*</span>}
+                            </Label>
+                            <SkillsInput
+                              className="rounded-full"
+                              error={errors.skills?.message}
+                              value={field.value ?? []}
+                              onChange={field.onChange}
+                              maxSkills={5}
+                            />
+                          </div>
+                          {field.value && field.value.length > 0 && (
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium">Selected skills</p>
+                              <div className="flex max-h-[250px] flex-wrap gap-2 overflow-auto rounded-lg border border-[#E0E2E6] p-3">
+                                {field.value.map((skill) => (
+                                  <SkillChip
+                                    key={skill.id}
+                                    name={skill.name}
+                                    id={skill.id}
+                                    onRemove={(id) =>
+                                      field.onChange(field.value?.filter((s) => s.id !== id))
+                                    }
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     />

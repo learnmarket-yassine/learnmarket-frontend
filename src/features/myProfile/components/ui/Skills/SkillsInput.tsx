@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils'
 import { Skill } from '@/types/skill'
 import useSkillsInput from '@/hooks/useSkillInput'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
-import SkillChip from './SkillChip'
 import SkillsDropdown from './SkillsDropdown'
 import SkillsInputFooter from './SkillsInputFooter'
 
@@ -34,7 +33,6 @@ function SkillsInput({
     atLimit,
     showDropdown,
     addSkill,
-    removeSkill,
     handleKeyDown,
     handleInputChange,
     openDropdown,
@@ -43,7 +41,7 @@ function SkillsInput({
 
   return (
     <div className="w-full space-y-2">
-      <Popover open={showDropdown} onOpenChange={(open) => !open && closeDropdown()}>
+      <Popover open={showDropdown} onOpenChange={(open) => !open && closeDropdown()} modal>
         <PopoverAnchor asChild>
           <div
             className={cn(
@@ -52,10 +50,6 @@ function SkillsInput({
               className
             )}
           >
-            {value.map((skill) => (
-              <SkillChip key={skill.id} skill={skill} onRemove={removeSkill} />
-            ))}
-
             <input
               type="text"
               value={query}

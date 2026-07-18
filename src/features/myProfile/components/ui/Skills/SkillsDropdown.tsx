@@ -22,7 +22,7 @@ function SkillsDropdown({
   onCreateCustom,
 }: SkillsDropdownProps) {
   return (
-    <div id={id} role="listbox" className="max-h-60 overflow-auto">
+    <div id={id} role="listbox" className="max-h-60 overflow-y-auto">
       {isLoading ? (
         <LoadingRow label="Searching..." />
       ) : options.length === 0 ? (

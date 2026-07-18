@@ -16,6 +16,7 @@ import { SkillsFormValues, skillsSchema } from '../../schemas'
 import EditButton from './EditButton'
 import useReplaceTutorSkills from '../../hooks/useReplaceTutorSkills'
 import SkillsInput from './Skills/SkillsInput'
+import SkillChip from './Skills/SkillChip'
 
 function SkillsForm() {
   const [isOpen, setIsOpen] = useState(false)
@@ -92,17 +93,36 @@ function SkillsForm() {
                     validate: (v) => v.length > 0 || 'Add at least one skill',
                   }}
                   render={({ field }) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="company" className="text-sm font-semibold text-[#1F2937]">
-                        Skills
-                      </Label>
-                      <SkillsInput
-                        className="rounded-full"
-                        error={errors.skills?.message}
-                        value={field.value}
-                        onChange={field.onChange}
-                        maxSkills={10}
-                      />
+                    <div className="space-y-5">
+                      <div className="space-y-2">
+                        <Label htmlFor="company" className="text-sm font-semibold text-[#1F2937]">
+                          Skills
+                        </Label>
+                        <SkillsInput
+                          className="rounded-full"
+                          error={errors.skills?.message}
+                          value={field.value}
+                          onChange={field.onChange}
+                          maxSkills={10}
+                        />
+                      </div>
+                      {field.value?.length > 0 && (
+                        <div className="space-y-3">
+                          <p className="text-sm font-medium">Selected skills</p>
+                          <div className="flex max-h-[250px] flex-wrap gap-2 overflow-auto rounded-lg border border-[#E0E2E6] p-3">
+                            {field.value.map((skill) => (
+                              <SkillChip
+                                key={skill.id}
+                                name={skill.name}
+                                id={skill.id}
+                                onRemove={(id) =>
+                                  field.onChange(field.value.filter((s) => s.id !== id))
+                                }
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 />

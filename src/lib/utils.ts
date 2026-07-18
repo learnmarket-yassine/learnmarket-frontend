@@ -31,3 +31,12 @@ export const getDomain = (url: string) => {
     return url
   }
 }
+
+export function omitEmptyValues<T extends object>(payload: T): T {
+  const entries = Object.entries(payload).filter(([, value]) => {
+    if (value === '') return false
+    if (typeof value === 'number' && Number.isNaN(value)) return false
+    return true
+  })
+  return Object.fromEntries(entries) as T
+}

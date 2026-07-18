@@ -9,6 +9,7 @@ import { OnboardingSkillsFormData, onboardingSkillsSchema } from '../../../schem
 import useReplaceTutorSkills from '@/features/myProfile/hooks/useReplaceTutorSkills'
 import { StepHandle } from '../../ui/StepperButtons'
 import SkillsInput from '@/features/myProfile/components/ui/Skills/SkillsInput'
+import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 
 type SkillsStepProps = {
   onValidityChange?: (isValid: boolean) => void
@@ -66,13 +67,30 @@ const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }
             name="skills"
             control={control}
             render={({ field }) => (
-              <SkillsInput
-                className="h-full rounded-lg"
-                value={field.value}
-                onChange={field.onChange}
-                maxSkills={20}
-                error={errors.skills?.message}
-              />
+              <div className="space-y-5">
+                <SkillsInput
+                  className="h-full rounded-lg"
+                  value={field.value}
+                  onChange={field.onChange}
+                  maxSkills={20}
+                  error={errors.skills?.message}
+                />
+                {field.value.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Selected skills</p>
+                    <div className="flex max-h-[250px] flex-wrap gap-2 overflow-auto rounded-lg border border-[#E0E2E6] p-3">
+                      {field.value.map((skill) => (
+                        <SkillChip
+                          key={skill.id}
+                          name={skill.name}
+                          id={skill.id}
+                          onRemove={(id) => field.onChange(field.value.filter((s) => s.id !== id))}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           />
         </div>
