@@ -71,6 +71,11 @@ export const INITIAL_WIZARD_STATE: LearnRequestWizardState = {
   description: '',
 }
 
+export interface LearnRequestStats {
+  requestCount: number
+  hireRate: number
+}
+
 export interface StepHandle {
   submit: () => Promise<boolean>
   getValues: () => Record<string, unknown>
