@@ -1,38 +1,35 @@
 import { LearnRequest } from '@/features/learn-requests/store/types'
 import { useLineClamp } from '@/hooks/useLineClamp'
+import { LEVEL_LABELS, TYPE_LABELS, formatLabel } from '@/features/learn-requests/constants/labels'
 import SkillsSlider from './SkillsCarousel'
-import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
-import { TYPE_BADGE_STYLES, TYPE_ICONS } from './TutorLearningRequestCard'
+import { Heart, CalendarClock, BookOpen } from 'lucide-react'
 import { formatBudget } from '@/lib/utils'
-import { useNavigate } from 'react-router-dom'
 
-export type LearnRequestPreview = Partial<LearnRequest>
+export type TutorLearnRequestPreview = Partial<LearnRequest>
 
 const DESCRIPTION_LINES = 3
 
-const formatStatus = (status?: string) => {
-  if (!status) return ''
-  return status
-    .toLowerCase()
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+export const TYPE_BADGE_STYLES: Record<string, string> = {
+  ONE_TIME: 'bg-[#F3F4F6] text-[#1E293B]',
+  COURSE: 'bg-blue-50 text-[#143681]',
 }
 
-const LearnRequestCard: React.FC<LearnRequestPreview> = ({
-  id,
-  status,
-  type,
+export const TYPE_ICONS: Record<string, React.ElementType> = {
+  ONE_TIME: CalendarClock,
+  COURSE: BookOpen,
+}
+
+const TutorLearningRequestCard: React.FC<TutorLearnRequestPreview> = ({
   level,
+  type,
   category,
   title,
   budgetMax,
   budgetMin,
   description,
-  requestedFrequency,
   skills,
+  requestedFrequency,
 }) => {
-  const navigate = useNavigate()
   const {
     ref: descriptionRef,
     isExpanded,
@@ -52,14 +49,8 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
       : formatLabel(TYPE_LABELS, type)
 
   return (
-    <div
-      onClick={() => {
-        navigate(`/learn-requests/${id}`)
-      }}
-      className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg"
-    >
+    <div className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg">
       <div className="space-y-4">
-        <p className="px-2 text-sm text-[#6B7280]">posted 1 hour ago</p>
         <div className="flex items-center justify-between">
           {type && TypeIcon && (
             <span
@@ -69,11 +60,18 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
               {typeLabel}
             </span>
           )}
-
-          <span className={`flex items-center gap-1.5 text-xs font-semibold`}>
-            {formatStatus(status)}
-          </span>
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-[#6B7280]">posted 1 hour ago</p>
+            <button
+              type="button"
+              aria-label="Save learning request"
+              className="rounded-full p-2 transition hover:bg-blue-50"
+            >
+              <Heart className="size-6 transition group-hover:scale-110" />
+            </button>
+          </div>
         </div>
+
         <h3 className="truncate text-xl font-bold leading-snug text-[#143681] hover:underline">
           {title}
         </h3>
@@ -90,22 +88,17 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
           {isClampable && (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                toggle()
-              }}
+              onClick={toggle}
               className="text-sm font-semibold text-[#565A60] underline"
             >
               {isExpanded ? 'See less' : 'See more'}
             </button>
           )}
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="relative">
-          <SkillsSlider skills={skills} />
-        </div>
+        <SkillsSlider skills={skills} />
       </div>
     </div>
   )
 }
 
-export default LearnRequestCard
+export default TutorLearningRequestCard
