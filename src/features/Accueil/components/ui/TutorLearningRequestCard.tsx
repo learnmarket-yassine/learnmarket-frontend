@@ -5,8 +5,10 @@ import SkillsSlider from './SkillsCarousel'
 import { Heart, CalendarClock, BookOpen } from 'lucide-react'
 import { formatBudget } from '@/lib/utils'
 
-export type TutorLearnRequestPreview = Partial<LearnRequest>
-
+export type TutorLearnRequestProps = {
+  learnRequest: Partial<LearnRequest>
+  onSelect: () => void
+}
 const DESCRIPTION_LINES = 3
 
 export const TYPE_BADGE_STYLES: Record<string, string> = {
@@ -19,17 +21,18 @@ export const TYPE_ICONS: Record<string, React.ElementType> = {
   COURSE: BookOpen,
 }
 
-const TutorLearningRequestCard: React.FC<TutorLearnRequestPreview> = ({
-  level,
-  type,
-  category,
-  title,
-  budgetMax,
-  budgetMin,
-  description,
-  skills,
-  requestedFrequency,
-}) => {
+const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnRequest, onSelect }) => {
+  const {
+    type,
+    title,
+    requestedFrequency,
+    description,
+    skills,
+    category,
+    budgetMax,
+    budgetMin,
+    level,
+  } = learnRequest
   const {
     ref: descriptionRef,
     isExpanded,
@@ -49,7 +52,10 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestPreview> = ({
       : formatLabel(TYPE_LABELS, type)
 
   return (
-    <div className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg">
+    <div
+      onClick={onSelect}
+      className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg"
+    >
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           {type && TypeIcon && (
@@ -63,6 +69,9 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestPreview> = ({
           <div className="flex items-center gap-3">
             <p className="text-sm text-[#6B7280]">posted 1 hour ago</p>
             <button
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
               type="button"
               aria-label="Save learning request"
               className="rounded-full p-2 transition hover:bg-blue-50"
@@ -88,14 +97,19 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestPreview> = ({
           {isClampable && (
             <button
               type="button"
-              onClick={toggle}
+              onClick={(e) => {
+                e.stopPropagation()
+                toggle()
+              }}
               className="text-sm font-semibold text-[#565A60] underline"
             >
               {isExpanded ? 'See less' : 'See more'}
             </button>
           )}
         </div>
-        <SkillsSlider skills={skills} />
+        <div onClick={(e) => e.stopPropagation()}>
+          <SkillsSlider skills={skills} />
+        </div>
       </div>
     </div>
   )
