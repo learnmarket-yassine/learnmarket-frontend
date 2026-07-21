@@ -8,7 +8,11 @@ export type JobRequestType = 'ONE_TIME' | 'COURSE'
 
 export type ProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'WITHDRAWN'
 
-export type ProposalSessionStatus =
+export type PayoutMethod = 'PER_SESSION' | 'ON_COMPLETION'
+
+// The real, committed session -- created only once a Proposal is accepted.
+// A ProposalSession (pre-acceptance plan) has no status at all.
+export type SessionStatus =
   'LOCKED' | 'PENDING_SCHEDULE' | 'HELD' | 'BOOKED' | 'COMPLETED' | 'CANCELLED'
 
 export type HoldStatus = 'ACTIVE' | 'EXPIRED' | 'CONVERTED'

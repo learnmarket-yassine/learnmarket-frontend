@@ -7,6 +7,7 @@ import { TYPE_BADGE_STYLES, TYPE_ICONS } from './TutorLearningRequestCard'
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 import LanguagesIcon from '@/assets/LanguagesIcon'
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 type LearningRequestDetailsSheetProps = {
   isOpen?: boolean
@@ -19,13 +20,14 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
   setIsOpen,
   request,
 }) => {
+  const navigate = useNavigate()
+
   if (!request) return null
   const TypeIcon = request.type ? TYPE_ICONS[request.type] : undefined
   const typeLabel =
     request.type === 'COURSE' && request.requestedFrequency
       ? `${formatLabel(TYPE_LABELS, request.type)} · ${request.requestedFrequency}x/week`
       : formatLabel(TYPE_LABELS, request.type)
-  if (!request) return
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetContent showCloseButton={false} side={'right'} className="min-w-[1020px] !border-0">
@@ -39,7 +41,7 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
         <div className="no-scrollbar flex overflow-y-auto">
           <div>
             <div className="flex flex-1 flex-col space-y-5 border-b-[0.5px] border-b-[#E0E2E6] p-8">
-              <h1 className="text-2xl font-medium">Website Development</h1>
+              <h1 className="text-2xl font-medium">{request.title}</h1>
               <div className="flex items-center justify-between">
                 {request.type && TypeIcon && (
                   <span
@@ -53,14 +55,7 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
               </div>
             </div>
             <div className="border-b-[0.5px] border-b-[#E0E2E6] p-8">
-              <p className="text-base font-medium text-[#1E293B]">
-                I am currently a third-year undergraduate student seeking comprehensive support for
-                my upcoming final examinations in Quantum Mechanics. The focus of our sessions
-                should be on strengthening theoretical foundations and mastering complex
-                problem-solving techniques. Specifically, I need help with: Schrödinger Equation
-                applications in 3D Angular Momentum and Spin operators Perturbation Theory
-                (Time-independent and Time-dependent) Identical particles and Fermi-Dirac statistics
-              </p>
+              <p className="text-base font-medium text-[#1E293B]">{request.description}</p>
             </div>
             <div className="flex items-center justify-around border-b-[0.5px] border-b-[#E0E2E6] p-8">
               <div className="flex flex-col items-center gap-2 text-lg">
@@ -115,7 +110,11 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
 
           <div className="flex w-[300px] shrink-0 flex-col border-l border-[#E0E2E6] p-8">
             <div className="flex flex-col gap-3">
-              <Button className="w-full whitespace-nowrap rounded-full bg-[#2563EB] py-6 font-medium text-white hover:bg-[#2563EB]">
+              <Button
+                type="button"
+                onClick={() => navigate(`/proposals/${request.id}/create`)}
+                className="w-full whitespace-nowrap rounded-full bg-[#2563EB] py-6 font-medium text-white hover:bg-[#2563EB]"
+              >
                 Apply now
               </Button>
               <Button

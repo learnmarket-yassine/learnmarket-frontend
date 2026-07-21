@@ -17,6 +17,7 @@ import CreateLearnRequestPage from './pages/CreateLearnRequestPage'
 import MyLearningRequestsPage from './pages/LearningRequestPage'
 import AccueilPage from './pages/AccueilPage'
 import LearnRequestDetailsPage from './pages/LearnRequestDetailsPage'
+import CreateProposalPage from './pages/CreateProposalPage'
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,7 @@ const AppRoutes = () => {
               <Route path="/profile" element={<MyProfilePage />} />
               <Route path="/accueil" element={<AccueilPage />} />
               <Route path="/learn-requests/:id" element={<LearnRequestDetailsPage />} />
+              <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
               </Route>

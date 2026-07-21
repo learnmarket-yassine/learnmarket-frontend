@@ -2,8 +2,8 @@ import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { Check, Lock } from 'lucide-react'
-import type { ProposalSession } from '../../types/dto'
-import type { ProposalSessionStatus } from '../../types/enums'
+import type { Session } from '../../types/dto'
+import type { SessionStatus } from '../../types/enums'
 
 type StepVisual = 'completed' | 'current' | 'locked' | 'scheduled'
 
@@ -12,7 +12,7 @@ type StepVisual = 'completed' | 'current' | 'locked' | 'scheduled'
  * HELD (mid-hold) and CANCELLED (reschedulable) both read as "current" — the
  * learner still has something actionable on that step.
  */
-function getStepVisual(status: ProposalSessionStatus): StepVisual {
+function getStepVisual(status: SessionStatus): StepVisual {
   switch (status) {
     case 'COMPLETED':
       return 'completed'
@@ -33,8 +33,8 @@ const VISUAL_CLASSNAMES: Record<StepVisual, string> = {
 }
 
 interface CourseProgressStepperProps {
-  sessions: ProposalSession[]
-  onSelectSession?: (session: ProposalSession) => void
+  sessions: Session[]
+  onSelectSession?: (session: Session) => void
 }
 
 const CourseProgressStepper = ({ sessions, onSelectSession }: CourseProgressStepperProps) => {
