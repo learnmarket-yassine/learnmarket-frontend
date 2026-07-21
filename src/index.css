@@ -133,3 +133,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.line-clamp-wrapper {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.line-clamp-wrapper.is-clamped {
+  --webkit-line-clamp: var(--lines);
+  max-height: calc(var(--line-clamp-line-height, 1.5em) * var(--lines, 3));
+  transition: max-height 0.3s ease-in;
+}
+
+.line-clamp-wrapper.is-expanded {
+  --webkit-line-clamp: 10000;
+  max-height: var(--line-clamp-expanded-height, 100rem);
+  transition: max-height 0.3s ease-out;
+}

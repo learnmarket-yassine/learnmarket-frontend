@@ -40,3 +40,9 @@ export function omitEmptyValues<T extends object>(payload: T): T {
   })
   return Object.fromEntries(entries) as T
 }
+
+export const formatBudget = (value: number | string | null | undefined) => {
+  if (value === null || value === undefined) return '—'
+
+  return new Intl.NumberFormat('en-US').format(Number(value))
+}

@@ -6,8 +6,6 @@ type Props = {
   request: LearnRequest
 }
 
-const NotSet = () => <p className="italic text-gray-400">Not set</p>
-
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="space-y-2">
     <h3 className="text-lg font-semibold text-[#143681]">{label}</h3>
@@ -26,7 +24,11 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
   return (
     <section className="space-y-8 p-6">
       <Field label="Description">
-        {request.description ? <p className="text-[#565a60]">{request.description}</p> : <NotSet />}
+        {request.description ? (
+          <p className="text-[#565a60]">{request.description}</p>
+        ) : (
+          <p className="italic text-gray-400">Not set</p>
+        )}
       </Field>
 
       <Field label="Learning format">
@@ -34,13 +36,17 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
       </Field>
 
       <Field label="Category">
-        {request.category ? <p className="text-[#565a60]">{request.category.name}</p> : <NotSet />}
+        {request.category ? (
+          <p className="text-[#565a60]">{request.category.name}</p>
+        ) : (
+          <p className="italic text-gray-400">Not set</p>
+        )}
       </Field>
 
       <Field label="Skills">
         <div className="flex max-h-[250px] flex-wrap gap-2 overflow-auto rounded-lg p-3">
           {request.skills.length === 0 ? (
-            <NotSet />
+            <p className="italic text-gray-400">Not set</p>
           ) : (
             request.skills.map(({ skill }) => <SkillChip key={skill.id} name={skill.name} />)
           )}
@@ -53,7 +59,7 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
 
       <Field label="Preferred Languages">
         {request.preferredLanguages.length === 0 ? (
-          <NotSet />
+          <p className="italic text-gray-400">Not set</p>
         ) : (
           <p className="text-[#565a60]">{request.preferredLanguages.join(', ')}</p>
         )}
@@ -64,7 +70,7 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
           {request.requestedFrequency ? (
             <p className="text-[#565a60]">{request.requestedFrequency} times per week</p>
           ) : (
-            <NotSet />
+            <p className="italic text-gray-400">Not set</p>
           )}
         </Field>
       )}
@@ -75,7 +81,7 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
             {budgetMin} - {budgetMax} TND
           </p>
         ) : (
-          <NotSet />
+          <p className="italic text-gray-400">Not set</p>
         )}
       </Field>
     </section>

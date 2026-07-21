@@ -59,6 +59,23 @@ export const budgetSchema = z
 
 export type BudgetFormData = z.infer<typeof budgetSchema>
 
+export const learnRequestFiltersSchema = z
+  .object({
+    categoryId: z.uuid().optional(),
+    type: z.array(z.enum(['ONE_TIME', 'COURSE'])).optional(),
+    level: z.array(z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED'])).optional(),
+    budgetMin: z.number().nonnegative().optional(),
+    budgetMax: z.number().nonnegative().optional(),
+    preferredLanguages: z.array(z.string()).optional(),
+    requestedFrequency: z.array(z.number().int().positive()).optional(),
+  })
+  .refine((data) => !data.budgetMin || !data.budgetMax || data.budgetMax >= data.budgetMin, {
+    message: 'Maximum must be at least the minimum',
+    path: ['budgetMax'],
+  })
+
+export type LearnRequestFiltersValues = z.infer<typeof learnRequestFiltersSchema>
+
 export const MAX_DESCRIPTION_LENGTH = 2000
 
 export const detailsSchema = z.object({

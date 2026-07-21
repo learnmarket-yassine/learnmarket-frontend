@@ -1,38 +1,38 @@
 import { LearnRequest } from '@/features/learn-requests/store/types'
 import { useLineClamp } from '@/hooks/useLineClamp'
+import { LEVEL_LABELS, TYPE_LABELS, formatLabel } from '@/features/learn-requests/constants/labels'
 import SkillsSlider from './SkillsCarousel'
-import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
-import { TYPE_BADGE_STYLES, TYPE_ICONS } from './TutorLearningRequestCard'
+import { Heart, CalendarClock, BookOpen } from 'lucide-react'
 import { formatBudget } from '@/lib/utils'
-import { useNavigate } from 'react-router-dom'
 
-export type LearnRequestPreview = Partial<LearnRequest>
-
+export type TutorLearnRequestProps = {
+  learnRequest: Partial<LearnRequest>
+  onSelect: () => void
+}
 const DESCRIPTION_LINES = 3
 
-const formatStatus = (status?: string) => {
-  if (!status) return ''
-  return status
-    .toLowerCase()
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+export const TYPE_BADGE_STYLES: Record<string, string> = {
+  ONE_TIME: 'bg-[#F3F4F6] text-[#1E293B]',
+  COURSE: 'bg-blue-50 text-[#143681]',
 }
 
-const LearnRequestCard: React.FC<LearnRequestPreview> = ({
-  id,
-  status,
-  type,
-  level,
-  category,
-  title,
-  budgetMax,
-  budgetMin,
-  description,
-  requestedFrequency,
-  skills,
-}) => {
-  const navigate = useNavigate()
+export const TYPE_ICONS: Record<string, React.ElementType> = {
+  ONE_TIME: CalendarClock,
+  COURSE: BookOpen,
+}
+
+const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnRequest, onSelect }) => {
+  const {
+    type,
+    title,
+    requestedFrequency,
+    description,
+    skills,
+    category,
+    budgetMax,
+    budgetMin,
+    level,
+  } = learnRequest
   const {
     ref: descriptionRef,
     isExpanded,
@@ -53,13 +53,10 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
 
   return (
     <div
-      onClick={() => {
-        navigate(`/learn-requests/${id}`)
-      }}
+      onClick={onSelect}
       className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg"
     >
       <div className="space-y-4">
-        <p className="px-2 text-sm text-[#6B7280]">posted 1 hour ago</p>
         <div className="flex items-center justify-between">
           {type && TypeIcon && (
             <span
@@ -69,11 +66,21 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
               {typeLabel}
             </span>
           )}
-
-          <span className={`flex items-center gap-1.5 text-xs font-semibold`}>
-            {formatStatus(status)}
-          </span>
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-[#6B7280]">posted 1 hour ago</p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              type="button"
+              aria-label="Save learning request"
+              className="rounded-full p-2 transition hover:bg-blue-50"
+            >
+              <Heart className="size-6 transition group-hover:scale-110" />
+            </button>
+          </div>
         </div>
+
         <h3 className="truncate text-xl font-bold leading-snug text-[#143681] hover:underline">
           {title}
         </h3>
@@ -100,7 +107,7 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
             </button>
           )}
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="relative">
+        <div onClick={(e) => e.stopPropagation()}>
           <SkillsSlider skills={skills} />
         </div>
       </div>
@@ -108,4 +115,4 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
   )
 }
 
-export default LearnRequestCard
+export default TutorLearningRequestCard
