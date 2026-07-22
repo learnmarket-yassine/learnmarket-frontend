@@ -22,7 +22,7 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
     setPage(0)
   }
 
-  const { data, isLoading, isError } = useGetProposalsForRequest(
+  const { data, isLoading, isError, refetch } = useGetProposalsForRequest(
     learnRequestId,
     page,
     debouncedSearch,
@@ -56,6 +56,8 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
           setPage={setPage}
           isLoading={isLoading}
           isError={isError}
+          hasSearch={!!debouncedSearch}
+          onRetry={() => refetch()}
         />
       </div>
     </div>

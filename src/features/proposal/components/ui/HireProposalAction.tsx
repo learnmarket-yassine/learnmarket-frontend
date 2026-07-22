@@ -1,0 +1,66 @@
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import ConfirmModal from '@/components/layout/ConfirmModal'
+import { PROPOSAL_STATUS_LABELS } from '../../constants/labels'
+import { ProposalStatus } from '../../store/types'
+import { LearnRequestStatus } from '@/features/learn-requests/store/types'
+
+type HireProposalActionProps = {
+  proposalId: string
+  proposalStatus: ProposalStatus
+  learnRequestStatus: LearnRequestStatus
+  tutorName: string
+  onHire: (proposalId: string) => void
+  isHiring: boolean
+}
+
+const HireProposalAction = ({
+  proposalId,
+  proposalStatus,
+  learnRequestStatus,
+  tutorName,
+  onHire,
+  isHiring,
+}: HireProposalActionProps) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const isPending = proposalStatus === 'PENDING'
+  const canHire = isPending && learnRequestStatus === 'OPEN'
+
+  if (!isPending) {
+    return (
+      <span className="rounded-full border border-[#E0E2E6] px-4 py-2 text-sm font-semibold text-[#6B7280]">
+        {PROPOSAL_STATUS_LABELS[proposalStatus]}
+      </span>
+    )
+  }
+
+  return (
+    <>
+      <Button
+        type="button"
+        disabled={!canHire || isHiring}
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsConfirmOpen(true)
+        }}
+        className="whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-6 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {isHiring ? 'Hiring...' : 'Hire'}
+      </Button>
+      <ConfirmModal
+        name="Event Exception Modal"
+        type="confirm"
+        isOpen={isConfirmOpen}
+        setIsOpen={(next) => setIsConfirmOpen(!!next)}
+        title="Hire this tutor?"
+        description={`Hiring ${tutorName} will close this request and decline all other pending proposals. This can't be undone.`}
+        handleConfirm={() => onHire(proposalId)}
+        isLoading={isHiring}
+        confirmButtonText="Confirm hire"
+        cancelButtonText="Cancel"
+      />
+    </>
+  )
+}
+
+export default HireProposalAction

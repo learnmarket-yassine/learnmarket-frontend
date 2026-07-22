@@ -1,20 +1,20 @@
-import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ThumbsUp, Wallet } from 'lucide-react'
 import SkillsSlider from '@/features/Accueil/components/ui/SkillsCarousel'
-import ConfirmModal from '@/components/layout/ConfirmModal'
-import { Button } from '@/components/ui/button'
 import { formatBudget, getAssetUrl } from '@/lib/utils'
-import { PAYOUT_METHOD_LABELS, PROPOSAL_STATUS_LABELS } from '@/features/proposal/constants/labels'
+import { PAYOUT_METHOD_LABELS } from '@/features/proposal/constants/labels'
 import { Proposal } from '@/features/proposal/store/types'
 import { LearnRequestStatus } from '@/features/learn-requests/store/types'
 import useLineClamp from '@/hooks/useLineClamp'
+import HireProposalAction from '@/features/proposal/components/ui/HireProposalAction'
+import { Button } from '@/components/ui/button'
 
 type LearnRequestProposalCardProps = {
   proposal: Proposal
   learnRequestStatus: LearnRequestStatus
   onHire: (proposalId: string) => void
   isHiring: boolean
+  onSelect: () => void
 }
 
 const DESCRIPTION_LINES = 3
@@ -24,15 +24,13 @@ const LearnRequestProposalCard = ({
   learnRequestStatus,
   onHire,
   isHiring,
+  onSelect,
 }: LearnRequestProposalCardProps) => {
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const { tutor } = proposal
 
   const initials =
     `${tutor.firstname?.charAt(0) ?? ''}${tutor.lastname?.charAt(0) ?? ''}`.toUpperCase()
   const fullName = `${tutor.firstname} ${tutor.lastname}`
-  const isPending = proposal.status === 'PENDING'
-  const canHire = isPending && learnRequestStatus === 'OPEN'
 
   const {
     ref: descriptionRef,
@@ -43,7 +41,10 @@ const LearnRequestProposalCard = ({
   } = useLineClamp(proposal.message, { lines: DESCRIPTION_LINES })
 
   return (
-    <div className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg">
+    <div
+      onClick={onSelect}
+      className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg"
+    >
       <div className="flex items-start gap-4">
         <Avatar className="h-20 w-20 cursor-pointer after:border-none">
           <AvatarImage src={getAssetUrl(tutor.avatar)} alt={fullName} />
@@ -70,38 +71,18 @@ const LearnRequestProposalCard = ({
               >
                 Message
               </Button>
-              {isPending ? (
-                <>
-                  <Button
-                    type="button"
-                    disabled={!canHire || isHiring}
-                    onClick={() => setIsConfirmOpen(true)}
-                    className="whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-6 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {isHiring ? 'Hiring...' : 'Hire'}
-                  </Button>
-                  <ConfirmModal
-                    name={`Event Exception Modal`}
-                    type="confirm"
-                    isOpen={isConfirmOpen}
-                    setIsOpen={(next) => setIsConfirmOpen(!!next)}
-                    title="Hire this tutor?"
-                    description={`Hiring ${fullName} will close this request and decline all other pending proposals. This can't be undone.`}
-                    handleConfirm={() => onHire(proposal.id)}
-                    isLoading={isHiring}
-                    confirmButtonText="Confirm hire"
-                    cancelButtonText="Cancel"
-                  />
-                </>
-              ) : (
-                <span className="rounded-full border border-[#E0E2E6] px-4 py-2 text-sm font-semibold text-[#6B7280]">
-                  {PROPOSAL_STATUS_LABELS[proposal.status]}
-                </span>
-              )}
+              <HireProposalAction
+                proposalId={proposal.id}
+                proposalStatus={proposal.status}
+                learnRequestStatus={learnRequestStatus}
+                tutorName={fullName}
+                onHire={onHire}
+                isHiring={isHiring}
+              />
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <p className="text-sm font-bold">{formatBudget(proposal.totalPrice)} USD</p>
+            <p className="text-sm font-bold">{formatBudget(proposal.totalPrice)} TND</p>
             <div className="flex items-center gap-2 font-bold">
               <Wallet className="size-4 text-[#143681]" />
               <p className="text-sm">{PAYOUT_METHOD_LABELS[proposal.payoutMethod]}</p>

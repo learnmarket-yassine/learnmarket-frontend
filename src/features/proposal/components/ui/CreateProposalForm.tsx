@@ -16,14 +16,12 @@ import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-request
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 import useLineClamp from '@/hooks/useLineClamp'
 import { formatBudget } from '@/lib/utils'
-import { GraduationCap, GripVertical, Plus, Tag, Wallet } from 'lucide-react'
-import { Controller, useFieldArray, useForm, UseFormRegister } from 'react-hook-form'
+import { GraduationCap, Plus, Tag, Wallet } from 'lucide-react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { buildProposalSchema, ProposalFormValues } from '../../schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LearnRequest } from '@/features/learn-requests/store/types'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import DeleteButton from '@/features/myProfile/components/ui/DeleteButton'
 import { useNavigate } from 'react-router-dom'
 import useCreateProposal from '../../hooks/useCreateProposal'
 import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
@@ -35,94 +33,11 @@ import {
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core'
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { FieldErrors } from 'react-hook-form'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import SortableProposalSessionCard from './SortableProposalSessionCard'
 
 type CreateProposalFormProps = {
   learnrequest: LearnRequest
-}
-
-type SortableSessionCardProps = {
-  id: string
-  index: number
-  canReorder: boolean
-  canRemove: boolean
-  register: UseFormRegister<ProposalFormValues>
-  errors: FieldErrors<ProposalFormValues>
-  onRemove: () => void
-}
-
-const SortableSessionCard = ({
-  id,
-  index,
-  canReorder,
-  canRemove,
-  register,
-  errors,
-  onRemove,
-}: SortableSessionCardProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id,
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`space-y-1 rounded-xl p-2 ${isDragging ? 'z-10 bg-[#F5F7FA] shadow-md' : ''}`}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {canReorder && (
-            <button
-              type="button"
-              {...attributes}
-              {...listeners}
-              className="cursor-grab touch-none text-[#8E949F] active:cursor-grabbing"
-              aria-label={`Reorder session ${index + 1}`}
-            >
-              <GripVertical className="size-4" />
-            </button>
-          )}
-          <span className="text-base font-semibold text-[#143681]">Session {index + 1}</span>
-        </div>
-        {canRemove && <DeleteButton onClick={onRemove} label={`Remove session ${index + 1}`} />}
-      </div>
-      <div className="space-y-5">
-        <div className="space-y-1.5">
-          <Label
-            htmlFor={`sessionPlans.${index}.title`}
-            className="text-sm font-semibold text-[#374151]"
-          >
-            Title
-          </Label>
-          <Input
-            id={`sessionPlans.${index}.title`}
-            {...register(`sessionPlans.${index}.title`)}
-            placeholder="e.g. Introduction to variables"
-          />
-          {errors.sessionPlans?.[index]?.title && (
-            <p className="text-xs text-destructive">{errors.sessionPlans[index]?.title?.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label
-            htmlFor={`sessionPlans.${index}.objective`}
-            className="text-sm font-semibold text-[#374151]"
-          >
-            Objective (optional)
-          </Label>
-          <Textarea
-            id={`sessionPlans.${index}.objective`}
-            {...register(`sessionPlans.${index}.objective`)}
-            className="h-20 resize-none"
-            placeholder="What the learner should be able to do after this session"
-          />
-        </div>
-      </div>
-    </div>
-  )
 }
 
 const DESCRIPTION_LINES = 3
@@ -309,7 +224,7 @@ const CreateProposalForm = ({ learnrequest }: CreateProposalFormProps) => {
               strategy={verticalListSortingStrategy}
             >
               {fields.map((field, index) => (
-                <SortableSessionCard
+                <SortableProposalSessionCard
                   key={field.id}
                   id={field.id}
                   index={index}
