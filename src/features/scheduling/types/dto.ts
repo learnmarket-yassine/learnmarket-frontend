@@ -3,8 +3,9 @@ import type {
   ExceptionType,
   HoldStatus,
   JobRequestType,
-  ProposalSessionStatus,
+  PayoutMethod,
   ProposalStatus,
+  SessionStatus,
 } from './enums'
 
 export interface AvailabilityRule {
@@ -63,7 +64,7 @@ export interface AvailableSlotsResponse {
 
 export interface AffectedSession {
   bookingId: string
-  proposalSessionId: string | null
+  sessionId: string | null
   startTime: string
   endTime: string
 }
@@ -77,7 +78,7 @@ export interface SlotHold {
   id: string
   tutorId: string
   learnerId: string
-  proposalSessionId: string
+  sessionId: string
   startTime: string
   endTime: string
   status: HoldStatus
@@ -86,15 +87,14 @@ export interface SlotHold {
 }
 
 export interface CreateHoldInput {
-  proposalSessionId: string
+  sessionId: string
   startTime: string
-  endTime: string
 }
 export interface Booking {
   id: string
   tutorId: string
   learnerId: string
-  proposalSessionId: string | null
+  sessionId: string | null
   slotHoldId: string | null
   startTime: string
   endTime: string
@@ -113,13 +113,27 @@ export interface JobRequest {
   updatedAt: string
 }
 
-export interface ProposalSession {
+// The tutor's pitch, submitted before acceptance -- no status at all.
+// Session count before acceptance is contextual: sessionPlans.length.
+export interface ProposalSessionPlan {
   id: string
   proposalId: string
   sessionNumber: number
   title: string
   objective: string | null
-  status: ProposalSessionStatus
+  createdAt: string
+  updatedAt: string
+}
+
+// The real, committed session -- created only once the Proposal is
+// accepted. Session count after acceptance is contextual: sessions.length.
+export interface Session {
+  id: string
+  proposalId: string
+  sessionNumber: number
+  title: string
+  objective: string | null
+  status: SessionStatus
   createdAt: string
   updatedAt: string
 }
@@ -129,11 +143,12 @@ export interface Proposal {
   jobRequestId: string
   tutorId: string
   status: ProposalStatus
-  totalSessions: number
   sessionDurationMinutes: number
+  payoutMethod: PayoutMethod
   message: string | null
   createdAt: string
   updatedAt: string
-  sessions: ProposalSession[]
+  sessionPlans: ProposalSessionPlan[]
+  sessions: Session[]
   jobRequest?: JobRequest
 }

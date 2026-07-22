@@ -16,14 +16,14 @@ const WINDOW_DAYS = 21
 
 interface SlotSelectionGridProps {
   tutorId: string
-  proposalSessionId: string
+  sessionId: string
   durationMinutes: number
   onHoldCreated: (hold: SlotHold) => void
 }
 
 const SlotSelectionGrid = ({
   tutorId,
-  proposalSessionId,
+  sessionId,
   durationMinutes,
   onHoldCreated,
 }: SlotSelectionGridProps) => {
@@ -93,12 +93,10 @@ const SlotSelectionGrid = ({
 
   const handlePick = async (slotIso: string) => {
     setPickError(null)
-    const endIso = new Date(new Date(slotIso).getTime() + durationMinutes * 60_000).toISOString()
     try {
       const hold = await createHold.mutateAsync({
-        proposalSessionId,
+        sessionId,
         startTime: slotIso,
-        endTime: endIso,
       })
       onHoldCreated(hold)
     } catch (error) {

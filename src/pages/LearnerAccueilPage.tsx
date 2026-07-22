@@ -6,6 +6,7 @@ import LearnRequestSection, {
 import { TutorPreview } from '@/features/Accueil/components/ui/TutorCard'
 import TutorSection from '@/features/Accueil/components/layout/TutorSection'
 import useGetLearnRequests, {
+  LEARN_REQUESTS_PAGE_SIZE,
   LearnRequestFilters,
 } from '@/features/learn-requests/hooks/useGetLearnRequests'
 
@@ -54,8 +55,8 @@ const myTutors: TutorPreview[] = [
 
 const LearnerAccueilPage = () => {
   const [activeFilter, setActiveFilter] = useState<PillFilter>('ALL')
-  const { data } = useGetLearnRequests(filtersForPill(activeFilter))
-  const myLearningRequests = data?.pages.flatMap((page) => page.paginatedResult) ?? []
+  const { data } = useGetLearnRequests(filtersForPill(activeFilter), 0, LEARN_REQUESTS_PAGE_SIZE)
+  const myLearningRequests = data?.paginatedResult ?? []
 
   return (
     <LearnerAccueilPageLayout>

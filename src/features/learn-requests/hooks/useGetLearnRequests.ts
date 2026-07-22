@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import {
   LearnRequest,
@@ -20,19 +20,24 @@ export interface LearnRequestFilters {
   requestedFrequency?: number[]
 }
 
-interface GetLearnRequestsResponse {
+export interface GetLearnRequestsResponse {
   paginatedResult: LearnRequest[]
   totalCount: number
 }
 
-const TAKE = 6
+export const LEARN_REQUESTS_PAGE_SIZE = 10
 
-const useGetLearnRequests = (filters: LearnRequestFilters, options?: { enabled?: boolean }) => {
+const useGetLearnRequests = (
+  filters: LearnRequestFilters,
+  page: number,
+  take: number,
+  options?: { enabled?: boolean }
+) => {
   const axiosPrivate = useAxiosPrivate()
 
-  return useInfiniteQuery({
-    queryKey: ['learn-requests', filters],
-    queryFn: async ({ pageParam = 0 }) => {
+  return useQuery({
+    queryKey: ['learn-requests', filters, page, take],
+    queryFn: async (): Promise<GetLearnRequestsResponse> => {
       const params = new URLSearchParams()
       if (filters.status?.length) params.set('status', filters.status.join(','))
       if (filters.categoryId) params.set('categoryId', filters.categoryId)
@@ -48,16 +53,14 @@ const useGetLearnRequests = (filters: LearnRequestFilters, options?: { enabled?:
       if (filters.requestedFrequency?.length) {
         params.set('requestedFrequency', filters.requestedFrequency.join(','))
       }
-      params.set('page', String(pageParam))
-      params.set('take', String(TAKE))
+      params.set('page', String(page))
+      params.set('take', String(take))
 
       const res = await axiosPrivate.get(`/learn-requests?${params.toString()}`)
       return res.data as GetLearnRequestsResponse
     },
-    initialPageParam: 0,
     enabled: options?.enabled !== false,
-    getNextPageParam: (lastPage, allPages) =>
-      allPages.length < Math.ceil(lastPage.totalCount / TAKE) ? allPages.length : undefined,
+    placeholderData: (previousData) => previousData,
   })
 }
 

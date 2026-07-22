@@ -18,18 +18,12 @@ import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import useCategories from '@/hooks/useCategories'
 import { LANGUAGES } from '@/lib/Constants'
 import {
+  DEFAULT_LEARN_REQUEST_FILTERS,
   learnRequestFiltersSchema,
   LearnRequestFiltersValues,
 } from '@/features/learn-requests/schemas'
 import { LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
 import { LearnRequestType, ProficiencyLevel } from '@/features/learn-requests/store/types'
-
-const DEFAULT_FILTERS: LearnRequestFiltersValues = {
-  type: [],
-  level: [],
-  preferredLanguages: [],
-  requestedFrequency: [],
-}
 
 const TYPE_OPTIONS: LearnRequestType[] = ['ONE_TIME', 'COURSE']
 const LEVEL_OPTIONS: ProficiencyLevel[] = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED']
@@ -73,13 +67,13 @@ function FiltersModal({ value, onApply }: FiltersModalProps) {
   const { control, register, handleSubmit, reset, setValue, formState } =
     useForm<LearnRequestFiltersValues>({
       resolver: zodResolver(learnRequestFiltersSchema),
-      defaultValues: { ...DEFAULT_FILTERS, ...value },
+      defaultValues: { ...DEFAULT_LEARN_REQUEST_FILTERS, ...value },
     })
   const { errors } = formState
   const draft = useWatch({ control })
 
   useEffect(() => {
-    if (isOpen) reset({ ...DEFAULT_FILTERS, ...value })
+    if (isOpen) reset({ ...DEFAULT_LEARN_REQUEST_FILTERS, ...value })
   }, [isOpen, value, reset])
 
   useEffect(() => {
@@ -89,8 +83,8 @@ function FiltersModal({ value, onApply }: FiltersModalProps) {
   }, [draft.type, draft.requestedFrequency, setValue])
 
   const handleClear = () => {
-    reset(DEFAULT_FILTERS)
-    onApply(DEFAULT_FILTERS)
+    reset(DEFAULT_LEARN_REQUEST_FILTERS)
+    onApply(DEFAULT_LEARN_REQUEST_FILTERS)
     setIsOpen(false)
   }
 

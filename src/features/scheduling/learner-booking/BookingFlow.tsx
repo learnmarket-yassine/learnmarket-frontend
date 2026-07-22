@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
-import type { Booking, ProposalSession, SlotHold } from '../types/dto'
-import type { ProposalSessionStatus } from '../types/enums'
+import type { Booking, Session, SlotHold } from '../types/dto'
+import type { SessionStatus } from '../types/enums'
 import { isHoldExpiredError } from '../utils/errors'
 import { getBrowserTimezone } from '../utils/timezones'
 import BookingConfirmed from './components/BookingConfirmed'
@@ -18,9 +18,9 @@ type BookingFlowState =
   | { step: 'expired'; reason: 'timeout' | 'taken' }
   | { step: 'confirmed'; booking: Booking }
 
-const ACTIONABLE_STATUSES: ProposalSessionStatus[] = ['PENDING_SCHEDULE', 'HELD', 'CANCELLED']
+const ACTIONABLE_STATUSES: SessionStatus[] = ['PENDING_SCHEDULE', 'HELD', 'CANCELLED']
 
-function findActiveSession(sessions: ProposalSession[]): ProposalSession | undefined {
+function findActiveSession(sessions: Session[]): Session | undefined {
   return sessions.find((session) => ACTIONABLE_STATUSES.includes(session.status))
 }
 
@@ -83,7 +83,7 @@ const BookingFlow = ({ proposalId }: BookingFlowProps) => {
       {activeSession && state.step === 'selecting' && (
         <SlotSelectionGrid
           tutorId={proposal.tutorId}
-          proposalSessionId={activeSession.id}
+          sessionId={activeSession.id}
           durationMinutes={proposal.sessionDurationMinutes}
           onHoldCreated={(hold) => setState({ step: 'holding', hold })}
         />
