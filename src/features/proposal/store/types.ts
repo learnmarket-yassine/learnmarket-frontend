@@ -1,22 +1,41 @@
-import { AuthUser } from '@/features/auth/store/types'
+import { Skill } from '@/types/skill'
 
-export interface sessionPlan {
+export type ProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'WITHDRAWN'
+export type PayoutMethod = 'PER_SESSION' | 'ON_COMPLETION'
+
+export interface ProposalSessionPlan {
   id: string
   proposalId: string
+  sessionNumber: number
+  title: string
+  objective: string | null
+}
+
+export interface ProposalTutorSummary {
+  id: string
+  firstname: string
+  lastname: string
+  avatar: string | null
+  headline: string | null
+  country: string | null
+  tutorProfile: {
+    hourlyRate: number | string | null
+    skills: { skill: Skill }[]
+  } | null
 }
 
 export interface Proposal {
-  createdAt: string
   id: string
   learnRequestId: string
-  learnerViewedAt: string
-  message: string
-  payoutMethod: string
-  sessionDurationMinutes: number
-  sessionPlans: sessionPlan[]
-  status: string
-  totalPrice: string
-  tutor: AuthUser
   tutorId: string
+  status: ProposalStatus
+  sessionDurationMinutes: number
+  totalPrice: number | string
+  payoutMethod: PayoutMethod
+  message: string | null
+  sessionPlans: ProposalSessionPlan[]
+  tutor: ProposalTutorSummary
+  learnerViewedAt: string | null
+  createdAt: string
   updatedAt: string
 }

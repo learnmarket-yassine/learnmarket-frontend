@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button'
 import DeleteButton from '@/features/myProfile/components/ui/DeleteButton'
 import { useNavigate } from 'react-router-dom'
 import useCreateProposal from '../../hooks/useCreateProposal'
+import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
 import {
   DndContext,
   closestCenter,
@@ -357,7 +358,7 @@ const CreateProposalForm = ({ learnrequest }: CreateProposalFormProps) => {
                   <RadioGroupItem value="PER_SESSION" id="r1" />
                   <div className="flex flex-col gap-1">
                     <Label htmlFor="r1" className="text-base font-bold">
-                      By Session
+                      {PAYOUT_METHOD_LABELS.PER_SESSION}
                     </Label>
                     <p className="text-[#5E5E5E]">
                       You'll be paid for each session after it has been completed and approved.
@@ -368,7 +369,7 @@ const CreateProposalForm = ({ learnrequest }: CreateProposalFormProps) => {
                   <RadioGroupItem value="ON_COMPLETION" id="r2" />
                   <div className="flex flex-col gap-1">
                     <Label htmlFor="r2" className="text-base font-bold">
-                      By Course
+                      {PAYOUT_METHOD_LABELS.ON_COMPLETION}
                     </Label>
                     <p className="text-[#5E5E5E]">
                       Receive your full payment after all sessions have been completed and approved
