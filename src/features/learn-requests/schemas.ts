@@ -76,6 +76,13 @@ export const learnRequestFiltersSchema = z
 
 export type LearnRequestFiltersValues = z.infer<typeof learnRequestFiltersSchema>
 
+export const DEFAULT_LEARN_REQUEST_FILTERS: LearnRequestFiltersValues = {
+  type: [],
+  level: [],
+  preferredLanguages: [],
+  requestedFrequency: [],
+}
+
 export const MAX_DESCRIPTION_LENGTH = 2000
 
 export const detailsSchema = z.object({

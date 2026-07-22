@@ -1,3 +1,4 @@
+import { Proposal } from '@/features/proposal/store/types'
 import { Category } from '@/types/category'
 import { Skill } from '@/types/skill'
 
@@ -20,6 +21,7 @@ export interface LearnRequest {
   budgetMin: string | number | null
   budgetMax: string | number | null
   skills: { skill: Skill }[]
+  proposals?: Proposal[]
   actionNeeded: boolean
   createdAt: string
   updatedAt: string
