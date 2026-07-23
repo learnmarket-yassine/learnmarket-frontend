@@ -67,7 +67,7 @@ const LearnRequestProposalCard = ({
               </div>
               <Button
                 variant="outline"
-                className="whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-6 font-medium text-[#2563EB] hover:bg-white/90 hover:text-[#2563EB]/90"
+                className="whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-6 font-medium text-[#2563EB] hover:bg-blue-50 hover:text-[#2563EB]/90"
               >
                 Message
               </Button>

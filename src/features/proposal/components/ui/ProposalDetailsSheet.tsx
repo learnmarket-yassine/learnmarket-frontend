@@ -1,65 +1,22 @@
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { ArrowLeft, CalendarCheck, MapPin, ThumbsUp, Wallet } from 'lucide-react'
-import { Proposal, ProposalSessionPlan } from '../../store/types'
+import { ArrowLeft, MapPin, ThumbsUp, Wallet } from 'lucide-react'
+import { Proposal } from '../../store/types'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { formatBudget, getAssetUrl } from '@/lib/utils'
 import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
 import { LearnRequestStatus } from '@/features/learn-requests/store/types'
 import HireProposalAction from './HireProposalAction'
 import { Button } from '@/components/ui/button'
-import useLineClamp from '@/hooks/useLineClamp'
-
-const COLLAPSED_SESSION_COUNT = 4
-const OBJECTIVE_LINES = 2
-
-type SessionTimelineItemProps = {
-  session: ProposalSessionPlan
-  isLast: boolean
-}
-
-const SessionTimelineItem = ({ session, isLast }: SessionTimelineItemProps) => {
-  const {
-    ref: objectiveRef,
-    isExpanded,
-    isClampable,
-    toggle,
-    className: clampClassName,
-  } = useLineClamp(session.objective, { lines: OBJECTIVE_LINES })
-
-  return (
-    <li className="relative flex gap-4 pb-6 last:pb-0">
-      {!isLast && (
-        <span
-          aria-hidden="true"
-          className="absolute left-[15px] top-8 h-[calc(100%-1.5rem)] w-px bg-[#D9DEE6]"
-        />
-      )}
-      <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#143681] text-xs font-bold text-white">
-        {session.sessionNumber}
-      </span>
-      <div className="flex-1 space-y-1 pt-0.5">
-        <p className="text-sm font-semibold text-[#1E293B]">{session.title}</p>
-        {session.objective && (
-          <>
-            <p ref={objectiveRef} className={`${clampClassName} text-sm text-[#6B7280]`}>
-              {session.objective}
-            </p>
-            {isClampable && (
-              <button
-                type="button"
-                onClick={toggle}
-                className="text-xs font-semibold text-[#2563EB] underline underline-offset-2"
-              >
-                {isExpanded ? 'See less' : 'See more'}
-              </button>
-            )}
-          </>
-        )}
-      </div>
-    </li>
-  )
-}
+import CoverLetterSection from './ProposalCoverLetterSection'
+import ProposalSessionsSection from './ProposalSessionsSection'
+import CustomTabToggle from './CustomTabToggle'
+import ProposalSessionObjective from './ProposalSessionObjective'
+import ReactPlayer from 'react-player/youtube'
+import { languageLevelLabels } from '@/lib/Constants'
+import { Language } from '@/features/myProfile/store/types'
+import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
+import { Link } from 'react-router-dom'
 
 type ProposalDetailsSheetProps = {
   isOpen?: boolean
@@ -78,24 +35,36 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
   onHire,
   isHiring,
 }) => {
-  const [showAllSessions, setShowAllSessions] = useState(false)
+  const steps = [
+    {
+      stepNumber: 1,
+      component: <CoverLetterSection message={proposal?.message} />,
+      show: true,
+      name: 'cover letter',
+      enabled: true,
+    },
+    {
+      stepNumber: 2,
+      component: <ProposalSessionsSection sessions={proposal?.sessionPlans} />,
+      show: true,
+      name: 'sessions',
+      enabled: true,
+    },
+  ]
+
+  const [detailsSection, setDetailsSection] = useState(1)
 
   if (!proposal) return null
   const { tutor } = proposal
   const initials =
     `${tutor.firstname?.charAt(0) ?? ''}${tutor.lastname?.charAt(0) ?? ''}`.toUpperCase()
-  const fullName = `${tutor.firstname} ${tutor.lastname}`
+  const fullName = `${tutor.firstname} ${tutor.lastname.charAt(0)} .`
   const submittedOn = new Date(proposal.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   })
-
-  const sessionPlans = [...proposal.sessionPlans].sort((a, b) => a.sessionNumber - b.sessionNumber)
-  const visibleSessions =
-    showAllSessions || sessionPlans.length <= COLLAPSED_SESSION_COUNT
-      ? sessionPlans
-      : sessionPlans.slice(0, COLLAPSED_SESSION_COUNT)
+  const currentStep = steps.find((step) => step.stepNumber === detailsSection)
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -107,8 +76,8 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
             </button>
           </SheetTitle>
         </SheetHeader>
-        <div className="no-scrollbar flex flex-col gap-6 divide-y divide-[#E0E2E6] overflow-y-auto p-5">
-          <div className="flex items-center justify-between">
+        <div className="no-scrollbar flex flex-col divide-y divide-[#E0E2E6] overflow-y-auto">
+          <div className="flex items-center justify-between p-5">
             <div className="flex items-center gap-3">
               <Avatar className="h-20 w-20 cursor-pointer after:border-none">
                 <AvatarImage src={getAssetUrl(tutor.avatar)} alt={fullName} />
@@ -127,6 +96,9 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                   )}
                   <span>Submitted {submittedOn}</span>
                 </div>
+                <Link to={'/'} className="text-sm font-semibold text-[#143681] underline">
+                  View profile
+                </Link>
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-3">
@@ -135,7 +107,7 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
               </div>
               <Button
                 variant="outline"
-                className="whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-6 font-medium text-[#2563EB] hover:bg-white/90 hover:text-[#2563EB]/90"
+                className="whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-6 font-medium text-[#2563EB] hover:bg-blue-50 hover:text-[#2563EB]/90"
               >
                 Message
               </Button>
@@ -151,41 +123,14 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
           </div>
           <div className="flex">
             <div className="flex w-[300px] shrink-0 flex-col border-r border-[#E0E2E6] p-5">
-              {sessionPlans.length > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="flex items-center gap-2 text-sm font-bold text-[#143681]">
-                      <CalendarCheck className="size-4" />
-                      Session plan
-                    </p>
-                    <span className="text-xs font-semibold text-[#6B7280]">
-                      {sessionPlans.length} session{sessionPlans.length > 1 ? 's' : ''} ·{' '}
-                      {proposal.sessionDurationMinutes} min each
-                    </span>
-                  </div>
-                  <ol className="rounded-2xl border border-[#E0E2E6] bg-[#FAFAFB] p-5">
-                    {visibleSessions.map((session, index) => (
-                      <SessionTimelineItem
-                        key={session.id}
-                        session={session}
-                        isLast={index === visibleSessions.length - 1}
-                      />
-                    ))}
-                  </ol>
-                  {sessionPlans.length > COLLAPSED_SESSION_COUNT && (
-                    <button
-                      type="button"
-                      onClick={() => setShowAllSessions((prev) => !prev)}
-                      className="text-sm font-semibold text-[#2563EB] underline underline-offset-2"
-                    >
-                      {showAllSessions ? 'Show less' : `Show all ${sessionPlans.length} sessions`}
-                    </button>
-                  )}
-                </div>
-              )}
+              <CustomTabToggle
+                selected={detailsSection}
+                setSelected={setDetailsSection}
+                steps={steps}
+              />
             </div>
-            <div className="space-y-5 p-6">
-              <div className="flex items-center justify-between">
+            <div className="w-full space-y-5 p-6">
+              <div className="flex w-full items-center justify-between">
                 <h1 className="text-xl font-bold">Proposal Details</h1>
                 <div className="flex items-center gap-6">
                   <p className="text-base font-bold">{formatBudget(proposal.totalPrice)} TND</p>
@@ -195,11 +140,55 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                   </div>
                 </div>
               </div>
-
-              {proposal.message && (
+              {currentStep?.component || null}
+            </div>
+          </div>
+          <div className="flex">
+            <div className="flex w-[300px] shrink-0 flex-col space-y-4 border-r border-[#E0E2E6] p-5">
+              {proposal.tutor.tutorProfile?.videoIntroUrl && (
                 <div className="space-y-4">
-                  <p className="text-lg font-bold">Cover letter</p>
-                  <p className="text-base font-medium text-[#1E293B]">{proposal.message}</p>
+                  <p className="text-xl font-semibold">Meet {proposal.tutor.firstname}</p>
+                  <div className="relative aspect-video overflow-hidden rounded-md">
+                    <ReactPlayer
+                      url={proposal.tutor.tutorProfile.videoIntroUrl}
+                      controls={true}
+                      height="100%"
+                      width="100%"
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Languages */}
+              {proposal.tutor.languages && (
+                <div>
+                  <p className="text-xl font-semibold">Languages</p>
+                  <ul className="mt-2 space-y-0.5">
+                    {proposal.tutor.languages.map((lang: Language) => (
+                      <li key={lang.language} className="text-sm font-normal text-[#143681]">
+                        <span className="font-semibold">{lang.language}</span>:{' '}
+                        {languageLevelLabels[lang.level] ?? lang.level}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="divide-y divide-[#E0E2E6]">
+              <div className="w-full space-y-5 p-6">
+                <p className="text-2xl font-bold text-[#1E293B]">{proposal.tutor.headline}</p>
+                <ProposalSessionObjective
+                  className="text-base font-medium text-[#1E293B]"
+                  objective={proposal.tutor.bio}
+                />
+              </div>
+              {proposal.tutor.tutorProfile?.skills && (
+                <div className="p-6">
+                  <p className="text-2xl font-bold text-[#1E293B]">Skills</p>
+                  <div className="flex flex-wrap gap-2 p-3">
+                    {proposal.tutor.tutorProfile.skills.map(({ skill }) => (
+                      <SkillChip key={skill.id} name={skill.name} id={skill.id} />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

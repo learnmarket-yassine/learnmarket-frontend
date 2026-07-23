@@ -90,6 +90,7 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
         />
       </div>
       <ProposalDetailsSheet
+        key={selectedProposal?.id ?? 'none'}
         proposal={selectedProposal}
         isOpen={isSheetOpen}
         setIsOpen={setIsSheetOpen}

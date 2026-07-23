@@ -43,7 +43,7 @@ const HireProposalAction = ({
           e.stopPropagation()
           setIsConfirmOpen(true)
         }}
-        className="whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-6 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed disabled:opacity-50"
+        className="whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-6 font-medium text-white hover:bg-[#113991] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isHiring ? 'Hiring...' : 'Hire'}
       </Button>
@@ -54,7 +54,10 @@ const HireProposalAction = ({
         setIsOpen={(next) => setIsConfirmOpen(!!next)}
         title="Hire this tutor?"
         description={`Hiring ${tutorName} will close this request and decline all other pending proposals. This can't be undone.`}
-        handleConfirm={() => onHire(proposalId)}
+        handleConfirm={async () => {
+          await onHire(proposalId)
+          setIsConfirmOpen(false)
+        }}
         isLoading={isHiring}
         confirmButtonText="Confirm hire"
         cancelButtonText="Cancel"

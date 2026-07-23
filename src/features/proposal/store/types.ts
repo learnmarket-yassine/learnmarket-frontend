@@ -1,3 +1,4 @@
+import { Language } from '@/features/myProfile/store/types'
 import { Skill } from '@/types/skill'
 
 export type ProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'WITHDRAWN'
@@ -18,9 +19,12 @@ export interface ProposalTutorSummary {
   avatar: string | null
   headline: string | null
   country: string | null
+  bio: string | null
+  languages: Language[] | null
   tutorProfile: {
     hourlyRate: number | string | null
     skills: { skill: Skill }[]
+    videoIntroUrl: string | null
   } | null
 }
 
