@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 
 type ChevronStep = {
   stepNumber: number
-  component: React.JSX.Element
+  component: React.JSX.Element | null
   show: boolean
   name: string
   enabled: boolean

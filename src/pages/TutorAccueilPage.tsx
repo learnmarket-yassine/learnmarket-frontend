@@ -20,18 +20,12 @@ import {
 
 const TutorAccueilPage = () => {
   const user = useStore((state) => state.auth.user)
-
-  // Search is deliberately local-only: typing never touches the URL, so it
-  // resets on refresh -- only filters and page persist there.
   const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebounce(searchInput)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const searchParamsKey = searchParams.toString()
-  // Keyed on the string, not the searchParams object, so `filters`/`page`
-  // keep a stable identity across renders where the URL hasn't actually
-  // changed -- FiltersModal's own effect depends on `value` by reference,
-  // and an unstable filters object would re-clobber its draft every render.
+
   const { filters, page } = useMemo(
     () => parseLearnRequestFeedParams(new URLSearchParams(searchParamsKey)),
     [searchParamsKey]
@@ -45,17 +39,12 @@ const TutorAccueilPage = () => {
     },
     [filters, page, setSearchParams]
   )
-
-  // Filter changes replace the current history entry -- tweaking filters
-  // shouldn't spam the back button with one stop per Apply.
   const handleFiltersApply = useCallback(
     (nextFilters: LearnRequestFiltersValues) => {
       updateFeedParams({ filters: nextFilters, page: 0 }, { replace: true })
     },
     [updateFeedParams]
   )
-
-  // Pagination pushes a new entry -- back button steps through pages.
   const setPage = useCallback(
     (nextPage: number) => updateFeedParams({ page: nextPage }, { replace: false }),
     [updateFeedParams]

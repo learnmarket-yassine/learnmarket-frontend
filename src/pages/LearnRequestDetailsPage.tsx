@@ -5,6 +5,7 @@ import { STATUS_LABELS } from '@/features/learn-requests/constants/labels'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -20,7 +21,9 @@ const LearnRequestDetailsPage = () => {
     },
     {
       stepNumber: 2,
-      component: <h1>Review proposals</h1>,
+      component: data ? (
+        <LearnRequestProposalStep learnRequestId={id as string} status={data.status} />
+      ) : null,
       show: true,
       name: 'Review proposals',
       enabled: true,

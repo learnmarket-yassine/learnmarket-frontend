@@ -15,7 +15,7 @@ import { MouseEventHandler } from 'react'
 
 type Props = {
   name: string
-  type: 'delete'
+  type: 'delete' | 'confirm'
   title: string
   description: string
   handleConfirm?: MouseEventHandler<HTMLButtonElement>
@@ -42,7 +42,7 @@ const ConfirmModal = (props: Props) => {
           <DialogTrigger asChild type="button">
             <button
               type="button"
-              className={'flex rounded-md'}
+              className={`flex rounded-md ${props.buttonClassName ?? ''}`}
               disabled={props?.disabledConfirmModal}
               onClick={(e) => {
                 e.stopPropagation()
