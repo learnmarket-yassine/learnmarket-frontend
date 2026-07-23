@@ -217,3 +217,4 @@ export const hoursPerWeekLabels: Record<string, string> = {
   '0-10': 'Less than 10 hrs/week',
   '0': 'None',
 }
+export const SERVICE_FEE_PERCENT = 0.1

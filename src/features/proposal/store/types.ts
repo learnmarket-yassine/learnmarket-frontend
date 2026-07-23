@@ -1,5 +1,6 @@
 import { Language } from '@/features/myProfile/store/types'
 import { Skill } from '@/types/skill'
+import { LearnRequest } from '@/features/learn-requests/store/types'
 
 export type ProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'WITHDRAWN'
 export type PayoutMethod = 'PER_SESSION' | 'ON_COMPLETION'
@@ -42,4 +43,43 @@ export interface Proposal {
   learnerViewedAt: string | null
   createdAt: string
   updatedAt: string
+}
+
+export type ProposalGroup = 'ACTIVE' | 'ARCHIVED'
+
+export interface ProposalLearnRequestSummary {
+  id: string
+  title: string
+  category: { name: string } | null
+}
+
+export interface MyProposal {
+  id: string
+  learnRequestId: string
+  tutorId: string
+  status: ProposalStatus
+  sessionDurationMinutes: number
+  totalPrice: number | string
+  payoutMethod: PayoutMethod
+  message: string | null
+  learnerViewedAt: string | null
+  createdAt: string
+  updatedAt: string
+  learnRequest: ProposalLearnRequestSummary
+}
+export interface MyProposalDetail {
+  id: string
+  learnRequestId: string
+  tutorId: string
+  status: ProposalStatus
+  sessionDurationMinutes: number
+  totalPrice: number | string
+  payoutMethod: PayoutMethod
+  message: string | null
+  sessionPlans: ProposalSessionPlan[]
+  sessions: ProposalSessionPlan[]
+  learnerViewedAt: string | null
+  createdAt: string
+  updatedAt: string
+  learnRequest: LearnRequest
 }

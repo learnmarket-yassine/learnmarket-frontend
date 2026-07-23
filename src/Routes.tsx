@@ -18,6 +18,8 @@ import MyLearningRequestsPage from './pages/LearningRequestPage'
 import AccueilPage from './pages/AccueilPage'
 import LearnRequestDetailsPage from './pages/LearnRequestDetailsPage'
 import CreateProposalPage from './pages/CreateProposalPage'
+import MyProposalsPage from './pages/MyProposalsPage'
+import MyProposalDetailsPage from './pages/MyProposalDetailsPage'
 
 const AppRoutes = () => {
   return (
@@ -37,13 +39,16 @@ const AppRoutes = () => {
               <Route path="/learning-requests" element={<MyLearningRequestsPage />} />
               <Route path="/profile" element={<MyProfilePage />} />
               <Route path="/accueil" element={<AccueilPage />} />
-              <Route path="/learn-requests/:id" element={<LearnRequestDetailsPage />} />
-              <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
+
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
+                <Route path="/proposals" element={<MyProposalsPage />} />
+                <Route path="/proposals/:id" element={<MyProposalDetailsPage />} />
+                <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
               </Route>
               <Route element={<RequireRole role="LEARNER" />}>
                 <Route path="/proposals/:proposalId/book" element={<BookingFlowPage />} />
+                <Route path="/learn-requests/:id" element={<LearnRequestDetailsPage />} />
               </Route>
             </Route>
           </Route>
