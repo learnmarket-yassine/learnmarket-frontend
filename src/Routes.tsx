@@ -21,6 +21,7 @@ import CreateProposalPage from './pages/CreateProposalPage'
 import MyProposalsPage from './pages/MyProposalsPage'
 import MyProposalDetailsPage from './pages/MyProposalDetailsPage'
 import EditProposalPage from './pages/EditProposalPage'
+import MessagingPage from './pages/MessagingPage'
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,7 @@ const AppRoutes = () => {
               <Route path="/learning-requests" element={<MyLearningRequestsPage />} />
               <Route path="/profile" element={<MyProfilePage />} />
               <Route path="/accueil" element={<AccueilPage />} />
+              <Route path="/messages" element={<MessagingPage />} />
 
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
