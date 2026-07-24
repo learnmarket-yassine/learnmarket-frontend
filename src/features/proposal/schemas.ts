@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
 const sessionPlanSchema = z.object({
+  // Present = this plan is a persisted ProposalSession row; absent = new/
+  // unsaved. Client-side only -- stripped before the request ever reaches
+  // the backend, which always full-replaces sessionPlans on save anyway.
+  id: z.string().optional(),
   title: z.string().trim().min(1, 'Session title is required'),
   objective: z.string().trim().optional(),
 })

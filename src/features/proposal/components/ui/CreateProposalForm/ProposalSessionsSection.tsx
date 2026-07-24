@@ -20,11 +20,15 @@ import {
 } from 'react-hook-form'
 import { ProposalFormValues } from '@/features/proposal/schemas'
 
+type SessionPlanField = FieldArrayWithId<ProposalFormValues, 'sessionPlans', 'fieldId'>
+
+const isPersistedSessionPlan = (field: SessionPlanField) => !!field.id
+
 type ProposalFormSessionsSectionProps = {
   learnRequestType: string | null
   register: UseFormRegister<ProposalFormValues>
   errors: FieldErrors<ProposalFormValues>
-  fields: FieldArrayWithId<ProposalFormValues, 'sessionPlans'>[]
+  fields: SessionPlanField[]
   append: UseFieldArrayAppend<ProposalFormValues, 'sessionPlans'>
   remove: UseFieldArrayRemove
   move: UseFieldArrayMove
@@ -42,8 +46,8 @@ const ProposalFormSessionsSection: React.FC<ProposalFormSessionsSectionProps> = 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return
-    const oldIndex = fields.findIndex((field) => field.id === active.id)
-    const newIndex = fields.findIndex((field) => field.id === over.id)
+    const oldIndex = fields.findIndex((field) => field.fieldId === active.id)
+    const newIndex = fields.findIndex((field) => field.fieldId === over.id)
     if (oldIndex !== -1 && newIndex !== -1) {
       move(oldIndex, newIndex)
     }
@@ -56,14 +60,15 @@ const ProposalFormSessionsSection: React.FC<ProposalFormSessionsSectionProps> = 
       <div className="max-h-[500px] overflow-y-auto">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext
-            items={fields.map((field) => field.id)}
+            items={fields.map((field) => field.fieldId)}
             strategy={verticalListSortingStrategy}
           >
             {fields.map((field, index) => (
               <SortableProposalSessionCard
-                key={field.id}
-                id={field.id}
+                key={field.fieldId ?? index}
+                id={field.fieldId}
                 index={index}
+                isPersisted={isPersistedSessionPlan(field)}
                 canReorder={!isOneTime && fields.length > 1}
                 canRemove={!isOneTime && fields.length > 1}
                 register={register}

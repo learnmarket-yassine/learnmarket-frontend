@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { PAYOUT_METHOD_LABELS } from '@/features/proposal/constants/labels'
 import { ProposalFormValues } from '@/features/proposal/schemas'
-import { SERVICE_FEE_PERCENT } from '@/lib/Constants'
+import { getProposalPricePreview } from '@/features/proposal/utils/proposalPricePreview'
 import { Control, Controller, FieldErrors, UseFormRegister } from 'react-hook-form'
 
 type ProposalTermsSectionProps = {
@@ -26,8 +26,7 @@ const ProposalTermsSection: React.FC<ProposalTermsSectionProps> = ({
   isSingleSession,
   totalPrice,
 }) => {
-  const serviceFee = totalPrice * SERVICE_FEE_PERCENT
-  const learnerTotal = totalPrice * (1 + SERVICE_FEE_PERCENT)
+  const { serviceFee, learnerTotal } = getProposalPricePreview(totalPrice)
   return (
     <div className="flex flex-col space-y-4 rounded-3xl border border-[#E0E2E6] bg-white p-5">
       <h3 className="text-xl font-bold">Terms</h3>

@@ -1,7 +1,6 @@
 import ProposalJobDetailsCard from './CreateProposalForm/ProposalJobDetailsCard'
 import { MyProposalDetail } from '../../store/types'
 import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
-import { SERVICE_FEE_PERCENT } from '@/lib/Constants'
 import { formatBudget } from '@/lib/utils'
 
 type ProposalLearnRequestContextCardProps = {
@@ -9,8 +8,6 @@ type ProposalLearnRequestContextCardProps = {
 }
 
 const ProposalLearnRequestContextCard = ({ proposal }: ProposalLearnRequestContextCardProps) => {
-  const tutorTotal = Number(proposal.totalPrice) * (1 - SERVICE_FEE_PERCENT)
-
   return (
     <div className="flex flex-col divide-y divide-[#E0E2E6] rounded-3xl border border-[#E0E2E6] bg-white p-5">
       <ProposalJobDetailsCard learnrequest={proposal.learnRequest} />
@@ -27,7 +24,7 @@ const ProposalLearnRequestContextCard = ({ proposal }: ProposalLearnRequestConte
       </div>
       <div className="space-y-2 p-5">
         <h5 className="text-base font-semibold text-[#143681]">You'll receive</h5>
-        <p className="text-sm">{formatBudget(tutorTotal)} USD</p>
+        <p className="text-sm">{formatBudget(proposal.tutorTotal)} USD</p>
       </div>
     </div>
   )

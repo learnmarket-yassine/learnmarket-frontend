@@ -20,6 +20,7 @@ import LearnRequestDetailsPage from './pages/LearnRequestDetailsPage'
 import CreateProposalPage from './pages/CreateProposalPage'
 import MyProposalsPage from './pages/MyProposalsPage'
 import MyProposalDetailsPage from './pages/MyProposalDetailsPage'
+import EditProposalPage from './pages/EditProposalPage'
 
 const AppRoutes = () => {
   return (
@@ -44,6 +45,7 @@ const AppRoutes = () => {
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
                 <Route path="/proposals" element={<MyProposalsPage />} />
                 <Route path="/proposals/:id" element={<MyProposalDetailsPage />} />
+                <Route path="/proposals/:id/edit" element={<EditProposalPage />} />
                 <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
               </Route>
               <Route element={<RequireRole role="LEARNER" />}>

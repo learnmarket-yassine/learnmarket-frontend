@@ -52,19 +52,21 @@ const MyProposalDetailsPage = () => {
         <div className="flex flex-col space-y-4 rounded-3xl border border-[#E0E2E6] bg-white p-5">
           <ProposalSessionsSection sessions={proposal.sessionPlans} />
         </div>
-        <div className="flex flex-col space-y-4 rounded-3xl border border-[#E0E2E6] bg-white p-5">
-          <CoverLetterSection message={proposal.message} />
-        </div>
+        {proposal.message && (
+          <div className="flex flex-col space-y-4 rounded-3xl border border-[#E0E2E6] bg-white p-5">
+            <CoverLetterSection message={proposal.message} />
+          </div>
+        )}
       </div>
       <div className="col-span-3 space-y-6">
         <div className="flex flex-col gap-3">
           <Button
             type="button"
             disabled={proposal.status !== 'PENDING'}
-            onClick={() => navigate(`/proposals/${proposal.learnRequestId}/create`)}
+            onClick={() => navigate(`/proposals/${proposal.id}/edit`)}
             className="w-full whitespace-nowrap rounded-full bg-[#2563EB] py-6 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed"
           >
-            Apply now
+            Edit proposal
           </Button>
           <WithdrawProposalAction proposalId={proposal.id} status={proposal.status} />
         </div>

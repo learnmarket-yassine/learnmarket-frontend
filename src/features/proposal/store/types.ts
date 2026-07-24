@@ -36,6 +36,8 @@ export interface Proposal {
   status: ProposalStatus
   sessionDurationMinutes: number
   totalPrice: number | string
+  tutorTotal: number
+  serviceFee: number
   payoutMethod: PayoutMethod
   message: string | null
   sessionPlans: ProposalSessionPlan[]
@@ -60,6 +62,8 @@ export interface MyProposal {
   status: ProposalStatus
   sessionDurationMinutes: number
   totalPrice: number | string
+  tutorTotal: number
+  serviceFee: number
   payoutMethod: PayoutMethod
   message: string | null
   learnerViewedAt: string | null
@@ -74,6 +78,8 @@ export interface MyProposalDetail {
   status: ProposalStatus
   sessionDurationMinutes: number
   totalPrice: number | string
+  tutorTotal: number
+  serviceFee: number
   payoutMethod: PayoutMethod
   message: string | null
   sessionPlans: ProposalSessionPlan[]
