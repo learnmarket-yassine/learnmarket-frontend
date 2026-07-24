@@ -1,16 +1,19 @@
+import { useState } from 'react'
 import { FieldErrors, UseFormRegister } from 'react-hook-form'
 import { ProposalFormValues } from '../../schemas'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical } from 'lucide-react'
-import DeleteButton from '@/features/myProfile/components/ui/DeleteButton'
+import ConfirmModal from '@/components/layout/ConfirmModal'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useSortable } from '@dnd-kit/sortable'
+import DeleteButton from '@/features/myProfile/components/ui/DeleteButton'
 
 type SortableSessionCardProps = {
   id: string
   index: number
+  isPersisted: boolean
   canReorder: boolean
   canRemove: boolean
   register: UseFormRegister<ProposalFormValues>
@@ -21,6 +24,7 @@ type SortableSessionCardProps = {
 const SortableProposalSessionCard = ({
   id,
   index,
+  isPersisted,
   canReorder,
   canRemove,
   register,
@@ -30,6 +34,7 @@ const SortableProposalSessionCard = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
   })
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean | null>(false)
 
   return (
     <div
@@ -52,7 +57,23 @@ const SortableProposalSessionCard = ({
           )}
           <span className="text-base font-semibold text-[#143681]">Session {index + 1}</span>
         </div>
-        {canRemove && <DeleteButton onClick={onRemove} label={`Remove session ${index + 1}`} />}
+        {canRemove &&
+          (isPersisted ? (
+            <ConfirmModal
+              name={`remove-session-${id}`}
+              type="delete"
+              title="Remove this session?"
+              description={`Session ${index + 1} and its objective will be removed from this proposal. This is only saved once you click "Save changes."`}
+              isOpen={!!isDeleteOpen}
+              setIsOpen={setIsDeleteOpen}
+              handleConfirm={() => {
+                onRemove()
+                setIsDeleteOpen(false)
+              }}
+            />
+          ) : (
+            <DeleteButton onClick={onRemove} label={`Remove session ${index + 1}`} />
+          ))}
       </div>
       <div className="space-y-5">
         <div className="space-y-1.5">

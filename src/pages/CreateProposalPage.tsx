@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import useGetLearnRequest from '@/features/learn-requests/hooks/useGetLearnRequest'
-import CreateProposalForm from '@/features/proposal/components/ui/CreateProposalForm'
+import CreateProposalForm from '@/features/proposal/components/ui/CreateProposalForm/CreateProposalForm'
 
 import { useParams } from 'react-router-dom'
 

@@ -9,6 +9,10 @@ export type LearnRequestStatus = 'DRAFT' | 'OPEN' | 'CLOSED' | 'CANCELLED' | 'CO
 export interface LearnRequest {
   id: string
   learnerId: string
+  learner?: {
+    city: string
+    country: string
+  } | null
   status: LearnRequestStatus
   type: LearnRequestType | null
   title: string

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { UserProfile } from '@/types/nav'
 import NavActions from './NavActions'
 import NavBrand from './NavBrand'
@@ -12,6 +13,7 @@ interface NavbarProps {
 
 function Navbar({ user, notificationCount = 0 }: NavbarProps) {
   const logout = useLogout()
+  const navigate = useNavigate()
   return (
     <header className="sticky top-0 z-50 h-28 w-full bg-white">
       <div className="container flex items-center justify-between py-8">
@@ -22,7 +24,7 @@ function Navbar({ user, notificationCount = 0 }: NavbarProps) {
         <NavActions
           user={user}
           notificationCount={notificationCount}
-          onNavigate={(path) => console.log('Navigate to:', path)}
+          onNavigate={(path) => navigate(path)}
           onLogout={() => logout.mutate()}
         />
       </div>

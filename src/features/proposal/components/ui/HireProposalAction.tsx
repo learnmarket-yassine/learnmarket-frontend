@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import ConfirmModal from '@/components/layout/ConfirmModal'
-import { PROPOSAL_STATUS_LABELS } from '../../constants/labels'
 import { ProposalStatus } from '../../store/types'
 import { LearnRequestStatus } from '@/features/learn-requests/store/types'
 
@@ -26,13 +25,7 @@ const HireProposalAction = ({
   const isPending = proposalStatus === 'PENDING'
   const canHire = isPending && learnRequestStatus === 'OPEN'
 
-  if (!isPending) {
-    return (
-      <span className="rounded-full border border-[#E0E2E6] px-4 py-2 text-sm font-semibold text-[#6B7280]">
-        {PROPOSAL_STATUS_LABELS[proposalStatus]}
-      </span>
-    )
-  }
+  if (!isPending) return null
 
   return (
     <>
