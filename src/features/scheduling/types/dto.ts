@@ -2,7 +2,7 @@ import type {
   BookingStatus,
   ExceptionType,
   HoldStatus,
-  JobRequestType,
+  LearnRequestType,
   PayoutMethod,
   ProposalStatus,
   SessionStatus,
@@ -103,10 +103,20 @@ export interface Booking {
   updatedAt: string
 }
 
-export interface JobRequest {
+// Confirmed bookings on the tutor's own availability calendar (GET /tutor/bookings).
+export interface TutorBooking {
+  id: string
+  startTime: string
+  endTime: string
+  sessionId: string | null
+  session: { title: string } | null
+  learner: { firstname: string; lastname: string }
+}
+
+export interface LearnRequest {
   id: string
   learnerId: string
-  type: JobRequestType
+  type: LearnRequestType
   title: string
   description: string | null
   createdAt: string
@@ -136,11 +146,13 @@ export interface Session {
   status: SessionStatus
   createdAt: string
   updatedAt: string
+  // Present when status is HELD (or was, until the next refetch catches up).
+  slotHold?: SlotHold | null
 }
 
 export interface Proposal {
   id: string
-  jobRequestId: string
+  learnRequestId: string
   tutorId: string
   status: ProposalStatus
   sessionDurationMinutes: number
@@ -150,5 +162,5 @@ export interface Proposal {
   updatedAt: string
   sessionPlans: ProposalSessionPlan[]
   sessions: Session[]
-  jobRequest?: JobRequest
+  learnRequest?: LearnRequest
 }

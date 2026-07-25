@@ -1,16 +1,24 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useQuery } from '@tanstack/react-query'
-import { schedulingClient } from '../../api/schedulingClient'
-import type { AvailableSlotsQuery } from '../../types/dto'
+import type { AvailableSlotsQuery, AvailableSlotsResponse } from '../../types/dto'
+import { AxiosInstance } from 'axios'
 
-/** Polls modestly + refetches on window focus so slots taken mid-browse surface without a manual refresh. */
+const getAvailableSlots = async (
+  api: AxiosInstance,
+  tutorId: string,
+  query: AvailableSlotsQuery
+): Promise<AvailableSlotsResponse> => {
+  const response = await api.get(`/tutors/${tutorId}/available-slots`, {
+    params: query,
+  })
+  return response.data
+}
 export function useAvailableSlots(tutorId: string | undefined, query: AvailableSlotsQuery) {
   const axiosPrivate = useAxiosPrivate()
   return useQuery({
     queryKey: ['availableSlots', tutorId, query],
-    queryFn: () => schedulingClient.getAvailableSlots(axiosPrivate, tutorId as string, query),
+    queryFn: () => getAvailableSlots(axiosPrivate, tutorId as string, query),
     enabled: Boolean(tutorId),
     refetchOnWindowFocus: true,
-    refetchInterval: 30_000,
   })
 }

@@ -1,18 +1,13 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-import { addDays, format, startOfDay } from 'date-fns'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { endOfMonth, format, startOfDay, startOfMonth } from 'date-fns'
 import { useState } from 'react'
 import type { SlotHold } from '../../types/dto'
 import { isSlotTakenError } from '../../utils/errors'
 import { formatDateLabel, formatSlotTime } from '../../utils/time'
 import { getBrowserTimezone } from '../../utils/timezones'
 import { useAvailableSlots } from '../hooks/useAvailableSlots'
-import { useCreateHold } from '../hooks/useSlotHold'
-
-const WINDOW_DAYS = 21
+import { useCreateHold } from '../hooks/useCreateHold'
 
 interface SlotSelectionGridProps {
   tutorId: string
@@ -21,51 +16,57 @@ interface SlotSelectionGridProps {
   onHoldCreated: (hold: SlotHold) => void
 }
 
+const dayKey = (date: Date) => format(startOfDay(date), 'yyyy-MM-dd')
+const isFutureSlot = (slot: string) => new Date(slot).getTime() > Date.now()
+function useAccumulatedSlots(monthKey: string, latestSlots: string[] | undefined) {
+  const [state, setState] = useState<{ monthKey: string; slots: Set<string> }>({
+    monthKey,
+    slots: new Set(),
+  })
+  const future = latestSlots?.filter(isFutureSlot)
+
+  if (state.monthKey !== monthKey) {
+    const reset = { monthKey, slots: new Set(future ?? []) }
+    setState(reset)
+    return reset.slots
+  }
+
+  if (future && future.some((slot) => !state.slots.has(slot))) {
+    const merged = new Set(state.slots)
+    for (const slot of future) merged.add(slot)
+    setState({ monthKey, slots: merged })
+    return merged
+  }
+
+  return state.slots
+}
+
 const SlotSelectionGrid = ({
   tutorId,
   sessionId,
   durationMinutes,
   onHoldCreated,
 }: SlotSelectionGridProps) => {
-  const [windowStart, setWindowStart] = useState(() => startOfDay(new Date()))
-  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null)
+  const [displayMonth, setDisplayMonth] = useState(() => startOfMonth(new Date()))
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [pickError, setPickError] = useState<string | null>(null)
-  // Slots seen at any point during the current window stay visible (as "taken") even after
-  // they disappear from a refetch, rather than silently vanishing from the grid.
-  const [seenState, setSeenState] = useState<{ windowKey: string; seen: Set<string> }>({
-    windowKey: '',
-    seen: new Set(),
-  })
   const learnerTimezone = getBrowserTimezone()
 
-  const fromDate = format(windowStart, 'yyyy-MM-dd')
-  const toDate = format(addDays(windowStart, WINDOW_DAYS - 1), 'yyyy-MM-dd')
-  const windowKey = `${fromDate}|${toDate}`
+  const fromDate = format(displayMonth, 'yyyy-MM-dd')
+  const toDate = format(endOfMonth(displayMonth), 'yyyy-MM-dd')
+  const monthKey = `${fromDate}|${toDate}`
   const slotsQuery = useAvailableSlots(tutorId, { fromDate, toDate, durationMinutes })
-  const createHold = useCreateHold()
-
-  // Adjusting state in response to a changed prop/query result, computed during render
-  // rather than in an effect (React's documented pattern for this).
-  let seenSlots = seenState.seen
-  if (seenState.windowKey !== windowKey) {
-    seenSlots = new Set(slotsQuery.data?.slots ?? [])
-    setSeenState({ windowKey, seen: seenSlots })
-  } else {
-    const latest = slotsQuery.data?.slots ?? []
-    if (latest.some((slot) => !seenSlots.has(slot))) {
-      seenSlots = new Set(seenSlots)
-      for (const slot of latest) seenSlots.add(slot)
-      setSeenState({ windowKey, seen: seenSlots })
-    }
-  }
+  const { handleCreateHold, isPending: isCreateHoldPending } = useCreateHold()
+  const seenSlots = useAccumulatedSlots(monthKey, slotsQuery.data?.slots)
 
   if (slotsQuery.isPending) {
     return (
-      <div className="flex flex-col gap-3">
-        <Skeleton className="h-8 w-64" />
-        <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[300px_1fr]">
+        <Skeleton className="h-80 w-full rounded-2xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-32" />
           {Array.from({ length: 6 }, (_, i) => (
-            <Skeleton key={i} className="h-8 w-20" />
+            <Skeleton key={i} className="h-11 w-full rounded-full" />
           ))}
         </div>
       </div>
@@ -76,25 +77,29 @@ const SlotSelectionGrid = ({
     return <p className="text-sm text-destructive">Couldn&apos;t load available times.</p>
   }
 
-  const currentSlots = new Set(slotsQuery.data?.slots ?? [])
+  const currentSlots = new Set((slotsQuery.data?.slots ?? []).filter(isFutureSlot))
   const allSlots = Array.from(seenSlots).sort()
 
-  const byDate = new Map<string, string[]>()
+  const byDay = new Map<string, { date: Date; slots: string[] }>()
   for (const slot of allSlots) {
-    const key = formatDateLabel(slot, learnerTimezone)
-    const bucket = byDate.get(key)
-    if (bucket) bucket.push(slot)
-    else byDate.set(key, [slot])
+    const date = startOfDay(new Date(slot))
+    const key = dayKey(date)
+    const bucket = byDay.get(key)
+    if (bucket) bucket.slots.push(slot)
+    else byDay.set(key, { date, slots: [slot] })
   }
-  const dateKeys = Array.from(byDate.keys())
-  const activeDateKey =
-    selectedDateKey && byDate.has(selectedDateKey) ? selectedDateKey : (dateKeys[0] ?? null)
-  const activeSlots = activeDateKey ? (byDate.get(activeDateKey) ?? []) : []
+  const sortedDayKeys = Array.from(byDay.keys()).sort()
+  const availableDates = sortedDayKeys.map((key) => byDay.get(key)!.date)
+
+  const selectedKey = selectedDate ? dayKey(selectedDate) : null
+  const activeKey = selectedKey && byDay.has(selectedKey) ? selectedKey : (sortedDayKeys[0] ?? null)
+  const activeDay = activeKey ? byDay.get(activeKey) : undefined
+  const activeSlots = activeDay?.slots ?? []
 
   const handlePick = async (slotIso: string) => {
     setPickError(null)
     try {
-      const hold = await createHold.mutateAsync({
+      const hold = await handleCreateHold({
         sessionId,
         startTime: slotIso,
       })
@@ -110,83 +115,80 @@ const SlotSelectionGrid = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">Times shown in {learnerTimezone}</p>
+      <p className="text-sm text-[#6B7280]">
+        Times shown in <span className="font-medium text-[#1E293B]">{learnerTimezone}</span>
+      </p>
 
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => {
-            setWindowStart((current) => addDays(current, -WINDOW_DAYS))
-            setSelectedDateKey(null)
-          }}
-          aria-label="Previous dates"
-        >
-          <ChevronLeft />
-        </Button>
-
-        <div className="flex flex-1 gap-2 overflow-x-auto pb-1">
-          {dateKeys.length === 0 && (
-            <span className="px-2 text-sm text-muted-foreground">
-              No availability in this range
-            </span>
-          )}
-          {dateKeys.map((key) => (
-            <Button
-              key={key}
-              type="button"
-              variant={key === activeDateKey ? 'default' : 'outline'}
-              size="sm"
-              className="shrink-0"
-              onClick={() => setSelectedDateKey(key)}
-            >
-              {key}
-            </Button>
-          ))}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_400px]">
+        <div className="h-full w-full">
+          <Calendar
+            mode="single"
+            month={displayMonth}
+            onMonthChange={(month) => {
+              setDisplayMonth(startOfMonth(month))
+              setSelectedDate(undefined)
+            }}
+            selected={activeDay?.date}
+            onSelect={(date) => date && setSelectedDate(date)}
+            disabled={(date) => !byDay.has(dayKey(date))}
+            modifiers={{ available: availableDates }}
+            modifiersClassNames={{ available: 'font-semibold text-[#2563EB]' }}
+            className="h-full w-full rounded-2xl border border-[#E0E2E6] p-3"
+            classNames={{
+              month: 'grid grid-cols-[auto_1fr_auto] items-center gap-y-4 w-full',
+              month_grid: 'col-span-3 w-full h-full border-collapse space-y-1',
+              weekdays: '',
+              week: 'w-full ',
+            }}
+          />
         </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => {
-            setWindowStart((current) => addDays(current, WINDOW_DAYS))
-            setSelectedDateKey(null)
-          }}
-          aria-label="Next dates"
-        >
-          <ChevronRight />
-        </Button>
-      </div>
+        {/* ── Select a time ─────────────────────────────────────────── */}
+        <div className="flex flex-col gap-3">
+          <h3 className="text-sm font-semibold text-[#1E293B]">
+            {activeSlots[0] ? formatDateLabel(activeSlots[0], learnerTimezone) : 'Select a date'}
+          </h3>
 
-      <div className="flex flex-wrap gap-2">
-        {activeSlots.map((slot) => {
-          const isTaken = !currentSlots.has(slot)
-          return (
-            <Badge
-              key={slot}
-              asChild={!isTaken}
-              variant={isTaken ? 'outline' : 'secondary'}
-              className={cn(
-                'px-3 py-1.5',
-                isTaken ? 'cursor-not-allowed text-muted-foreground line-through' : 'cursor-pointer'
-              )}
-            >
-              {isTaken ? (
-                <span>{formatSlotTime(slot, learnerTimezone)} · Just booked</span>
-              ) : (
+          <div className="flex max-h-[360px] flex-col gap-2 overflow-y-auto pr-1">
+            {activeKey && activeSlots.length === 0 && (
+              <p className="rounded-xl border border-dashed border-[#E0E2E6] p-4 text-center text-sm text-[#6B7280]">
+                No times available on this day
+              </p>
+            )}
+            {!activeKey && (
+              <p className="rounded-xl border border-dashed border-[#E0E2E6] p-4 text-center text-sm text-[#6B7280]">
+                No availability this month
+              </p>
+            )}
+            {activeSlots.map((slot) => {
+              const isTaken = !currentSlots.has(slot)
+              if (isTaken) {
+                return (
+                  <button
+                    key={slot}
+                    type="button"
+                    disabled
+                    className="flex w-full items-center justify-between rounded-full border border-[#E0E2E6] px-5 py-3 text-sm text-[#B0B0B0] line-through disabled:cursor-not-allowed"
+                  >
+                    {formatSlotTime(slot, learnerTimezone)}
+                    <span className="text-xs no-underline">Just booked</span>
+                  </button>
+                )
+              }
+              return (
                 <button
+                  key={slot}
                   type="button"
-                  disabled={createHold.isPending}
+                  disabled={isCreateHoldPending}
                   onClick={() => handlePick(slot)}
+                  className="w-full rounded-full border border-[#2563EB] px-5 py-3 text-center text-sm font-medium text-[#2563EB] transition-colors hover:bg-[#2563EB] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {formatSlotTime(slot, learnerTimezone)}
                 </button>
-              )}
-            </Badge>
-          )
-        })}
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {pickError && <p className="text-sm text-destructive">{pickError}</p>}

@@ -1,5 +1,5 @@
 import { addDays, format } from 'date-fns'
-import type { AvailabilityException, AvailabilityRule } from '../../types/dto'
+import type { AvailabilityException, AvailabilityRule, TutorBooking } from '../../types/dto'
 
 export const minutesToTime = (minutes: number) =>
   `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}:00`
@@ -46,6 +46,19 @@ export const exceptionToEvent = (exception: AvailabilityException) => {
     allDay: false,
     classNames,
     extendedProps: { exception },
+  }
+}
+
+export const bookingToEvent = (booking: TutorBooking) => {
+  const learnerName = `${booking.learner.firstname} ${booking.learner.lastname}`.trim()
+  return {
+    id: `booking-${booking.id}`,
+    start: booking.startTime,
+    end: booking.endTime,
+    allDay: false,
+    classNames: ['date-overrides-event-booked'],
+    editable: false,
+    extendedProps: { booking, learnerName },
   }
 }
 

@@ -13,9 +13,15 @@ import DateDetailsModal from './DateDetailsModal'
 import useAvailabilityExceptions from '../../hooks/useGetAvailabilityExceptions'
 import useDeleteAvailabilityException from '../../hooks/useDeleteAvailabilityExceptions'
 import useGetAvailabilityRules from '../../hooks/useGetAvailabilityRules'
-import type { AvailabilityException } from '../../types/dto'
+import useGetTutorBookings from '../../hooks/useGetTutorBookings'
+import type { AvailabilityException, TutorBooking } from '../../types/dto'
 import { formatTimeRange } from '../../utils/time'
-import { computeBusinessHours, exceptionToEvent, roundToNearest30 } from './dateOverridesUtils'
+import {
+  bookingToEvent,
+  computeBusinessHours,
+  exceptionToEvent,
+  roundToNearest30,
+} from './dateOverridesUtils'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 
 export interface DateOverridesProps {
@@ -33,11 +39,13 @@ const LEGEND_ITEMS = [
   { label: 'Recurring', swatchClassName: 'date-overrides-legend-recurring' },
   { label: 'Extra Hours', swatchClassName: 'date-overrides-legend-extra' },
   { label: 'Blocked', swatchClassName: 'date-overrides-legend-blocked' },
+  { label: 'Booked', swatchClassName: 'date-overrides-legend-booked' },
 ] as const
 
 const DateOverrides = ({ timezone, onConflict }: DateOverridesProps) => {
   const exceptionsQuery = useAvailabilityExceptions()
   const rulesQuery = useGetAvailabilityRules()
+  const bookingsQuery = useGetTutorBookings()
   const { handleDeleteAvailabilityException, isPending: deleteAvailabilityExceptionPending } =
     useDeleteAvailabilityException()
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -51,8 +59,11 @@ const DateOverrides = ({ timezone, onConflict }: DateOverridesProps) => {
   )
 
   const events = useMemo(
-    () => (exceptionsQuery.data ?? []).map(exceptionToEvent),
-    [exceptionsQuery.data]
+    () => [
+      ...(exceptionsQuery.data ?? []).map(exceptionToEvent),
+      ...(bookingsQuery.data ?? []).map(bookingToEvent),
+    ],
+    [exceptionsQuery.data, bookingsQuery.data]
   )
 
   const openEditException = (exception: AvailabilityException) => {
@@ -71,11 +82,11 @@ const DateOverrides = ({ timezone, onConflict }: DateOverridesProps) => {
     setPendingDeleteId(null)
   }
 
-  if (exceptionsQuery.isPending || rulesQuery.isPending) {
+  if (exceptionsQuery.isPending || rulesQuery.isPending || bookingsQuery.isPending) {
     return <Skeleton className="h-80 w-full" />
   }
 
-  if (exceptionsQuery.isError || rulesQuery.isError) {
+  if (exceptionsQuery.isError || rulesQuery.isError || bookingsQuery.isError) {
     return <p className="py-4 text-sm text-destructive">Couldn't load date overrides.</p>
   }
 
@@ -108,6 +119,18 @@ const DateOverrides = ({ timezone, onConflict }: DateOverridesProps) => {
             setSelectedDate(arg.date)
           }}
           eventContent={(arg: EventContentArg) => {
+            const booking = arg.event.extendedProps.booking as TutorBooking | undefined
+            if (booking) {
+              const learnerName = arg.event.extendedProps.learnerName as string
+              return (
+                <div className="flex flex-col gap-1">
+                  <span className="font-bold">Booked</span>
+                  <span>{learnerName}</span>
+                  {booking.session && <span>{booking.session.title}</span>}
+                </div>
+              )
+            }
+
             const exception = arg.event.extendedProps.exception as AvailabilityException | undefined
             if (!exception) return null
             const isCustomRange = exception.startTime !== null && exception.endTime !== null
