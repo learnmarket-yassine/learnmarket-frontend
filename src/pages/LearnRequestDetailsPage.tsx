@@ -6,11 +6,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
+import BookingFlow from '@/features/scheduling/learner-booking/BookingFlow'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data } = useGetLearnRequest(id)
   const [selected, setSelected] = useState(1)
+  const acceptedProposal = data?.proposals?.find((proposal) => proposal.status === 'ACCEPTED')
   const steps = [
     {
       stepNumber: 1,
@@ -30,10 +32,10 @@ const LearnRequestDetailsPage = () => {
     },
     {
       stepNumber: 3,
-      component: <h1>Hiring</h1>,
+      component: acceptedProposal ? <BookingFlow proposalId={acceptedProposal.id} /> : null,
       show: true,
-      name: ' Hiring',
-      enabled: true,
+      name: 'Plannification',
+      enabled: !!acceptedProposal,
     },
     {
       stepNumber: 4,

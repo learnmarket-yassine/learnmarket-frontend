@@ -57,6 +57,12 @@
   color: white;
 }
 
+.date-overrides-calendar .fc-event.date-overrides-event-booked {
+  background: #1a46a7;
+  border-color: #1a46a7;
+  color: white;
+}
+
 /* Legend */
 .date-overrides-legend {
   display: flex;
@@ -97,4 +103,8 @@
 
 .date-overrides-legend-blocked {
   background: #631e22;
+}
+
+.date-overrides-legend-booked {
+  background: #1a46a7;
 }

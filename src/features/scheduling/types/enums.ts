@@ -4,7 +4,7 @@ export type UserRole = 'LEARNER' | 'TUTOR' | 'ADMIN'
 
 export type ExceptionType = 'BLOCKED' | 'ADDED'
 
-export type JobRequestType = 'ONE_TIME' | 'COURSE'
+export type LearnRequestType = 'ONE_TIME' | 'COURSE'
 
 export type ProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'WITHDRAWN'
 

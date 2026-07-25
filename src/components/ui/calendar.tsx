@@ -19,28 +19,30 @@ function Calendar({
   classNames,
   showOutsideDays = true,
   components: componentsProp,
+  navLayout = 'around',
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      navLayout={navLayout}
       className={cn('p-3', className)}
       classNames={{
-        months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-        month: 'space-y-4',
-        month_caption: 'flex justify-center pt-1 relative items-center',
+        months: 'flex flex-col h-full sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+        month: 'grid grid-cols-[auto_1fr_auto] items-center gap-y-4',
+        month_caption: 'col-start-2 flex justify-center pt-1 items-center',
         caption_label: 'text-sm font-medium',
         dropdowns: 'flex justify-center gap-1',
         nav: 'space-x-1 flex items-center',
         button_previous: cn(
           buttonVariants({ variant: 'outline' }),
-          'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1'
+          'col-start-1 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
         button_next: cn(
           buttonVariants({ variant: 'outline' }),
-          'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-1'
+          'col-start-3 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
-        month_grid: 'w-full border-collapse space-y-1',
+        month_grid: 'col-span-3 w-full border-collapse space-y-1',
         weekdays: 'flex',
         weekday: 'text-neutral-500 rounded-md w-9 font-normal text-[0.8rem] dark:text-neutral-400',
         week: 'flex w-full mt-2',
