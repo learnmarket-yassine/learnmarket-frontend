@@ -77,7 +77,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     id: 'support',
     links: [
       { label: 'Help & Support', href: '/help' },
-      { label: 'Upwork Foundation', href: '/foundation' },
+      { label: 'Community Guidelines', href: '/community' },
       { label: 'Terms of Service', href: '/terms' },
     ],
   },
@@ -85,7 +85,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     id: 'legal',
     links: [
       { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'CA Notice at Collection', href: '/ca-notice' },
+      { label: 'California Privacy Notice', href: '/privacy/california' },
       { label: 'Your Privacy Choices', href: '/privacy-choices' },
       { label: 'Accessibility', href: '/accessibility' },
     ],

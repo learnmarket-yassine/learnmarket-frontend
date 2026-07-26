@@ -2,22 +2,23 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 
-const deleteAttachment = async (
+const deleteSubmissionAttachment = async (
   api: AxiosInstance,
-  sessionId: string,
+  assignmentId: string,
   attachmentId: string
 ): Promise<void> => {
-  await api.delete(`/sessions/${sessionId}/attachments/${attachmentId}`)
+  await api.delete(`/assignments/${assignmentId}/submission/attachments/${attachmentId}`)
 }
 
-export default function useDeleteSessionAttachment(sessionId: string) {
+export default function useDeleteSubmissionAttachment(sessionId: string, assignmentId: string) {
   const axiosPrivate = useAxiosPrivate()
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation({
-    mutationFn: (attachmentId: string) => deleteAttachment(axiosPrivate, sessionId, attachmentId),
+    mutationFn: (attachmentId: string) =>
+      deleteSubmissionAttachment(axiosPrivate, assignmentId, attachmentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'attachments'] })
+      queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'assignment'] })
     },
   })
 

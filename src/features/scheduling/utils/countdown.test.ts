@@ -1,21 +1,52 @@
 import { describe, expect, it } from 'vitest'
-import { formatCountdown, getCountdownUrgency } from './countdown'
+import { formatCountdownLong, formatCountdownShort, getCountdownUrgency } from './countdown'
 
-describe('formatCountdown', () => {
-  it('formats minutes and seconds', () => {
-    expect(formatCountdown(9 * 60_000 + 45_000)).toBe('9:45')
+describe('formatCountdownShort', () => {
+  it('formats as mm:ss', () => {
+    expect(formatCountdownShort(10 * 60_000)).toBe('10:00')
   })
 
   it('pads seconds under 10', () => {
-    expect(formatCountdown(65_000)).toBe('1:05')
+    expect(formatCountdownShort(65_000)).toBe('1:05')
   })
 
   it('floors to 0:00 once expired', () => {
-    expect(formatCountdown(0)).toBe('0:00')
+    expect(formatCountdownShort(0)).toBe('0:00')
   })
 
   it('never returns negative', () => {
-    expect(formatCountdown(-5000)).toBe('0:00')
+    expect(formatCountdownShort(-5000)).toBe('0:00')
+  })
+})
+
+describe('formatCountdownLong', () => {
+  it('formats minutes only under an hour', () => {
+    expect(formatCountdownLong(9 * 60_000 + 45_000)).toBe('9 minutes')
+  })
+
+  it('uses singular units', () => {
+    expect(formatCountdownLong(65_000)).toBe('1 minute')
+  })
+
+  it('rolls over into hours', () => {
+    expect(formatCountdownLong(2 * 60 * 60_000 + 15 * 60_000)).toBe('2 hours, 15 minutes')
+  })
+
+  it('rolls over into days, hours, and minutes', () => {
+    // 8170 minutes = 5 days, 16 hours, 10 minutes
+    expect(formatCountdownLong(8170 * 60_000 + 4_000)).toBe('5 days, 16 hours, 10 minutes')
+  })
+
+  it('uses singular day/hour', () => {
+    expect(formatCountdownLong(25 * 60 * 60_000 + 60_000)).toBe('1 day, 1 hour, 1 minute')
+  })
+
+  it('floors to 0 minutes once expired', () => {
+    expect(formatCountdownLong(0)).toBe('0 minutes')
+  })
+
+  it('never returns negative', () => {
+    expect(formatCountdownLong(-5000)).toBe('0 minutes')
   })
 })
 

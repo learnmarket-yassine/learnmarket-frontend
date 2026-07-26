@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import { Session } from '@/features/scheduling/types/dto'
 import { SESSION_STATUS_ICON, SESSION_STATUS_LABELS } from '@/features/scheduling/utils/sessions'
+import useGetAssignment from '../../hooks/useGetAssignment'
 
 type SessionCardProps = {
   session: Session
@@ -18,6 +19,15 @@ const SessionCard: React.FC<SessionCardProps> = ({
   const StatusIcon = SESSION_STATUS_ICON[session.status]
   const isJoinable = JOINABLE_STATUSES.includes(session.status)
   const isSelected = session.id === selectedSessionId
+  const { data: assignment } = useGetAssignment(session.id)
+  const assignmentDotClass =
+    assignment?.exists && assignment.displayStatus === 'SUBMITTED'
+      ? 'bg-emerald-500'
+      : assignment?.exists &&
+          (assignment.displayStatus === 'ASSIGNED' || assignment.displayStatus === 'LATE')
+        ? 'bg-[#1a46a7]'
+        : null
+
   return (
     <div
       className={cn(
@@ -36,6 +46,7 @@ const SessionCard: React.FC<SessionCardProps> = ({
       <span className="text-sm font-medium">{session.title}</span>
 
       <span className="flex items-center gap-1.5 text-xs font-medium">
+        {assignmentDotClass && <span className={cn('size-2 rounded-full', assignmentDotClass)} />}
         <StatusIcon className="size-4" />
         {SESSION_STATUS_LABELS[session.status]}
       </span>

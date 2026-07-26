@@ -4,7 +4,7 @@ import { getBrowserTimezone } from '../../../scheduling/utils/timezones'
 import useGetSessionContext from '../../hooks/useGetSessionContext'
 import useGetMeetingDetails from '../../hooks/useGetMeetingDetails'
 import { useSessionSocketConnection } from '../../hooks/useSessionSocketConnection'
-import SessionAttachments from './SessionAttachments'
+import ClassroomFeed from './ClassroomFeed'
 import ProposalSessionObjective from '@/features/proposal/components/ui/ProposalSessionObjective'
 import SessionZoom from './SessionZoom'
 
@@ -24,7 +24,7 @@ const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="space-y-5">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{context.title}</h2>
@@ -47,8 +47,10 @@ const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
         </div>
         <ProposalSessionObjective className="text-base font-medium" objective={context.objective} />
       </div>
-      <SessionZoom context={context} meeting={meeting} sessionId={sessionId} />
-      <SessionAttachments sessionId={sessionId} />
+      <div className="space-y-8">
+        <SessionZoom context={context} meeting={meeting} sessionId={sessionId} />
+        <ClassroomFeed sessionId={sessionId} isTutor={context.isTutor} />
+      </div>
     </div>
   )
 }

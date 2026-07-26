@@ -172,17 +172,90 @@ export type MeetingDetails =
       password: string | null
     }
 
-export interface SessionAttachment {
+export interface CommentAuthor {
   id: string
-  sessionId: string
-  uploaderId: string
+  firstname: string
+  lastname: string
+  avatar: string | null
+}
+
+export interface AnnouncementAttachment {
+  id: string
   key: string
   fileName: string
   mimeType: string | null
   fileSize: number | null
   createdAt: string
-  uploader: { id: string; firstname: string; lastname: string }
 }
+
+export interface AnnouncementComment {
+  id: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+}
+
+export interface Announcement {
+  id: string
+  sessionId: string
+  authorId: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+  attachments: AnnouncementAttachment[]
+  comments: AnnouncementComment[]
+}
+
+export type SubmissionStatus = 'ASSIGNED' | 'SUBMITTED' | 'EXCUSED'
+export type AssignmentDisplayStatus = SubmissionStatus | 'LATE'
+
+export interface SubmissionAttachment {
+  id: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+}
+
+export interface AssignmentSubmission {
+  id: string
+  status: SubmissionStatus
+  submittedAt: string | null
+  attachments: SubmissionAttachment[]
+}
+
+export interface AssignmentAttachment {
+  id: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+}
+
+export interface AssignmentComment {
+  id: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+}
+
+export interface Assignment {
+  id: string
+  sessionId: string
+  title: string
+  instructions: string | null
+  dueAt: string | null
+  createdAt: string
+  updatedAt: string
+  submission: AssignmentSubmission
+  attachments: AssignmentAttachment[]
+  comments: AssignmentComment[]
+  displayStatus: AssignmentDisplayStatus
+}
+
+export type AssignmentResponse = { exists: false } | ({ exists: true } & Assignment)
 
 export interface Proposal {
   id: string
