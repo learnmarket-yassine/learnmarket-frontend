@@ -58,7 +58,14 @@ const MyProposalsList = ({
         {proposals.map((proposal) => (
           <MyProposalRow
             onSelect={() => {
-              navigate(`/proposals/${proposal.id}`)
+              // Once accepted, real sessions exist -- send the tutor to the
+              // Job details / Sessions stepper page instead of the plain
+              // pending-proposal view (which has no sessions to show).
+              navigate(
+                proposal.status === 'ACCEPTED'
+                  ? `/jobs/${proposal.id}`
+                  : `/proposals/${proposal.id}`
+              )
             }}
             key={proposal.id}
             proposal={proposal}

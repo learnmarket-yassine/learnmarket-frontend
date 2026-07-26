@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import useGetMyProposal from '@/features/proposal/hooks/useGetMyProposal'
 import ProposalLearnRequestContextCard from '@/features/proposal/components/ui/ProposalLearnRequestContextCard'
 import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverLetterSection'
+import ProposalStatusBadge from '@/features/proposal/components/ui/ProposalStatusBadge'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 
@@ -49,7 +50,7 @@ const TutorJobDetailsPage = () => {
         </div>
       ),
       show: true,
-      name: 'Details',
+      name: 'Job details',
       enabled: true,
     },
     {
@@ -64,7 +65,10 @@ const TutorJobDetailsPage = () => {
 
   return (
     <div className="flex w-full flex-col gap-10">
-      <h1 className="text-2xl font-semibold">{proposal.learnRequest.title}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">{proposal.learnRequest.title}</h1>
+        <ProposalStatusBadge status={proposal.status} />
+      </div>
       <div className="w-full space-y-2">
         <ChevronStepper selected={selected} setSelected={setSelected} steps={steps} />
       </div>

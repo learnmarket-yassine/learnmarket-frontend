@@ -112,7 +112,7 @@ function UploadImageForm() {
             variant={'outline'}
             className="flex h-full items-center gap-2 rounded-full border border-[#2563EB] px-6 py-2 text-sm font-semibold text-[#2563EB] hover:border-[#2563EB] hover:text-[#2563EB]"
           >
-            <PlusIcon className="size-4" />
+            <PlusIcon className="size-4 text-[#2563EB]" />
             <span>Upload photo</span>
           </Button>
         </DialogTrigger>

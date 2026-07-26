@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Download, Trash2, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import { cn } from '@/lib/utils'
 import { Assignment } from '@/features/scheduling/types/dto'
 import useUploadSubmissionAttachment from '../../hooks/useUploadSubmissionAttachment'
@@ -12,7 +13,7 @@ import useDownloadClassroomAttachment from '../../hooks/useDownloadClassroomAtta
 import { formatFileSize } from '../../utils/formatFileSize'
 import CommentThread from './CommentThread'
 import AssignmentStatusBadge from './AssignmentStatusBadge'
-import CreateAssignmentPanel from './CreateAssignmentPanel'
+import AssignmentModal from './AssignmentModal'
 
 interface AssignmentCardProps {
   sessionId: string
@@ -23,7 +24,6 @@ interface AssignmentCardProps {
 const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [isEditOpen, setIsEditOpen] = useState(false)
 
   const { handleDownload } = useDownloadClassroomAttachment()
   const { handleUpload, isPending: isUploading } = useUploadSubmissionAttachment(
@@ -79,27 +79,18 @@ const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps)
         </div>
         {isTutor && (
           <div className="flex flex-col items-end gap-1">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={!isAssigned}
-              onClick={() => setIsEditOpen(true)}
-            >
-              Edit
-            </Button>
-            {!isAssigned && (
-              <span className="text-[10px] text-gray-400">Can't be edited after submission</span>
+            {isAssigned ? (
+              <AssignmentModal sessionId={sessionId} assignment={assignment} />
+            ) : (
+              <>
+                <span className="text-[10px] text-gray-400">Can't be edited after submission</span>
+              </>
             )}
           </div>
         )}
       </div>
 
-      {assignment.instructions && (
-        <p className="whitespace-pre-wrap break-words text-sm text-[#374151]">
-          {assignment.instructions}
-        </p>
-      )}
+      {assignment.instructions && <RichTextContent html={assignment.instructions} />}
 
       {assignment.attachments.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -240,15 +231,6 @@ const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps)
       <div className="border-t border-[#E0E2E6] pt-4">
         <CommentThread comments={assignment.comments} onSubmit={handleCreateComment} />
       </div>
-
-      {isTutor && (
-        <CreateAssignmentPanel
-          sessionId={sessionId}
-          isOpen={isEditOpen}
-          setIsOpen={setIsEditOpen}
-          assignment={assignment}
-        />
-      )}
     </div>
   )
 }
