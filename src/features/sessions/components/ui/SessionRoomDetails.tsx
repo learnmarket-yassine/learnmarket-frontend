@@ -1,0 +1,56 @@
+import { CalendarIcon, Clock } from 'lucide-react'
+import { formatDateLabel, formatSlotTime } from '../../../scheduling/utils/time'
+import { getBrowserTimezone } from '../../../scheduling/utils/timezones'
+import useGetSessionContext from '../../hooks/useGetSessionContext'
+import useGetMeetingDetails from '../../hooks/useGetMeetingDetails'
+import { useSessionSocketConnection } from '../../hooks/useSessionSocketConnection'
+import SessionAttachments from './SessionAttachments'
+import ProposalSessionObjective from '@/features/proposal/components/ui/ProposalSessionObjective'
+import SessionZoom from './SessionZoom'
+
+interface SessionRoomDetailsProps {
+  sessionId: string
+}
+
+const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
+  useSessionSocketConnection()
+  const { data: context, isLoading: isContextLoading } = useGetSessionContext(sessionId)
+  const { data: meeting, isLoading: isMeetingLoading } = useGetMeetingDetails(sessionId)
+
+  const timezone = getBrowserTimezone()
+
+  if (isContextLoading || isMeetingLoading || !context || !meeting) {
+    return <div className="p-6 text-sm text-gray-500">Loading session…</div>
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">{context.title}</h2>
+          {context.booking && (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 text-[#1a46a7]">
+                <CalendarIcon className="h-4 w-4" />
+                <p> {formatDateLabel(context.booking.startTime, timezone)}</p>
+              </div>
+              <div className="flex items-center gap-2 text-[#1a46a7]">
+                <Clock className="h-4 w-4" />
+                <p>
+                  {' '}
+                  {formatSlotTime(context.booking.startTime, timezone)} -{' '}
+                  {formatSlotTime(context.booking.endTime, timezone)}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+        <ProposalSessionObjective className="text-base font-medium" objective={context.objective} />
+      </div>
+      <SessionZoom context={context} meeting={meeting} sessionId={sessionId} />
+      <SessionAttachments sessionId={sessionId} />
+    </div>
+  )
+}
+
+export default SessionRoomDetails

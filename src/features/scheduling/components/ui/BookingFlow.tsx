@@ -1,12 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { getBrowserTimezone } from '../utils/timezones'
-import SlotSelectionGrid from './components/SlotSelectionGrid'
-import { useBookingFlow } from './hooks/useBookingFlow'
-import CourseList from './components/CourseList'
-import HoldSlotModal from './components/HoldModal'
-import SessionsSummary from './components/SessionsSummary'
-import { useGetProposal } from './hooks/useGetProposal'
+import { getBrowserTimezone } from '../../utils/timezones'
+import SlotSelectionGrid from './SlotSelectionGrid'
+import CourseList from './CourseList'
+import HoldSlotModal from './HoldModal'
+import SessionsSummary from './SessionsSummary'
 import SuccessModal from '@/components/ui/SuccessModal'
+import { useGetProposal } from '../../hooks/useGetProposal'
+import { useBookingFlow } from '../../hooks/useBookingFlow'
 
 interface BookingFlowProps {
   proposalId: string

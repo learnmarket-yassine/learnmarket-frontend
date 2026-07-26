@@ -5,7 +5,7 @@ import useGetMyProposal from '@/features/proposal/hooks/useGetMyProposal'
 import ProposalLearnRequestContextCard from '@/features/proposal/components/ui/ProposalLearnRequestContextCard'
 import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverLetterSection'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
-import SessionsTab from '@/features/sessions/components/SessionsTab'
+import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 
 const TutorJobDetailsPage = () => {
   const { id } = useParams<{ id: string }>()

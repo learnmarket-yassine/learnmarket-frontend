@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Session, SlotHold } from '../../types/dto'
-import { isHoldStillActive } from '../../utils/holds'
-import { findActionableSessions } from '../../utils/sessions'
-import { useReleaseHold } from './useReleaseHold'
 import { useConfirmHold } from './useConfirmHold'
+import { findActionableSessions } from '../utils/sessions'
+import { Session, SlotHold } from '../types/dto'
+import { useReleaseHold } from './useReleaseHold'
+import { isHoldStillActive } from '../utils/holds'
 
 export type BookingFlowState = { step: 'selecting' } | { step: 'holding'; hold: SlotHold }
 

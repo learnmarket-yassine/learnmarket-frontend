@@ -22,7 +22,7 @@ import MyProposalsPage from './pages/MyProposalsPage'
 import MyProposalDetailsPage from './pages/MyProposalDetailsPage'
 import EditProposalPage from './pages/EditProposalPage'
 import MessagingPage from './pages/MessagingPage'
-import SessionRoomPage from './pages/SessionRoomPage'
+import SessionsPage from './pages/SessionsPage'
 import TutorJobDetailsPage from './pages/TutorJobDetailsPage'
 
 const AppRoutes = () => {
@@ -44,8 +44,7 @@ const AppRoutes = () => {
               <Route path="/profile" element={<MyProfilePage />} />
               <Route path="/accueil" element={<AccueilPage />} />
               <Route path="/messages" element={<MessagingPage />} />
-              <Route path="/sessions/:id/room" element={<SessionRoomPage />} />
-
+              <Route path="/sessions" element={<SessionsPage />} />
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
                 <Route path="/proposals" element={<MyProposalsPage />} />

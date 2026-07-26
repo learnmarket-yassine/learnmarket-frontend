@@ -1,7 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Booking } from '../../types/dto'
 import { AxiosInstance } from 'axios'
+import { Booking } from '../types/dto'
 
 const cancelBooking = async (api: AxiosInstance, bookingId: string): Promise<Booking> => {
   const response = await api.patch(`/bookings/${bookingId}/cancel`)
@@ -13,7 +13,10 @@ export function useCancelBooking() {
   const queryClient = useQueryClient()
   const cancelBookingMutation = useMutation({
     mutationFn: (bookingId: string) => cancelBooking(axiosPrivate, bookingId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['proposal'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['proposal'] })
+      queryClient.invalidateQueries({ queryKey: ['myBookings'] })
+    },
   })
 
   return {

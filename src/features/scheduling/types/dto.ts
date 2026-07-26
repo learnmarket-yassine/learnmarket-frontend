@@ -113,6 +113,16 @@ export interface TutorBooking {
   learner: { firstname: string; lastname: string }
 }
 
+export interface MyBooking {
+  id: string
+  startTime: string
+  endTime: string
+  sessionId: string | null
+  session: { title: string } | null
+  tutor?: { firstname: string; lastname: string }
+  learner?: { firstname: string; lastname: string }
+}
+
 export interface LearnRequest {
   id: string
   learnerId: string

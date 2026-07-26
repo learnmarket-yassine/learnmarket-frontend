@@ -1,4 +1,4 @@
-import BookingFlow from '@/features/scheduling/learner-booking/BookingFlow'
+import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
 import { useParams } from 'react-router-dom'
 
 const BookingFlowPage = () => {

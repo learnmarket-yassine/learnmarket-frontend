@@ -1,7 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useQuery } from '@tanstack/react-query'
-import type { AvailableSlotsQuery, AvailableSlotsResponse } from '../../types/dto'
 import { AxiosInstance } from 'axios'
+import { AvailableSlotsQuery, AvailableSlotsResponse } from '../types/dto'
 
 const getAvailableSlots = async (
   api: AxiosInstance,

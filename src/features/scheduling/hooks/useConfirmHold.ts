@@ -2,10 +2,10 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { useState } from 'react'
-import { Booking } from '../../types/dto'
-import { getBrowserTimezone } from '../../utils/timezones'
-import { formatDateLabel, formatSlotTime } from '../../utils/time'
-import { isHoldExpiredError, isSlotTakenError } from '../../utils/errors'
+import { Booking } from '../types/dto'
+import { getBrowserTimezone } from '../utils/timezones'
+import { formatDateLabel, formatSlotTime } from '../utils/time'
+import { isHoldExpiredError, isSlotTakenError } from '../utils/errors'
 
 const confirmHold = async (api: AxiosInstance, holdId: string): Promise<Booking> => {
   const response = await api.post(`/holds/${holdId}/confirm`)

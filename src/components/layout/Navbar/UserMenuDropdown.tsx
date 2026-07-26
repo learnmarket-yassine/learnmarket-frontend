@@ -10,6 +10,7 @@ import LayoutIcon from '@/assets/LayoutIcon'
 import MessagesIcon from '@/assets/MessagesIcon'
 import SettingsIcon from '@/assets/SettingsIcon'
 import LogoutIcon from '@/assets/LogoutIcon'
+import VideoIcon from '@/assets/VideoIcon'
 interface UserMenuDropdownProps {
   user: UserProfile
   onNavigate?: (path: string) => void
@@ -81,6 +82,11 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
             icon={<LayoutIcon />}
             label="Dashboard"
             onClick={() => onNavigate?.('/dashboard')}
+          />
+          <MenuItem
+            icon={<VideoIcon />}
+            label="Sessions"
+            onClick={() => onNavigate?.('/sessions')}
           />
           <MenuItem
             icon={<MessagesIcon />}

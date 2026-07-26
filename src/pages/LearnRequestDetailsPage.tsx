@@ -6,8 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
-import BookingFlow from '@/features/scheduling/learner-booking/BookingFlow'
-import SessionsTab from '@/features/sessions/components/SessionsTab'
+import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
+import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
