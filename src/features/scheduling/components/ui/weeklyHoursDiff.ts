@@ -11,6 +11,18 @@ export interface WeeklyHoursMutations {
   toDelete: string[]
 }
 
+export function buildWeeklyHoursDefaultValues(rules: AvailabilityRule[]): WeeklyHoursFormValues {
+  return {
+    days: Array.from({ length: 7 }, (_, dayOfWeek) => {
+      const slots = rules
+        .filter((rule) => rule.dayOfWeek === dayOfWeek)
+        .sort((a, b) => a.startTime - b.startTime)
+        .map((rule) => ({ id: rule.id, start: rule.startTime, end: rule.endTime }))
+      return { dayOfWeek, enabled: slots.length > 0, slots }
+    }),
+  }
+}
+
 /** Reconciles the Weekly Hours form against the tutor's persisted rules into create/update/delete ops. */
 export function diffWeeklyHours(
   original: AvailabilityRule[],

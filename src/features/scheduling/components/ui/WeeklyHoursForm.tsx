@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import type { AvailabilityRule } from '../../types/dto'
 
-import { diffWeeklyHours } from './weeklyHoursDiff'
+import { buildWeeklyHoursDefaultValues, diffWeeklyHours } from './weeklyHoursDiff'
 import DayRow from './DayRow'
 import useUpdateWeeklyHours from '../../hooks/useUpdateWeeklyHours'
 import { type WeeklyHoursFormValues, weeklyHoursSchema } from '../../schemas'
@@ -17,22 +17,10 @@ interface WeeklyHoursFormProps {
   onConflict: (error: unknown) => boolean
 }
 
-function buildDefaultValues(rules: AvailabilityRule[]): WeeklyHoursFormValues {
-  return {
-    days: Array.from({ length: 7 }, (_, dayOfWeek) => {
-      const slots = rules
-        .filter((rule) => rule.dayOfWeek === dayOfWeek)
-        .sort((a, b) => a.startTime - b.startTime)
-        .map((rule) => ({ id: rule.id, start: rule.startTime, end: rule.endTime }))
-      return { dayOfWeek, enabled: slots.length > 0, slots }
-    }),
-  }
-}
-
 const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) => {
   const { control, handleSubmit, formState, reset } = useForm<WeeklyHoursFormValues>({
     resolver: zodResolver(weeklyHoursSchema),
-    defaultValues: buildDefaultValues(rules),
+    defaultValues: buildWeeklyHoursDefaultValues(rules),
   })
   const [saveStatus, setSaveStatus] = useState<{
     type: 'success' | 'error'
@@ -74,7 +62,7 @@ const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) 
         <Button
           type="button"
           variant="ghost"
-          onClick={() => reset(buildDefaultValues(rules))}
+          onClick={() => reset(buildWeeklyHoursDefaultValues(rules))}
           className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
         >
           Cancel

@@ -21,7 +21,7 @@ import {
   computeBusinessHours,
   exceptionToEvent,
   roundToNearest30,
-} from './dateOverridesUtils'
+} from '../../utils/dateOverridesUtils'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 
 export interface DateOverridesProps {

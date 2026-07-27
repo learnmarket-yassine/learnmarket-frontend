@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import AvailabilityStep from '@/features/onboarding/components/layout/FormSteps/AvailabilityStep'
 import EducationStep from '@/features/onboarding/components/layout/FormSteps/EducationStep'
 import ExperienceStep from '@/features/onboarding/components/layout/FormSteps/ExperienceStep'
 import HeadlineStep from '@/features/onboarding/components/layout/FormSteps/HeadlineStep'
@@ -15,7 +16,7 @@ import OverviewStep from '@/features/onboarding/components/layout/FormSteps/Over
 import UserInfoStep from '@/features/onboarding/components/layout/FormSteps/UserInfoStep'
 
 // Steps gated behind their own form validation before "Next" is enabled
-const VALIDATED_STEPS = new Set([2, 3, 4, 6, 7, 8, 9])
+const VALIDATED_STEPS = new Set([2, 3, 4, 6, 7, 8, 9, 10])
 
 const TutorOnboardingPage = () => {
   const user = useStore((state) => state.auth.user)
@@ -27,6 +28,7 @@ const TutorOnboardingPage = () => {
   const skillsRef = useRef<StepHandle>(null)
   const headlineRef = useRef<StepHandle>(null)
   const languagesRef = useRef<StepHandle>(null)
+  const availabilityRef = useRef<StepHandle>(null)
   const overviewRef = useRef<StepHandle>(null)
   const userInfoRef = useRef<StepHandle>(null)
 
@@ -66,8 +68,10 @@ const TutorOnboardingPage = () => {
       case 7:
         return (await languagesRef.current?.submit()) ?? true
       case 8:
-        return (await overviewRef.current?.submit()) ?? true
+        return (await availabilityRef.current?.submit()) ?? true
       case 9:
+        return (await overviewRef.current?.submit()) ?? true
+      case 10:
         return (await userInfoRef.current?.submit()) ?? true
       default:
         return true
@@ -128,14 +132,23 @@ const TutorOnboardingPage = () => {
     },
     {
       stepNumber: 8,
-      component: <OverviewStep ref={overviewRef} onValidityChange={(v) => setStepValid(8, v)} />,
+      component: (
+        <AvailabilityStep ref={availabilityRef} onValidityChange={(v) => setStepValid(8, v)} />
+      ),
+      show: true,
+      name: 'set your availability',
+      canSkip: false,
+    },
+    {
+      stepNumber: 9,
+      component: <OverviewStep ref={overviewRef} onValidityChange={(v) => setStepValid(9, v)} />,
       show: true,
       name: 'write an overview',
       canSkip: false,
     },
     {
-      stepNumber: 9,
-      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(9, v)} />,
+      stepNumber: 10,
+      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(10, v)} />,
       show: true,
       name: 'add your photo and location',
       canSkip: false,
