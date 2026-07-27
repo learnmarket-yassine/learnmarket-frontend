@@ -1,13 +1,14 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
 import { LearnRequest } from '@/features/learn-requests/store/types'
-import { formatBudget } from '@/lib/utils'
+import { formatBudget, cn } from '@/lib/utils'
 import { ArrowLeft, GraduationCap, Heart, Tag, Wallet } from 'lucide-react'
 import { TYPE_BADGE_STYLES, TYPE_ICONS } from './TutorLearningRequestCard'
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 import LanguagesIcon from '@/assets/LanguagesIcon'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import useToggleSavedLearnRequest from '@/features/learn-requests/hooks/useToggleSavedLearnRequest'
 
 type LearningRequestDetailsSheetProps = {
   isOpen?: boolean
@@ -21,6 +22,7 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
   request,
 }) => {
   const navigate = useNavigate()
+  const toggleSaved = useToggleSavedLearnRequest(request?.id ?? '')
 
   if (!request) return null
   const TypeIcon = request.type ? TYPE_ICONS[request.type] : undefined
@@ -119,11 +121,18 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
                 Apply now
               </Button>
               <Button
+                type="button"
                 variant="outline"
+                onClick={() => toggleSaved.mutate(!!request.isSavedByMe)}
                 className="group flex w-full items-center gap-3 whitespace-nowrap rounded-full border-[#2563EB] bg-white py-6 font-medium text-[#2563EB] hover:bg-white/90 hover:text-[#2563EB]/90"
               >
-                <Heart className="size-5 transition group-hover:scale-110" />
-                Save request
+                <Heart
+                  className={cn(
+                    'size-5 transition group-hover:scale-110',
+                    request.isSavedByMe && 'fill-current'
+                  )}
+                />
+                {request.isSavedByMe ? 'Saved' : 'Save request'}
               </Button>
             </div>
           </div>

@@ -27,6 +27,11 @@ export interface LearnRequest {
   skills: { skill: Skill }[]
   proposals?: Proposal[]
   actionNeeded: boolean
+  // Optional: only populated by endpoints that include the savedBy join
+  // (main feed, Saved tab) -- other LearnRequest call sites in the codebase
+  // don't set it, so treat a missing value as "not saved" rather than
+  // assuming it's always sent.
+  isSavedByMe?: boolean
   createdAt: string
   updatedAt: string
 }
