@@ -1,10 +1,9 @@
 import { Education, Language } from '../../store/types'
-import AvailabilityForm from '../ui/AvailabilityForm'
 import VideoIntroForm from '../ui/VideoIntroForm'
 import CreateLanguageForm from '../ui/CreateLanguageForm'
 import EducationForm from '../ui/EducationForm'
 import EditLanguagesForm from '../ui/EditLanguagesForm'
-import { hoursPerWeekLabels, languageLevelLabels } from '@/lib/Constants'
+import { languageLevelLabels } from '@/lib/Constants'
 import { getYoutubeThumbnailUrl } from '@/lib/utils'
 import VideoModal from '../ui/VideoModal'
 import { useState } from 'react'
@@ -64,20 +63,6 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
       {videoIntroUrl && (
         <VideoModal isOpen={isVideoOpen} setIsOpen={setIsVideoOpen} videoUrl={videoIntroUrl} />
       )}
-      {/* Hours per week */}
-      <div className="px-5 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold text-[#143681]">Hours per week</p>
-          <AvailabilityForm />
-        </div>
-        <p className="text-sm text-[#143681]">
-          {myProfile.tutorProfile?.hoursPerWeek
-            ? (hoursPerWeekLabels[myProfile.tutorProfile.hoursPerWeek] ??
-              myProfile.tutorProfile.hoursPerWeek)
-            : null}
-        </p>
-      </div>
-
       {/* Languages */}
       <div className="px-5 py-4">
         <div className="flex items-center justify-between">

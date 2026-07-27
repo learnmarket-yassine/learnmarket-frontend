@@ -12,11 +12,10 @@ import StepperButtons, { StepHandle } from '@/features/onboarding/components/ui/
 import { useStore } from '@/store/store'
 import { Navigate, useNavigate } from 'react-router-dom'
 import OverviewStep from '@/features/onboarding/components/layout/FormSteps/OverviewStep'
-import HourlyRateStep from '@/features/onboarding/components/layout/FormSteps/HourlyRateStep'
 import UserInfoStep from '@/features/onboarding/components/layout/FormSteps/UserInfoStep'
 
 // Steps gated behind their own form validation before "Next" is enabled
-const VALIDATED_STEPS = new Set([2, 3, 4, 6, 7, 8, 9, 10])
+const VALIDATED_STEPS = new Set([2, 3, 4, 6, 7, 8, 9])
 
 const TutorOnboardingPage = () => {
   const user = useStore((state) => state.auth.user)
@@ -29,7 +28,6 @@ const TutorOnboardingPage = () => {
   const headlineRef = useRef<StepHandle>(null)
   const languagesRef = useRef<StepHandle>(null)
   const overviewRef = useRef<StepHandle>(null)
-  const hourlyRateRef = useRef<StepHandle>(null)
   const userInfoRef = useRef<StepHandle>(null)
 
   const [stepValidity, setStepValidity] = useState<Record<number, boolean>>({})
@@ -70,8 +68,6 @@ const TutorOnboardingPage = () => {
       case 8:
         return (await overviewRef.current?.submit()) ?? true
       case 9:
-        return (await hourlyRateRef.current?.submit()) ?? true
-      case 10:
         return (await userInfoRef.current?.submit()) ?? true
       default:
         return true
@@ -139,16 +135,7 @@ const TutorOnboardingPage = () => {
     },
     {
       stepNumber: 9,
-      component: (
-        <HourlyRateStep ref={hourlyRateRef} onValidityChange={(v) => setStepValid(9, v)} />
-      ),
-      show: true,
-      name: 'set your rate',
-      canSkip: false,
-    },
-    {
-      stepNumber: 10,
-      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(10, v)} />,
+      component: <UserInfoStep ref={userInfoRef} onValidityChange={(v) => setStepValid(9, v)} />,
       show: true,
       name: 'add your photo and location',
       canSkip: false,

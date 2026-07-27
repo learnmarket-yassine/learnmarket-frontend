@@ -76,8 +76,6 @@ export interface WorkHistoryTab {
 
 export interface TutorProfile {
   id: string
-  hourlyRate?: number
-  hoursPerWeek?: string
   videoIntroUrl?: string | null
   isVerified: boolean
   skills: Skill[]

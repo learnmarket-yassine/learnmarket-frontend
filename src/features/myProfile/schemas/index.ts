@@ -16,12 +16,6 @@ export const overviewSchema = z.object({
 
 export type OverviewFormData = z.infer<typeof overviewSchema>
 
-export const availabilitySchema = z.object({
-  hoursPerWeek: z.string().min(1, 'Ce champ est obligatoire'),
-})
-
-export type AvailabilityFormData = z.infer<typeof availabilitySchema>
-
 export const videoIntroSchema = z.object({
   videoIntroUrl: z.string().min(1, 'Ce champ est obligatoire'),
 })
@@ -226,14 +220,3 @@ export const portfolioSchema = z.object({
 })
 
 export type PortfolioFormValues = z.infer<typeof portfolioSchema>
-
-export const hourlyRateSchema = z.object({
-  hourlyRate: z
-    .number({
-      error: 'Hourly rate is required',
-    })
-    .min(0, 'Hourly rate cannot be negative')
-    .max(10000, 'Hourly rate is too high'),
-})
-
-export type HourlyRateFormData = z.infer<typeof hourlyRateSchema>
