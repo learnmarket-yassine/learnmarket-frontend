@@ -2,8 +2,9 @@ import { LearnRequest } from '@/features/learn-requests/store/types'
 import { useLineClamp } from '@/hooks/useLineClamp'
 import { LEVEL_LABELS, TYPE_LABELS, formatLabel } from '@/features/learn-requests/constants/labels'
 import SkillsSlider from './SkillsCarousel'
-import { Heart, CalendarClock, BookOpen } from 'lucide-react'
+import { CalendarClock, BookOpen } from 'lucide-react'
 import { formatBudget } from '@/lib/utils'
+import SaveLearnRequestButton from '@/features/learn-requests/components/ui/SaveLearnRequestButton'
 
 export type TutorLearnRequestProps = {
   learnRequest: Partial<LearnRequest>
@@ -23,6 +24,7 @@ export const TYPE_ICONS: Record<string, React.ElementType> = {
 
 const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnRequest, onSelect }) => {
   const {
+    id,
     type,
     title,
     requestedFrequency,
@@ -32,6 +34,7 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnReque
     budgetMax,
     budgetMin,
     level,
+    isSavedByMe,
   } = learnRequest
   const {
     ref: descriptionRef,
@@ -68,16 +71,7 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnReque
           )}
           <div className="flex items-center gap-3">
             <p className="text-sm text-[#6B7280]">posted 1 hour ago</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-              type="button"
-              aria-label="Save learning request"
-              className="rounded-full p-2 transition hover:bg-blue-50"
-            >
-              <Heart className="size-6 transition group-hover:scale-110" />
-            </button>
+            {id && <SaveLearnRequestButton learnRequestId={id} isSaved={!!isSavedByMe} />}
           </div>
         </div>
 

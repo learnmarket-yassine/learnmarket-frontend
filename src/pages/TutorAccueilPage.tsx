@@ -6,6 +6,7 @@ import FiltersModal from '@/features/Accueil/components/ui/FiltersModal'
 import useGetLearnRequests, {
   LEARN_REQUESTS_PAGE_SIZE,
 } from '@/features/learn-requests/hooks/useGetLearnRequests'
+import useGetSavedLearnRequests from '@/features/learn-requests/hooks/useGetSavedLearnRequests'
 import { LearnRequestFiltersValues } from '@/features/learn-requests/schemas'
 import TutorAccueilRightBar from '@/features/Accueil/components/layout/TutorAccueilRightBar'
 import LearnRequestPagination from '@/features/learn-requests/components/ui/LearnRequestPagination'
@@ -17,12 +18,12 @@ import {
   LearnRequestFeedParams,
   parseLearnRequestFeedParams,
 } from '@/features/learn-requests/utils/learnRequestFeedParams'
+import LearningRequestCustomToggle from '@/features/Accueil/components/ui/CustomLearningRequestTab'
 
 const TutorAccueilPage = () => {
   const user = useStore((state) => state.auth.user)
   const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebounce(searchInput)
-
   const [searchParams, setSearchParams] = useSearchParams()
   const searchParamsKey = searchParams.toString()
 
@@ -49,16 +50,84 @@ const TutorAccueilPage = () => {
     (nextPage: number) => updateFeedParams({ page: nextPage }, { replace: false }),
     [updateFeedParams]
   )
+  const [selected, setSelected] = useState(1)
+  const [savedPage, setSavedPage] = useState(0)
 
   const { data, isPlaceholderData, isLoading, isError } = useGetLearnRequests(
     { ...filters, search: debouncedSearch || undefined },
     page,
-    LEARN_REQUESTS_PAGE_SIZE
+    LEARN_REQUESTS_PAGE_SIZE,
+    { enabled: selected === 1 }
   )
   const learnRequests = data?.paginatedResult ?? []
   const totalCount = data?.totalCount ?? 0
 
+  const {
+    data: savedData,
+    isPlaceholderData: isSavedPlaceholderData,
+    isLoading: isSavedLoading,
+    isError: isSavedError,
+  } = useGetSavedLearnRequests(savedPage, LEARN_REQUESTS_PAGE_SIZE, {
+    enabled: selected === 2,
+  })
+  const savedLearnRequests = savedData?.paginatedResult ?? []
+  const savedTotalCount = savedData?.totalCount ?? 0
+
   const { data: myProposals } = useGetProposals()
+
+  const steps = [
+    {
+      stepNumber: 1,
+      component: (
+        <>
+          <TutorLearningRequestList
+            learnRequests={learnRequests}
+            isPlaceholderData={isPlaceholderData}
+            isError={isError}
+            isLoading={isLoading}
+          />
+          <div className="flex items-center justify-end">
+            <LearnRequestPagination
+              currentPage={page}
+              totalCount={totalCount}
+              take={LEARN_REQUESTS_PAGE_SIZE}
+              onPageChange={setPage}
+            />
+          </div>
+        </>
+      ),
+      show: true,
+      name: 'Best matches',
+      enabled: true,
+    },
+    {
+      stepNumber: 2,
+      component: (
+        <>
+          <TutorLearningRequestList
+            learnRequests={savedLearnRequests}
+            isPlaceholderData={isSavedPlaceholderData}
+            isError={isSavedError}
+            isLoading={isSavedLoading}
+            emptyMessage="You haven't saved any requests yet."
+          />
+          <div className="flex items-center justify-end">
+            <LearnRequestPagination
+              currentPage={savedPage}
+              totalCount={savedTotalCount}
+              take={LEARN_REQUESTS_PAGE_SIZE}
+              onPageChange={setSavedPage}
+            />
+          </div>
+        </>
+      ),
+      show: true,
+      name: 'Saved Learning Request',
+      enabled: true,
+    },
+  ]
+  const visibleSteps = steps.filter((step) => step.show)
+  const currentStep = visibleSteps.find((step) => step.stepNumber === selected)
 
   return (
     <>
@@ -87,26 +156,14 @@ const TutorAccueilPage = () => {
             onClear={() => setSearchInput('')}
           />
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h4 className="cursor-pointer font-bold underline">Best matches</h4>
-              <h4 className="cursor-pointer font-medium hover:font-bold">Saved jobs</h4>
-            </div>
+            <LearningRequestCustomToggle
+              selected={selected}
+              setSelected={setSelected}
+              steps={steps}
+            />
             <FiltersModal value={filters} onApply={handleFiltersApply} />
           </div>
-          <TutorLearningRequestList
-            learnRequests={learnRequests}
-            isPlaceholderData={isPlaceholderData}
-            isError={isError}
-            isLoading={isLoading}
-          />
-          <div className="flex items-center justify-end">
-            <LearnRequestPagination
-              currentPage={page}
-              totalCount={totalCount}
-              take={LEARN_REQUESTS_PAGE_SIZE}
-              onPageChange={setPage}
-            />
-          </div>
+          {currentStep?.component || null}
         </div>
         <TutorAccueilRightBar user={user} proposalsCount={myProposals?.length ?? 0} />
       </div>

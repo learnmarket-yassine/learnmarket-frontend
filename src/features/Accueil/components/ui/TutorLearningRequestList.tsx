@@ -3,13 +3,14 @@ import { LearnRequest } from '@/features/learn-requests/store/types'
 import { cn } from '@/lib/utils'
 import TutorLearningRequestCard from './TutorLearningRequestCard'
 import LearningRequestDetailsSheet from './LearningRequestDetailsSheet'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type TutorLearningRequestListProps = {
   learnRequests: LearnRequest[]
   isError?: boolean
   isLoading?: boolean
   isPlaceholderData?: boolean
+  emptyMessage?: string
 }
 
 const TutorLearningRequestList = ({
@@ -17,16 +18,27 @@ const TutorLearningRequestList = ({
   isError,
   isLoading,
   isPlaceholderData,
+  emptyMessage,
 }: TutorLearningRequestListProps) => {
-  const [selectedRequest, setSelectedRequest] = useState<LearnRequest | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const selectedRequest = learnRequests.find((request) => request.id === selectedId) ?? null
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isSheetOpen && !selectedRequest) setIsSheetOpen(false)
+  }, [isSheetOpen, selectedRequest])
 
   if (isLoading) return <p>...loading</p>
 
   if (isError || learnRequests.length <= 0)
     return (
       <div>
-        <NoResults />
+        {!isError && emptyMessage ? (
+          <p className="py-10 text-center text-sm text-[#6B7280]">{emptyMessage}</p>
+        ) : (
+          <NoResults />
+        )}
       </div>
     )
 
@@ -36,7 +48,7 @@ const TutorLearningRequestList = ({
         {learnRequests.map((learnRequest) => (
           <TutorLearningRequestCard
             onSelect={() => {
-              setSelectedRequest(learnRequest)
+              setSelectedId(learnRequest.id)
               setIsSheetOpen(true)
             }}
             key={learnRequest.id}
