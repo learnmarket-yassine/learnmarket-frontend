@@ -5,12 +5,15 @@ import { getAssetUrl } from '@/lib/utils'
 import { useStore } from '@/store/store'
 import { Announcement } from '@/features/scheduling/types/dto'
 import useCreateAnnouncementComment from '../../hooks/useCreateAnnouncementComment'
+import useUpdateAnnouncementComment from '../../hooks/useUpdateAnnouncementComment'
+import useDeleteAnnouncementComment from '../../hooks/useDeleteAnnouncementComment'
 import useDownloadClassroomAttachment from '../../hooks/useDownloadClassroomAttachment'
 import useDeleteAnnouncement from '../../hooks/useDeleteAnnouncement'
 import { formatFileSize } from '../../utils/formatFileSize'
 import CommentThread from './CommentThread'
 import AnnouncementModal from './AnnouncementModal'
 import ConfirmModal from '@/components/layout/ConfirmModal'
+import { MessageCircle } from 'lucide-react'
 
 interface AnnouncementCardProps {
   sessionId: string
@@ -22,6 +25,9 @@ const AnnouncementCard = ({ sessionId, announcement }: AnnouncementCardProps) =>
   const isAuthor = announcement.authorId === currentUserId
 
   const { handleCreateComment } = useCreateAnnouncementComment(sessionId)
+  const { handleUpdateComment } = useUpdateAnnouncementComment(sessionId)
+  const { handleDeleteComment, isPending: isDeletingComment } =
+    useDeleteAnnouncementComment(sessionId)
   const { handleDownload } = useDownloadClassroomAttachment()
   const { handleDelete, isPending: isDeleting } = useDeleteAnnouncement(sessionId)
 
@@ -29,7 +35,7 @@ const AnnouncementCard = ({ sessionId, announcement }: AnnouncementCardProps) =>
     <div className="flex flex-col gap-5 rounded-2xl border border-[#E0E2E6] bg-white p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Avatar size="sm">
+          <Avatar size="lg">
             <AvatarImage src={getAssetUrl(announcement.author.avatar)} />
             <AvatarFallback>
               {announcement.author.firstname[0]}
@@ -88,6 +94,9 @@ const AnnouncementCard = ({ sessionId, announcement }: AnnouncementCardProps) =>
       <CommentThread
         comments={announcement.comments}
         onSubmit={(text) => handleCreateComment({ announcementId: announcement.id, content: text })}
+        onUpdate={(commentId, content) => handleUpdateComment({ commentId, content })}
+        onDelete={handleDeleteComment}
+        isDeleting={isDeletingComment}
       />
     </div>
   )

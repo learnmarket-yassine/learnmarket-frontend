@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { CalendarIcon, Clock } from 'lucide-react'
 import { formatDateLabel, formatSlotTime } from '../../../scheduling/utils/time'
 import { getBrowserTimezone } from '../../../scheduling/utils/timezones'
 import useGetSessionContext from '../../hooks/useGetSessionContext'
 import useGetMeetingDetails from '../../hooks/useGetMeetingDetails'
+import useGetAssignment from '../../hooks/useGetAssignment'
 import { useSessionSocketConnection } from '../../hooks/useSessionSocketConnection'
 import ClassroomFeed from './ClassroomFeed'
+import AssignmentCard from './AssignmentCard'
 import ProposalSessionObjective from '@/features/proposal/components/ui/ProposalSessionObjective'
 import SessionZoom from './SessionZoom'
 
@@ -16,11 +19,24 @@ const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
   useSessionSocketConnection()
   const { data: context, isLoading: isContextLoading } = useGetSessionContext(sessionId)
   const { data: meeting, isLoading: isMeetingLoading } = useGetMeetingDetails(sessionId)
+  const { data: assignmentResponse } = useGetAssignment(sessionId)
+  const [isAssignmentOpen, setIsAssignmentOpen] = useState(false)
 
   const timezone = getBrowserTimezone()
 
   if (isContextLoading || isMeetingLoading || !context || !meeting) {
     return <div className="p-6 text-sm text-gray-500">Loading session…</div>
+  }
+
+  if (isAssignmentOpen && assignmentResponse?.exists) {
+    return (
+      <AssignmentCard
+        sessionId={sessionId}
+        isTutor={context.isTutor}
+        assignment={assignmentResponse}
+        onBack={() => setIsAssignmentOpen(false)}
+      />
+    )
   }
 
   return (
@@ -49,7 +65,12 @@ const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
       </div>
       <div className="space-y-8">
         <SessionZoom context={context} meeting={meeting} sessionId={sessionId} />
-        <ClassroomFeed sessionId={sessionId} isTutor={context.isTutor} />
+        <ClassroomFeed
+          sessionId={sessionId}
+          isTutor={context.isTutor}
+          tutor={context.tutor}
+          onOpenAssignment={() => setIsAssignmentOpen(true)}
+        />
       </div>
     </div>
   )

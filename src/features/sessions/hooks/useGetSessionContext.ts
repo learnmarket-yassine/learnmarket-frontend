@@ -9,6 +9,7 @@ export interface SessionContext {
   objective: string | null
   status: SessionStatus
   isTutor: boolean
+  tutor: { firstname: string; lastname: string }
   tutorJoinedAt: string | null
   learnerJoinedAt: string | null
   booking: { startTime: string; endTime: string } | null

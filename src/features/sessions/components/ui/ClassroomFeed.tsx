@@ -1,20 +1,22 @@
 import useGetSessionAnnouncements from '../../hooks/useGetSessionAnnouncements'
 import useGetAssignment from '../../hooks/useGetAssignment'
 import AnnouncementCard from './AnnouncementCard'
-import AssignmentCard from './AssignmentCard'
+import AssignmentSummaryCard from './AssignmentSummaryCard'
 import AnnouncementModal from './AnnouncementModal'
 import AssignmentModal from './AssignmentModal'
 
 interface ClassroomFeedProps {
   sessionId: string
   isTutor: boolean
+  tutor: { firstname: string; lastname: string }
+  onOpenAssignment: () => void
 }
 
 type FeedItem =
   | { key: string; createdAt: string; kind: 'announcement'; render: () => React.ReactNode }
   | { key: string; createdAt: string; kind: 'assignment'; render: () => React.ReactNode }
 
-const ClassroomFeed = ({ sessionId, isTutor }: ClassroomFeedProps) => {
+const ClassroomFeed = ({ sessionId, isTutor, tutor, onOpenAssignment }: ClassroomFeedProps) => {
   const { data: announcements, isLoading: isLoadingAnnouncements } =
     useGetSessionAnnouncements(sessionId)
   const { data: assignmentResponse, isLoading: isLoadingAssignment } = useGetAssignment(sessionId)
@@ -36,7 +38,11 @@ const ClassroomFeed = ({ sessionId, isTutor }: ClassroomFeedProps) => {
             createdAt: assignment.createdAt,
             kind: 'assignment' as const,
             render: () => (
-              <AssignmentCard sessionId={sessionId} isTutor={isTutor} assignment={assignment} />
+              <AssignmentSummaryCard
+                assignment={assignment}
+                tutor={tutor}
+                onClick={onOpenAssignment}
+              />
             ),
           },
         ]

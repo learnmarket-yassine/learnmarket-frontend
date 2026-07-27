@@ -4,6 +4,8 @@ import SessionsList from './SessionsList'
 import { useState } from 'react'
 import { Session } from '@/features/scheduling/types/dto'
 import SessionRoomDetails from './SessionRoomDetails'
+import NoResults from '@/components/ui/NoResults'
+import EmptySelectedSession from './EmptySelectedSession'
 interface SessionsTabProps {
   proposalId: string
 }
@@ -45,9 +47,9 @@ const SessionsTab = ({ proposalId }: SessionsTabProps) => {
         </div>
         <div className="flex-1 p-6">
           {selectedSession ? (
-            <SessionRoomDetails sessionId={selectedSession?.id} />
+            <SessionRoomDetails key={selectedSession.id} sessionId={selectedSession.id} />
           ) : (
-            <p>select a session first</p>
+            <EmptySelectedSession />
           )}
         </div>
       </div>
