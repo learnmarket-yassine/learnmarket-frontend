@@ -14,7 +14,7 @@ const PlusIcon = ({ className, ...props }: IconProps) => (
     fill="none"
   >
     <path
-      stroke="#2563EB"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}

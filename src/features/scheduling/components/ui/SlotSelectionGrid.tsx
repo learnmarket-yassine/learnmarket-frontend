@@ -6,8 +6,8 @@ import type { SlotHold } from '../../types/dto'
 import { isSlotTakenError } from '../../utils/errors'
 import { formatDateLabel, formatSlotTime } from '../../utils/time'
 import { getBrowserTimezone } from '../../utils/timezones'
-import { useAvailableSlots } from '../hooks/useAvailableSlots'
-import { useCreateHold } from '../hooks/useCreateHold'
+import { useAvailableSlots } from '../../hooks/useAvailableSlots'
+import { useCreateHold } from '../../hooks/useCreateHold'
 
 interface SlotSelectionGridProps {
   tutorId: string

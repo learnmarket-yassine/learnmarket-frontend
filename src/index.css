@@ -152,3 +152,45 @@ body {
   max-height: var(--line-clamp-expanded-height, 100rem);
   transition: max-height 0.3s ease-out;
 }
+
+.prose-editor p {
+  margin: 0 0 0.5em;
+}
+
+.prose-editor p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-editor ul,
+.prose-editor ol {
+  margin: 0 0 0.5em;
+  padding-left: 1.25em;
+}
+
+.prose-editor ul {
+  list-style: disc;
+}
+
+.prose-editor ol {
+  list-style: decimal;
+}
+
+.prose-editor strong {
+  font-weight: 700;
+}
+
+.prose-editor em {
+  font-style: italic;
+}
+
+.prose-editor s {
+  text-decoration: line-through;
+}
+
+.prose-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: #9ca3af;
+}

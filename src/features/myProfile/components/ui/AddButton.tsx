@@ -17,7 +17,7 @@ function AddButton({ label, onClick, className }: AddButtonProps) {
       onClick={onClick}
       className={`h-10 w-10 rounded-full border border-[#2563EB] text-[#2563EB] ${className ?? ''}`}
     >
-      <PlusIcon className="size-4" />
+      <PlusIcon className="size-4 text-[#2563EB]" />
     </Button>
   )
 }

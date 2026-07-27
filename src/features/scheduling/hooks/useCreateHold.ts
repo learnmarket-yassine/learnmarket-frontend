@@ -1,7 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CreateHoldInput, SlotHold } from '../../types/dto'
 import { AxiosInstance } from 'axios'
+import { CreateHoldInput, SlotHold } from '../types/dto'
 
 const createHold = async (api: AxiosInstance, input: CreateHoldInput): Promise<SlotHold> => {
   const response = await api.post('/holds', input)

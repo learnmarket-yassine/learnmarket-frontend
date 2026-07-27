@@ -113,6 +113,24 @@ export interface TutorBooking {
   learner: { firstname: string; lastname: string }
 }
 
+export interface MyBooking {
+  id: string
+  startTime: string
+  endTime: string
+  sessionId: string | null
+  // proposalId is present for a tutor's own bookings (-> /jobs/:proposalId);
+  // proposal.learnRequestId is present for a learner's own bookings
+  // (-> /learn-requests/:learnRequestId). Only one side is ever populated,
+  // matching whichever of findConfirmedByTutor/findConfirmedByLearner ran.
+  session: {
+    title: string
+    proposalId?: string
+    proposal?: { learnRequestId: string }
+  } | null
+  tutor?: { firstname: string; lastname: string }
+  learner?: { firstname: string; lastname: string }
+}
+
 export interface LearnRequest {
   id: string
   learnerId: string
@@ -149,6 +167,103 @@ export interface Session {
   // Present when status is HELD (or was, until the next refetch catches up).
   slotHold?: SlotHold | null
 }
+
+// GET /sessions/:id/meeting -- shape already role-scoped server-side.
+// joinUrl is whichever of start_url/join_url is correct for the caller;
+// the frontend never distinguishes the two.
+export type MeetingDetails =
+  | { status: 'not_provisioned'; canJoinYet: false }
+  | {
+      status: 'provisioned'
+      canJoinYet: boolean
+      joinUrl: string
+      password: string | null
+    }
+
+export interface CommentAuthor {
+  id: string
+  firstname: string
+  lastname: string
+  avatar: string | null
+}
+
+export interface AnnouncementAttachment {
+  id: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+}
+
+export interface AnnouncementComment {
+  id: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+}
+
+export interface Announcement {
+  id: string
+  sessionId: string
+  authorId: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+  attachments: AnnouncementAttachment[]
+  comments: AnnouncementComment[]
+}
+
+export type SubmissionStatus = 'ASSIGNED' | 'SUBMITTED' | 'EXCUSED'
+export type AssignmentDisplayStatus = SubmissionStatus | 'LATE'
+
+export interface SubmissionAttachment {
+  id: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+}
+
+export interface AssignmentSubmission {
+  id: string
+  status: SubmissionStatus
+  submittedAt: string | null
+  attachments: SubmissionAttachment[]
+}
+
+export interface AssignmentAttachment {
+  id: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+}
+
+export interface AssignmentComment {
+  id: string
+  content: string
+  createdAt: string
+  author: CommentAuthor
+}
+
+export interface Assignment {
+  id: string
+  sessionId: string
+  title: string
+  instructions: string | null
+  dueAt: string | null
+  createdAt: string
+  updatedAt: string
+  submission: AssignmentSubmission
+  attachments: AssignmentAttachment[]
+  comments: AssignmentComment[]
+  displayStatus: AssignmentDisplayStatus
+}
+
+export type AssignmentResponse = { exists: false } | ({ exists: true } & Assignment)
 
 export interface Proposal {
   id: string

@@ -171,7 +171,7 @@ const LanguagesStep = forwardRef<StepHandle, LanguagesStepProps>(
               onClick={() => append({ language: '', level: '' as LanguageLevel })}
               className="flex h-full items-center gap-3 rounded-full border border-[#004AC6] px-8 py-3 text-base text-[#004AC6] hover:text-[#004AC6]"
             >
-              <PlusIcon className="size-4" />
+              <PlusIcon className="size-4 text-[#2563EB]" />
               Add a language
             </Button>
           </div>
