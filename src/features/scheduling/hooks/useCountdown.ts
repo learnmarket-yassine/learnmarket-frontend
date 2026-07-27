@@ -17,9 +17,6 @@ function msUntil(expiresAt: string): number {
   return Math.max(0, new Date(expiresAt).getTime() - Date.now())
 }
 
-// 'short' (mm:ss) suits a tight, seconds-precision countdown like an active
-// slot hold; 'long' (day/hour/minute breakdown) suits a far-out countdown
-// like the time until a scheduled session starts.
 export function useCountdown(
   expiresAt: string | null,
   format: 'short' | 'long' = 'short'

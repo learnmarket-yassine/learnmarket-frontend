@@ -10,12 +10,14 @@ import ClassroomFeed from './ClassroomFeed'
 import AssignmentCard from './AssignmentCard'
 import ProposalSessionObjective from '@/features/proposal/components/ui/ProposalSessionObjective'
 import SessionZoom from './SessionZoom'
+import RescheduleSessionAction from './RescheduleSessionAction'
 
 interface SessionRoomDetailsProps {
   sessionId: string
+  proposalId: string
 }
 
-const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
+const SessionRoomDetails = ({ sessionId, proposalId }: SessionRoomDetailsProps) => {
   useSessionSocketConnection()
   const { data: context, isLoading: isContextLoading } = useGetSessionContext(sessionId)
   const { data: meeting, isLoading: isMeetingLoading } = useGetMeetingDetails(sessionId)
@@ -46,17 +48,26 @@ const SessionRoomDetails = ({ sessionId }: SessionRoomDetailsProps) => {
           <h2 className="text-xl font-semibold">{context.title}</h2>
           {context.booking && (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-[#1a46a7]">
-                <CalendarIcon className="h-4 w-4" />
-                <p> {formatDateLabel(context.booking.startTime, timezone)}</p>
-              </div>
-              <div className="flex items-center gap-2 text-[#1a46a7]">
-                <Clock className="h-4 w-4" />
-                <p>
-                  {' '}
-                  {formatSlotTime(context.booking.startTime, timezone)} -{' '}
-                  {formatSlotTime(context.booking.endTime, timezone)}
-                </p>
+              <RescheduleSessionAction
+                sessionId={sessionId}
+                proposalId={proposalId}
+                bookingId={context.booking.id}
+                bookingStatus={context.booking.status}
+                startTime={context.booking.startTime}
+              />
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-[#1a46a7]">
+                  <CalendarIcon className="h-4 w-4" />
+                  <p> {formatDateLabel(context.booking.startTime, timezone)}</p>
+                </div>
+                <div className="flex items-center gap-2 text-[#1a46a7]">
+                  <Clock className="h-4 w-4" />
+                  <p>
+                    {' '}
+                    {formatSlotTime(context.booking.startTime, timezone)} -{' '}
+                    {formatSlotTime(context.booking.endTime, timezone)}
+                  </p>
+                </div>
               </div>
             </div>
           )}

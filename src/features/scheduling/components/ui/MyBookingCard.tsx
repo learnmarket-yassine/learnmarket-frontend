@@ -3,7 +3,7 @@ import { MyBooking } from '../../types/dto'
 import { formatDateLabel, formatSlotTime } from '../../utils/time'
 import { useNavigate } from 'react-router-dom'
 import { Video } from 'lucide-react'
-import CancelBookingAction from './CancelBookingAction'
+import RescheduleSessionAction from '@/features/sessions/components/ui/RescheduleSessionAction'
 
 type BookingProps = {
   booking: MyBooking
@@ -17,8 +17,20 @@ function counterpartName(booking: MyBooking): string {
   return counterpart ? `${counterpart.firstname} ${counterpart.lastname}` : 'Unknown'
 }
 
+// A tutor's booking carries session.proposalId (-> /jobs/:id); a learner's
+// booking carries session.proposal.learnRequestId (-> /learn-requests/:id).
+// Only one is ever populated, matching whichever role fetched the list.
+function jobDetailsPath(booking: MyBooking): string | null {
+  if (booking.session?.proposalId) return `/jobs/${booking.session.proposalId}`
+  if (booking.session?.proposal?.learnRequestId) {
+    return `/learn-requests/${booking.session.proposal.learnRequestId}`
+  }
+  return null
+}
+
 const MyBookingCard: React.FC<BookingProps> = ({ booking, isUpcoming = false }) => {
   const navigate = useNavigate()
+  const joinPath = jobDetailsPath(booking)
   return (
     <div
       key={booking.id}
@@ -30,15 +42,24 @@ const MyBookingCard: React.FC<BookingProps> = ({ booking, isUpcoming = false }) 
             {booking.session?.title ?? 'Session'}
           </h2>
           <div className="flex items-center gap-2">
-            {isUpcoming && <CancelBookingAction bookingId={booking.id} />}
-            {isUpcoming && booking.sessionId && (
+            {booking.sessionId && (
+              <RescheduleSessionAction
+                sessionId={booking.sessionId}
+                bookingId={booking.id}
+                bookingStatus="CONFIRMED"
+                startTime={booking.startTime}
+                className="whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 font-medium text-[#2563EB] hover:bg-blue-50 hover:text-[#2563EB]/90"
+              />
+            )}
+
+            {isUpcoming && booking.sessionId && joinPath && (
               <Button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation()
-                  navigate(`/sessions/${booking.sessionId}/room`)
+                  navigate(joinPath)
                 }}
-                className="flex items-center gap-3 whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-6 font-medium text-white hover:bg-[#113991] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-full items-center gap-3 whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-4 font-medium text-white hover:bg-[#113991] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Video className="size-5" />
                 Join Session room

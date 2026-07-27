@@ -47,7 +47,11 @@ const SessionsTab = ({ proposalId }: SessionsTabProps) => {
         </div>
         <div className="flex-1 p-6">
           {selectedSession ? (
-            <SessionRoomDetails key={selectedSession.id} sessionId={selectedSession.id} />
+            <SessionRoomDetails
+              key={selectedSession.id}
+              sessionId={selectedSession.id}
+              proposalId={proposalId}
+            />
           ) : (
             <EmptySelectedSession />
           )}

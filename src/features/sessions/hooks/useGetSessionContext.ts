@@ -1,7 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useQuery } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
-import { SessionStatus } from '../../scheduling/types/enums'
+import { BookingStatus, SessionStatus } from '../../scheduling/types/enums'
 
 export interface SessionContext {
   id: string
@@ -12,7 +12,7 @@ export interface SessionContext {
   tutor: { firstname: string; lastname: string }
   tutorJoinedAt: string | null
   learnerJoinedAt: string | null
-  booking: { startTime: string; endTime: string } | null
+  booking: { id: string; status: BookingStatus; startTime: string; endTime: string } | null
 }
 
 const getSessionContext = async (
