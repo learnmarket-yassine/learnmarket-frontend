@@ -8,16 +8,13 @@ import { getBrowserTimezone } from '@/features/scheduling/utils/timezones'
 import { useState } from 'react'
 
 const TutorAvailabilityPage = () => {
-  const [timezone, setTimezone] = useState(getBrowserTimezone)
+  const timezone = getBrowserTimezone()
   const { conflict, handleError, dismiss } = useAvailabilityConflict()
-
   const [selected, setSelected] = useState(1)
   const steps = [
     {
       stepNumber: 1,
-      component: (
-        <WeeklyHoursNav timezone={timezone} setTimezone={setTimezone} onConflict={handleError} />
-      ),
+      component: <WeeklyHoursNav timezone={timezone} onConflict={handleError} />,
       show: true,
       name: 'Weekly Hours',
       enabled: true,
