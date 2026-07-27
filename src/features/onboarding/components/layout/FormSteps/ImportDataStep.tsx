@@ -23,8 +23,6 @@ const ImportDataStep = ({ onContinue }: ImportDataStepProps) => {
           <Button
             type="button"
             variant={'outline'}
-            data-mdb-button-init
-            data-mdb-ripple-init
             disabled
             title="Coming soon"
             className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white disabled:opacity-50"
@@ -35,8 +33,6 @@ const ImportDataStep = ({ onContinue }: ImportDataStepProps) => {
           <Button
             type="button"
             variant={'outline'}
-            data-mdb-button-init
-            data-mdb-ripple-init
             disabled
             title="Coming soon"
             className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white disabled:opacity-50"
@@ -47,8 +43,6 @@ const ImportDataStep = ({ onContinue }: ImportDataStepProps) => {
           <Button
             type="button"
             variant={'outline'}
-            data-mdb-button-init
-            data-mdb-ripple-init
             onClick={onContinue}
             className="flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border-[#2563EB] bg-white px-6 py-4 hover:bg-white"
           >

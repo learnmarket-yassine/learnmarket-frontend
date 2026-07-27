@@ -16,9 +16,6 @@ const WeeklyHoursNav = ({ timezone, onConflict }: WeeklyHoursNavProps) => {
             individual dates using date overrides for holidays, time off, or extra availability.
           </p>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium">Timezone</span>
-        </div>
       </div>
       <div className="flex w-full flex-1">
         <WeeklyHours timezone={timezone} onConflict={onConflict} />

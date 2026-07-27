@@ -25,8 +25,6 @@ const WeeklyHours = ({ timezone, onConflict }: WeeklyHoursNavProps) => {
   }
 
   const rules = rulesQuery.data
-  // Remounts (and re-derives defaultValues) only when the persisted rules actually change,
-  // e.g. right after a save picks up server-assigned ids for newly created slots.
   const formKey = rules.map((rule) => `${rule.id}:${rule.updatedAt}`).join('|')
 
   return <WeeklyHoursForm key={formKey} rules={rules} timezone={timezone} onConflict={onConflict} />
