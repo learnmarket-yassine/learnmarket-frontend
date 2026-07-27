@@ -1,13 +1,14 @@
+import { useState } from 'react'
+import { CircleCheck, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import type { AvailabilityRule } from '../../types/dto'
 
-import { diffWeeklyHours } from './weeklyHoursDiff'
+import { buildWeeklyHoursDefaultValues, diffWeeklyHours } from './weeklyHoursDiff'
 import DayRow from './DayRow'
-import useCreateAvailabilityRule from '../../hooks/useCreateAvailabilityRules'
-import useUpdateAvailabilityRule from '../../hooks/useUpdateAvailabilityRules'
-import useDeleteAvailabilityRule from '../../hooks/useDeleteAvailabilityRule'
+import useUpdateWeeklyHours from '../../hooks/useUpdateWeeklyHours'
 import { type WeeklyHoursFormValues, weeklyHoursSchema } from '../../schemas'
 
 interface WeeklyHoursFormProps {
@@ -16,39 +17,31 @@ interface WeeklyHoursFormProps {
   onConflict: (error: unknown) => boolean
 }
 
-function buildDefaultValues(rules: AvailabilityRule[]): WeeklyHoursFormValues {
-  return {
-    days: Array.from({ length: 7 }, (_, dayOfWeek) => {
-      const slots = rules
-        .filter((rule) => rule.dayOfWeek === dayOfWeek)
-        .sort((a, b) => a.startTime - b.startTime)
-        .map((rule) => ({ id: rule.id, start: rule.startTime, end: rule.endTime }))
-      return { dayOfWeek, enabled: slots.length > 0, slots }
-    }),
-  }
-}
-
 const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) => {
-  const { control, handleSubmit, formState } = useForm<WeeklyHoursFormValues>({
+  const { control, handleSubmit, formState, reset } = useForm<WeeklyHoursFormValues>({
     resolver: zodResolver(weeklyHoursSchema),
-    defaultValues: buildDefaultValues(rules),
+    defaultValues: buildWeeklyHoursDefaultValues(rules),
   })
+  const [saveStatus, setSaveStatus] = useState<{
+    type: 'success' | 'error'
+    message: string
+  } | null>(null)
 
-  const createRule = useCreateAvailabilityRule()
-  const updateRule = useUpdateAvailabilityRule()
-  const { handleDeleteAvailabilityRule, isPending: isDeletePending } = useDeleteAvailabilityRule()
-  const isSaving = createRule.isPending || updateRule.isPending || isDeletePending
+  const updateWeeklyHours = useUpdateWeeklyHours()
 
   const onSubmit = async (values: WeeklyHoursFormValues) => {
-    const { toCreate, toUpdate, toDelete } = diffWeeklyHours(rules, values, timezone)
+    const diff = diffWeeklyHours(rules, values, timezone)
+    setSaveStatus(null)
     try {
-      await Promise.all([
-        ...toCreate.map((input) => createRule.mutateAsync(input)),
-        ...toUpdate.map(({ id, input }) => updateRule.mutateAsync({ id, input })),
-        ...toDelete.map((id) => handleDeleteAvailabilityRule(id)),
-      ])
+      await updateWeeklyHours.mutateAsync(diff)
+      setSaveStatus({ type: 'success', message: 'Your availability has been updated.' })
     } catch (error) {
-      if (!onConflict(error)) console.error(error)
+      if (!onConflict(error)) {
+        setSaveStatus({
+          type: 'error',
+          message: 'Something went wrong saving your availability. Please try again.',
+        })
+      }
     }
   }
 
@@ -58,23 +51,28 @@ const WeeklyHoursForm = ({ rules, timezone, onConflict }: WeeklyHoursFormProps) 
         <DayRow key={dayIndex} control={control} dayIndex={dayIndex} />
       ))}
 
+      {saveStatus && (
+        <Alert variant={saveStatus.type === 'error' ? 'destructive' : 'default'}>
+          {saveStatus.type === 'error' ? <TriangleAlert /> : <CircleCheck />}
+          <AlertDescription>{saveStatus.message}</AlertDescription>
+        </Alert>
+      )}
+
       <div className="flex justify-end gap-3">
         <Button
           type="button"
-          data-mdb-button-init
-          data-mdb-ripple-init
+          variant="ghost"
+          onClick={() => reset(buildWeeklyHoursDefaultValues(rules))}
           className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
         >
           Cancel
         </Button>
         <Button
           type="submit"
-          data-mdb-button-init
-          data-mdb-ripple-init
           className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB] disabled:cursor-not-allowed"
-          disabled={!formState.isDirty || isSaving}
+          disabled={!formState.isDirty || updateWeeklyHours.isPending}
         >
-          {isSaving ? 'Saving…' : 'Save changes'}
+          {updateWeeklyHours.isPending ? 'Saving…' : 'Save changes'}
         </Button>
       </div>
     </form>

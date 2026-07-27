@@ -112,8 +112,6 @@ const RegisterForm = () => {
       </div>
       <Button
         type="submit"
-        data-mdb-button-init
-        data-mdb-ripple-init
         className="h-full w-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
       >
         Sign Up

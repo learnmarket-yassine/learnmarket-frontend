@@ -7,7 +7,6 @@ import OverviewForm from '../ui/OverviewForm'
 import { AuthUser } from '@/features/auth/store/types'
 import SkillsForm from '../ui/SkillsForm'
 import SpecialtiesForm from '../ui/SpecialtiesForm'
-import HourlyRateForm from '../ui/HourlyRateForm'
 
 interface MyProfileMainContentProps {
   myProfile: AuthUser
@@ -28,12 +27,6 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
             <div>
               <HeadlineForm />
             </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="text-2xl font-semibold text-[#143681]">
-              ${myProfile.tutorProfile?.hourlyRate}.00/hr
-            </span>
-            <HourlyRateForm />
           </div>
         </div>
         {/* Bio */}

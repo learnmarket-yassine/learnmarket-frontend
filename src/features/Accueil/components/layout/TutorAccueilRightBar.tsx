@@ -61,8 +61,6 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
           <Button
             type="submit"
             variant={'outline'}
-            data-mdb-button-init
-            data-mdb-ripple-init
             className="h-full w-full whitespace-nowrap rounded-full bg-white px-6 py-3 font-semibold text-[#2563EB] hover:bg-white hover:text-[#2563EB]"
           >
             Buy Connects

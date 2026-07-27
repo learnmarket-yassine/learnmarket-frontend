@@ -23,7 +23,6 @@ export interface ProposalTutorSummary {
   bio: string | null
   languages: Language[] | null
   tutorProfile: {
-    hourlyRate: number | string | null
     skills: { skill: Skill }[]
     videoIntroUrl: string | null
   } | null

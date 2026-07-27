@@ -96,8 +96,6 @@ function HeadlineForm() {
             <div className="flex justify-end gap-3">
               <Button
                 type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
                 onClick={() => setIsOpen(false)}
               >
@@ -106,8 +104,6 @@ function HeadlineForm() {
 
               <Button
                 type="submit"
-                data-mdb-button-init
-                data-mdb-ripple-init
                 className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
                 disabled={isPending}
               >

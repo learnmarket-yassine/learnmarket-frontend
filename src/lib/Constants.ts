@@ -211,10 +211,4 @@ export const languageLevelLabels: Record<LanguageLevel, string> = {
   NATIVE_OR_BILINGUAL: 'native',
 }
 
-export const hoursPerWeekLabels: Record<string, string> = {
-  '30+': 'More than 30 hrs/week',
-  '10-30': '10-30 hrs/week',
-  '0-10': 'Less than 10 hrs/week',
-  '0': 'None',
-}
 export const SERVICE_FEE_PERCENT = 0.1
