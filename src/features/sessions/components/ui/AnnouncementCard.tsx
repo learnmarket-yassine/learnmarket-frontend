@@ -13,7 +13,6 @@ import { formatFileSize } from '../../utils/formatFileSize'
 import CommentThread from './CommentThread'
 import AnnouncementModal from './AnnouncementModal'
 import ConfirmModal from '@/components/layout/ConfirmModal'
-import { MessageCircle } from 'lucide-react'
 
 interface AnnouncementCardProps {
   sessionId: string

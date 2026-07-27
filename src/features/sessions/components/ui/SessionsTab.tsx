@@ -4,7 +4,6 @@ import SessionsList from './SessionsList'
 import { useState } from 'react'
 import { Session } from '@/features/scheduling/types/dto'
 import SessionRoomDetails from './SessionRoomDetails'
-import NoResults from '@/components/ui/NoResults'
 import EmptySelectedSession from './EmptySelectedSession'
 interface SessionsTabProps {
   proposalId: string
