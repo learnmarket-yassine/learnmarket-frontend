@@ -12,10 +12,18 @@ type LearnRequestProposalStepProps = {
   status: LearnRequestStatus
 }
 
+type ProposalTab = 'all' | 'shortlisted'
+
+const TABS: { key: ProposalTab; label: string }[] = [
+  { key: 'all', label: 'All proposals' },
+  { key: 'shortlisted', label: 'Shortlisted' },
+]
+
 const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestProposalStepProps) => {
   const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebounce(searchInput)
   const [page, setPage] = useState(0)
+  const [activeTab, setActiveTab] = useState<ProposalTab>('all')
 
   const handleSearchChange = (value: string) => {
     setSearchInput(value)
@@ -29,15 +37,30 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
     PROPOSALS_PAGE_SIZE
   )
   const proposals = data?.paginatedResult ?? []
-  const totalCount = data?.totalCount ?? 0
+  // Client-side only -- filters within the already-fetched (and already
+  // search-narrowed) page, no separate endpoint for the Shortlisted tab.
+  const displayedProposals =
+    activeTab === 'shortlisted' ? proposals.filter((p) => p.isShortlisted) : proposals
+  const totalCount =
+    activeTab === 'shortlisted' ? displayedProposals.length : (data?.totalCount ?? 0)
 
   return (
     <div className="flex flex-col space-y-8">
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <h4 className="cursor-pointer font-bold text-[#143681] underline decoration-[#143681]">
-            All proposals
-          </h4>
+          {TABS.map((tab) => (
+            <h4
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`cursor-pointer font-bold ${
+                activeTab === tab.key
+                  ? 'text-[#143681] underline decoration-[#143681]'
+                  : 'text-[#565A60]'
+              }`}
+            >
+              {tab.label}
+            </h4>
+          ))}
         </div>
         <SearchInput
           placeholder="search by tutor name"
@@ -48,7 +71,7 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
       </div>
       <div className="flex-1">
         <LearnRequestProposalList
-          proposals={proposals}
+          proposals={displayedProposals}
           learnRequestStatus={status}
           learnRequestId={learnRequestId}
           totalCount={totalCount}
@@ -58,6 +81,9 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
           isError={isError}
           hasSearch={!!debouncedSearch}
           onRetry={() => refetch()}
+          emptyMessage={
+            activeTab === 'shortlisted' ? "You haven't shortlisted any proposals yet" : undefined
+          }
         />
       </div>
     </div>

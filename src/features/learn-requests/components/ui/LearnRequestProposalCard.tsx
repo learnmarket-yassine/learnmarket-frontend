@@ -12,9 +12,11 @@ import HireProposalAction from '@/features/proposal/components/ui/HireProposalAc
 import { Button } from '@/components/ui/button'
 import SendMessageModal from '@/features/messaging/components/ui/SendMessageModal'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
+import useToggleShortlistProposal from '../../hooks/useToggleShortlistProposal'
 
 type LearnRequestProposalCardProps = {
   proposal: Proposal
+  learnRequestId: string
   learnRequestStatus: LearnRequestStatus
   onHire: (proposalId: string) => void
   isHiring: boolean
@@ -25,6 +27,7 @@ const DESCRIPTION_LINES = 3
 
 const LearnRequestProposalCard = ({
   proposal,
+  learnRequestId,
   learnRequestStatus,
   onHire,
   isHiring,
@@ -34,6 +37,7 @@ const LearnRequestProposalCard = ({
   const [isMessageOpen, setIsMessageOpen] = useState(false)
   const navigate = useNavigate()
   const { data: conversations } = useGetConversations()
+  const toggleShortlist = useToggleShortlistProposal(learnRequestId, proposal.id)
 
   const initials =
     `${tutor.firstname?.charAt(0) ?? ''}${tutor.lastname?.charAt(0) ?? ''}`.toUpperCase()
@@ -70,9 +74,22 @@ const LearnRequestProposalCard = ({
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-3">
-                <div className="flex cursor-pointer items-center justify-center rounded-full border border-[#2563EB] p-2 text-[#2563EB] hover:bg-[#2563EB] hover:text-white">
-                  <ThumbsUp className="size-5" />
-                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleShortlist.mutate(!!proposal.isShortlisted)
+                  }}
+                  aria-label={proposal.isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}
+                  aria-pressed={!!proposal.isShortlisted}
+                  className={`flex cursor-pointer items-center justify-center rounded-full border border-[#2563EB] p-2 ${
+                    proposal.isShortlisted
+                      ? 'bg-[#2563EB] text-white'
+                      : 'text-[#2563EB] hover:bg-[#2563EB] hover:text-white'
+                  }`}
+                >
+                  <ThumbsUp className={`size-5 ${proposal.isShortlisted ? 'fill-current' : ''}`} />
+                </button>
                 <Button
                   type="button"
                   onClick={(e) => {

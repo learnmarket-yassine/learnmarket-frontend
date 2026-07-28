@@ -44,6 +44,10 @@ export interface Proposal {
   learnerViewedAt: string | null
   createdAt: string
   updatedAt: string
+  // Only populated by GET /learn-requests/:id/proposals for the owning
+  // learner -- other call sites don't include it, so treat a missing value
+  // as "not shortlisted" rather than assuming it's always sent.
+  isShortlisted?: boolean
 }
 
 export type ProposalGroup = 'ACTIVE' | 'ARCHIVED'
