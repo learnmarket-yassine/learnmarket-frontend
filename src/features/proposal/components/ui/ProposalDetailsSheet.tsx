@@ -19,11 +19,13 @@ import { Language } from '@/features/myProfile/store/types'
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 import SendMessageModal from '@/features/messaging/components/ui/SendMessageModal'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
+import useToggleShortlistProposal from '@/features/learn-requests/hooks/useToggleShortlistProposal'
 
 type ProposalDetailsSheetProps = {
   isOpen?: boolean
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
   proposal: Proposal | null
+  learnRequestId: string
   learnRequestStatus: LearnRequestStatus
   onHire: (proposalId: string) => void
   isHiring: boolean
@@ -33,6 +35,7 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
   isOpen,
   setIsOpen,
   proposal,
+  learnRequestId,
   learnRequestStatus,
   onHire,
   isHiring,
@@ -58,6 +61,7 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
   const [isMessageOpen, setIsMessageOpen] = useState(false)
   const navigate = useNavigate()
   const { data: conversations } = useGetConversations()
+  const toggleShortlist = useToggleShortlistProposal(learnRequestId, proposal?.id ?? '')
 
   if (!proposal) return null
   const { tutor } = proposal
@@ -108,9 +112,19 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-3">
-                <div className="flex cursor-pointer items-center justify-center rounded-full border border-[#2563EB] p-2 text-[#2563EB] hover:bg-[#2563EB] hover:text-white">
-                  <ThumbsUp className="size-5" />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => toggleShortlist.mutate(!!proposal.isShortlisted)}
+                  aria-label={proposal.isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}
+                  aria-pressed={!!proposal.isShortlisted}
+                  className={`flex cursor-pointer items-center justify-center rounded-full border border-[#2563EB] p-2 ${
+                    proposal.isShortlisted
+                      ? 'bg-[#2563EB] text-white'
+                      : 'text-[#2563EB] hover:bg-[#2563EB] hover:text-white'
+                  }`}
+                >
+                  <ThumbsUp className={`size-5 ${proposal.isShortlisted ? 'fill-current' : ''}`} />
+                </button>
                 <Button
                   type="button"
                   onClick={() => {

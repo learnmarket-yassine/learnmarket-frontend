@@ -1,5 +1,5 @@
 import { Proposal } from '@/features/proposal/store/types'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import LearnRequestProposalCard from './LearnRequestProposalCard'
 import { LearnRequestStatus } from '../../store/types'
 import useHireProposal from '@/features/proposal/hooks/useHireProposal'
@@ -21,6 +21,7 @@ type LearnRequestProposalListProps = {
   isLoading?: boolean
   hasSearch?: boolean
   onRetry?: () => void
+  emptyMessage?: string
 }
 
 const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
@@ -33,10 +34,19 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
   isError,
   isLoading,
   onRetry,
+  emptyMessage,
 }) => {
   const hireMutation = useHireProposal(learnRequestId)
-  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null)
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const selectedProposal = proposals.find((p) => p.id === selectedProposalId) ?? null
+
+  useEffect(() => {
+    if (selectedProposalId && !selectedProposal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsSheetOpen(false)
+    }
+  }, [selectedProposalId, selectedProposal])
 
   if (isLoading) {
     return (
@@ -61,7 +71,7 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
   }
 
   if (proposals.length === 0) {
-    return <NoResults />
+    return <NoResults title={emptyMessage} />
   }
 
   return (
@@ -70,11 +80,12 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
         {proposals.map((proposal) => (
           <LearnRequestProposalCard
             onSelect={() => {
-              setSelectedProposal(proposal)
+              setSelectedProposalId(proposal.id)
               setIsSheetOpen(true)
             }}
             key={proposal.id}
             proposal={proposal}
+            learnRequestId={learnRequestId}
             learnRequestStatus={learnRequestStatus}
             onHire={(proposalId) => hireMutation.mutate(proposalId)}
             isHiring={hireMutation.isPending && hireMutation.variables === proposal.id}
@@ -94,6 +105,7 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
         proposal={selectedProposal}
         isOpen={isSheetOpen}
         setIsOpen={setIsSheetOpen}
+        learnRequestId={learnRequestId}
         learnRequestStatus={learnRequestStatus}
         onHire={(proposalId) => hireMutation.mutate(proposalId)}
         isHiring={
