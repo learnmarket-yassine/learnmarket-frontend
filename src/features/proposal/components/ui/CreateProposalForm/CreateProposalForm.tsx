@@ -67,9 +67,6 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
   const isSingleSession = fields.length === 1
 
   const onSubmit = (values: ProposalFormValues) => {
-    // values.totalPrice is the tutor's raw asking price -- send it as-is.
-    // The backend applies the service fee to compute the learner-facing
-    // total that actually gets stored; never gross it up here.
     const payload = {
       ...values,
       sessionPlans: values.sessionPlans.map(({ title, objective }) => ({

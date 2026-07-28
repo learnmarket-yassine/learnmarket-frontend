@@ -1,4 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton'
+import VerificationRequiredModal from '@/components/ui/VerificationRequiredModal'
 import useGetLearnRequest from '@/features/learn-requests/hooks/useGetLearnRequest'
 import CreateProposalForm from '@/features/proposal/components/ui/CreateProposalForm/CreateProposalForm'
 
@@ -33,6 +34,7 @@ const CreateProposalPage = () => {
 
   return (
     <div>
+      <VerificationRequiredModal />
       <CreateProposalForm learnrequest={data} />
     </div>
   )

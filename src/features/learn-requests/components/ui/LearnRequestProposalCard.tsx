@@ -12,6 +12,7 @@ import HireProposalAction from '@/features/proposal/components/ui/HireProposalAc
 import { Button } from '@/components/ui/button'
 import SendMessageModal from '@/features/messaging/components/ui/SendMessageModal'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
+import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
 import useToggleShortlistProposal from '../../hooks/useToggleShortlistProposal'
 
 type LearnRequestProposalCardProps = {
@@ -68,7 +69,10 @@ const LearnRequestProposalCard = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-medium">{fullName}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium">{fullName}</p>
+                    <VerifiedBadge status={tutor.tutorProfile?.verificationStatus} />
+                  </div>
                   {tutor.headline && <p className="text-sm font-bold">{tutor.headline}</p>}
                   {tutor.country && <span className="text-sm">{tutor.country}</span>}
                 </div>

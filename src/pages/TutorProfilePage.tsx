@@ -4,6 +4,7 @@ import EmploymentSection from '@/features/myProfile/components/layout/Employment
 import MyProfileHeader from '@/features/myProfile/components/layout/MyProfileHeader'
 import MyProfileLeftSidebar from '@/features/myProfile/components/layout/MyProfileLeftSidebar'
 import MyProfileMainContent from '@/features/myProfile/components/layout/MyProfileMainContent'
+import VerificationStatusCard from '@/features/tutor-verification/components/ui/VerificationStatusCard'
 import { useStore } from '@/store/store'
 
 const TutorProfilePage = () => {
@@ -21,7 +22,6 @@ const TutorProfilePage = () => {
           <MyProfileMainContent myProfile={myProfile} />
         </div>
       </div>
-
       <CertificationsSection certifications={myProfile?.tutorProfile?.certifications ?? []} />
       <EmploymentSection employment={myProfile?.tutorProfile?.employment ?? []} />
     </>

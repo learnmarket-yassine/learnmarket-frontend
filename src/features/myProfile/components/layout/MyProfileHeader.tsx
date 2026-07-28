@@ -1,9 +1,11 @@
-import { MapPin, BadgeCheck } from 'lucide-react'
+import { BadgeCheck, MapPin } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
 import { getAssetUrl } from '@/lib/utils'
+import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
+import TutorVerificationModal from '@/features/tutor-verification/components/ui/TutorVerificationModal'
 
 interface ProfileHeaderProps {
   profile: AuthUser
@@ -33,14 +35,13 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
             <h1 className="text-2xl font-bold text-[#143681]">
               {profile.firstname} {profile.lastname}
             </h1>
-            {profile?.tutorProfile?.isVerified && (
-              <>
-                <BadgeCheck className="h-5 w-5 text-[#102A63]" aria-label="Identity verified" />
-                <a href="#verify" className="text-sm text-[#225AD6] underline underline-offset-2">
-                  Verify your identity
-                </a>
-              </>
+            {profile.tutorProfile?.verificationStatus && (
+              <div className="flex items-center gap-1">
+                <BadgeCheck className="size-3.5" aria-hidden="true" />
+                <TutorVerificationModal />
+              </div>
             )}
+            <VerifiedBadge status={profile?.tutorProfile?.verificationStatus} />
           </div>
           <div className="flex flex-wrap items-center gap-1 text-base text-[#143681]">
             <span className="flex items-center gap-1">

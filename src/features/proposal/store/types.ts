@@ -1,4 +1,4 @@
-import { Language } from '@/features/myProfile/store/types'
+import { Language, TutorVerificationStatus } from '@/features/myProfile/store/types'
 import { Skill } from '@/types/skill'
 import { LearnRequest } from '@/features/learn-requests/store/types'
 
@@ -25,6 +25,7 @@ export interface ProposalTutorSummary {
   tutorProfile: {
     skills: { skill: Skill }[]
     videoIntroUrl: string | null
+    verificationStatus: TutorVerificationStatus
   } | null
 }
 

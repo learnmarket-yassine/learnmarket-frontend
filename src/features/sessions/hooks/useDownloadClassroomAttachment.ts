@@ -10,9 +10,6 @@ const getAttachmentUrl = async (
   return response.data
 }
 
-// Generic download-url fetcher shared by announcement attachments, assignment
-// reference attachments, and submission attachments -- all three are private
-// S3 objects behind the same signed-url pattern, just at different routes.
 export default function useDownloadClassroomAttachment() {
   const axiosPrivate = useAxiosPrivate()
 

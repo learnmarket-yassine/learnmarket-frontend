@@ -220,3 +220,32 @@ export const portfolioSchema = z.object({
 })
 
 export type PortfolioFormValues = z.infer<typeof portfolioSchema>
+
+export const certificationSchema = z
+  .object({
+    title: z.string().trim().min(1, 'Title is required').max(200, 'Title is too long'),
+
+    issuer: z
+      .string()
+      .trim()
+      .min(1, 'Issuing organization is required')
+      .max(200, 'Issuer name is too long'),
+
+    // yyyy-MM-dd, controlled by DatePickerField -- '' means "not set".
+    issuedAt: z.string().trim().optional().or(z.literal('')),
+    expiresAt: z.string().trim().optional().or(z.literal('')),
+
+    credentialUrl: z
+      .string()
+      .trim()
+      .url('Enter a valid URL (e.g. https://example.com/certificate)')
+      .max(500, 'URL is too long')
+      .optional()
+      .or(z.literal('')),
+  })
+  .refine((data) => !data.issuedAt || !data.expiresAt || data.expiresAt >= data.issuedAt, {
+    message: 'Expiration date must be on or after the issue date',
+    path: ['expiresAt'],
+  })
+
+export type CertificationFormData = z.infer<typeof certificationSchema>

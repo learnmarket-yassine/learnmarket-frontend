@@ -58,14 +58,20 @@ export interface PortfolioItem {
   createdAt?: string
 }
 
+export interface CertificationFile {
+  id: string
+  fileName: string | null
+  mimeType: string | null
+}
+
 export interface Certification {
-  id?: string
-  pofileId?: string
+  id: string
   title: string
   issuer: string
-  issuedAt?: string
-  expiresAt?: string
-  credentialUrl?: string
+  issuedAt?: string | null
+  expiresAt?: string | null
+  credentialUrl?: string | null
+  files: CertificationFile[]
 }
 
 export interface WorkHistoryTab {
@@ -74,10 +80,16 @@ export interface WorkHistoryTab {
   key: 'completed' | 'in_progress'
 }
 
+export type TutorVerificationStatus =
+  'UNSUBMITTED' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'REVOKED'
+
 export interface TutorProfile {
   id: string
   videoIntroUrl?: string | null
-  isVerified: boolean
+  verificationStatus: TutorVerificationStatus
+  submittedAt?: string | null
+  reviewedAt?: string | null
+  reviewNote?: string | null
   skills: Skill[]
   specialties: Specialty[]
   portfolio: PortfolioItem[]
