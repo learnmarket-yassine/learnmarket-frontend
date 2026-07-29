@@ -46,7 +46,7 @@ function HeadlineForm() {
           <EditButton label="edit headline" />
         </DialogTrigger>
         <DialogContent
-          className="flex h-[400px] min-w-[750px] flex-col space-y-9"
+          className="flex min-w-[750px] flex-col space-y-4"
           style={{
             boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
           }}
@@ -71,7 +71,7 @@ function HeadlineForm() {
             </DialogDescription>
           </DialogHeader>
           <form
-            className="flex flex-1 flex-col"
+            className="flex flex-1 flex-col space-y-4"
             onSubmit={(e) => {
               e.stopPropagation()
               handleSubmit(onSubmit)(e)

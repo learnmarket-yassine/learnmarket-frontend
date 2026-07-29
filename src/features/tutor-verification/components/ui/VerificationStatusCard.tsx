@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { AuthUser } from '@/features/auth/store/types'
 import useSubmitForVerification from '../../hooks/useSubmitForVerification'
 import VerifiedBadge from './VerifiedBadge'
-import CheckListItem from '../CheckListItem'
+import CheckListItem from './CheckListItem'
 
 interface VerificationStatusCardProps {
   profile: AuthUser

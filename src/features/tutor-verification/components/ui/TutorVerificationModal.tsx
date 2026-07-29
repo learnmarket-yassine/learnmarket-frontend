@@ -14,7 +14,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import useSubmitForVerification from '../../hooks/useSubmitForVerification'
-import CheckListItem from '../CheckListItem'
+import CheckListItem from './CheckListItem'
 
 type VerificationStatus = 'UNSUBMITTED' | 'PENDING' | 'REJECTED' | 'REVOKED'
 
@@ -33,7 +33,6 @@ interface TutorVerificationModalProps {
 const TutorVerificationModal = ({ children }: TutorVerificationModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const user = useStore((state) => state.auth.user)
-  const navigate = useNavigate()
   const submitForVerification = useSubmitForVerification()
 
   const status = (user?.tutorProfile?.verificationStatus ?? undefined) as
@@ -101,13 +100,10 @@ const TutorVerificationModal = ({ children }: TutorVerificationModalProps) => {
           </p>
         )}
       </DialogTrigger>
-      <DialogContent className="flex max-w-[340px] flex-col items-center justify-center py-8 sm:max-w-[400px] lg:max-h-[650px] lg:max-w-[480px]">
-        <DialogHeader className="items-center">
-          <DialogTitle className="flex justify-center">{content.icon}</DialogTitle>
-          <DialogDescription className="flex flex-col items-center gap-1 text-center text-[#2C2C2C]">
-            <span className="mt-2 text-xl font-semibold text-[#143681] sm:text-2xl">
-              {content.title}
-            </span>
+      <DialogContent className="max-w-[480px]">
+        <DialogHeader>
+          <DialogDescription className="flex flex-col gap-3 text-[#2C2C2C]">
+            <span className="text-2xl font-semibold text-[#143681]">{content.title}</span>
             <span className="text-sm text-muted-foreground">{content.description}</span>
           </DialogDescription>
         </DialogHeader>
@@ -126,28 +122,26 @@ const TutorVerificationModal = ({ children }: TutorVerificationModalProps) => {
             <CheckListItem label="At least one certification" met={hasCertification} />
           </ul>
         )}
-
-        <DialogFooter className="w-full flex-col-reverse gap-2 sm:flex-row sm:justify-center">
+        <div className="flex justify-end gap-2">
           <Button
             type="button"
-            variant="outline"
-            className="h-full flex-1 whitespace-nowrap rounded-full px-6 py-3 font-semibold"
-            onClick={() => navigate('/profile')}
+            className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
+            onClick={() => setIsOpen(false)}
           >
-            Go to your profile
+            Cancel
           </Button>
           {content.primaryAction && (
             <Button
               type="button"
               variant="default"
-              className="h-full flex-1 whitespace-nowrap rounded-full bg-[#143681] px-6 py-3 font-semibold text-white hover:bg-[#143681] disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-semibold text-white hover:bg-[#2563EB]"
               disabled={content.primaryAction.disabled}
               onClick={content.primaryAction.onClick}
             >
               {content.primaryAction.label}
             </Button>
           )}
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   )

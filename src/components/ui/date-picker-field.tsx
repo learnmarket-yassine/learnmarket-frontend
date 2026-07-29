@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { format, parse } from 'date-fns'
+import { format, isValid, parse } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -17,6 +17,14 @@ interface DatePickerFieldProps {
 
 const DATE_FORMAT = 'yyyy-MM-dd'
 
+function parseFieldValue(value?: string): Date | undefined {
+  if (!value) return undefined
+  const strict = parse(value, DATE_FORMAT, new Date())
+  if (isValid(strict)) return strict
+  const fallback = new Date(value)
+  return isValid(fallback) ? fallback : undefined
+}
+
 export function DatePickerField({
   value,
   onChange,
@@ -27,7 +35,7 @@ export function DatePickerField({
   fromDate,
 }: DatePickerFieldProps) {
   const [open, setOpen] = useState(false)
-  const selected = value ? parse(value, DATE_FORMAT, new Date()) : undefined
+  const selected = parseFieldValue(value)
 
   return (
     <div className="relative w-full">
