@@ -34,7 +34,7 @@ const CreateProposalPage = () => {
 
   return (
     <div>
-      <VerificationRequiredModal />
+      {/* <VerificationRequiredModal /> */}
       <CreateProposalForm learnrequest={data} />
     </div>
   )

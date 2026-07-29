@@ -28,8 +28,6 @@ type ProposalDetailsSheetProps = {
   proposal: Proposal | null
   learnRequestId: string
   learnRequestStatus: LearnRequestStatus
-  onHire: (proposalId: string) => void
-  isHiring: boolean
 }
 
 const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
@@ -38,8 +36,6 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
   proposal,
   learnRequestId,
   learnRequestStatus,
-  onHire,
-  isHiring,
 }) => {
   const steps = [
     {
@@ -147,10 +143,9 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                 <HireProposalAction
                   proposalId={proposal.id}
                   proposalStatus={proposal.status}
+                  learnRequestId={learnRequestId}
                   learnRequestStatus={learnRequestStatus}
                   tutorName={fullName}
-                  onHire={onHire}
-                  isHiring={isHiring}
                 />
               </div>
             </div>

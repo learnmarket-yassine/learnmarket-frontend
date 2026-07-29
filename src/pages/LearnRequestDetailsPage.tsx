@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom'
 import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
 import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
+import CancelEngagementAction from '@/features/payments/components/CancelEngagementAction'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -55,9 +56,17 @@ const LearnRequestDetailsPage = () => {
         {data ? (
           <>
             <h1 className="text-2xl font-semibold">{data.title}</h1>
-            <span className="rounded-full border bg-[#143681] px-4 py-1 text-sm text-white">
-              {STATUS_LABELS[data.status]}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full border bg-[#143681] px-4 py-1 text-sm text-white">
+                {STATUS_LABELS[data.status]}
+              </span>
+              {data.status === 'CLOSED' && acceptedProposal && (
+                <CancelEngagementAction
+                  learnRequestId={id as string}
+                  proposalId={acceptedProposal.id}
+                />
+              )}
+            </div>
           </>
         ) : (
           <>

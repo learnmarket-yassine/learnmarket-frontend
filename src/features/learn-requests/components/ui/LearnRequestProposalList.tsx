@@ -2,7 +2,6 @@ import { Proposal } from '@/features/proposal/store/types'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import LearnRequestProposalCard from './LearnRequestProposalCard'
 import { LearnRequestStatus } from '../../store/types'
-import useHireProposal from '@/features/proposal/hooks/useHireProposal'
 import LearnRequestPagination from './LearnRequestPagination'
 import { PROPOSALS_PAGE_SIZE } from '../../hooks/useGetProposalsForRequest'
 import ProposalDetailsSheet from '@/features/proposal/components/ui/ProposalDetailsSheet'
@@ -36,7 +35,6 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
   onRetry,
   emptyMessage,
 }) => {
-  const hireMutation = useHireProposal(learnRequestId)
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const selectedProposal = proposals.find((p) => p.id === selectedProposalId) ?? null
@@ -87,8 +85,6 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
             proposal={proposal}
             learnRequestId={learnRequestId}
             learnRequestStatus={learnRequestStatus}
-            onHire={(proposalId) => hireMutation.mutate(proposalId)}
-            isHiring={hireMutation.isPending && hireMutation.variables === proposal.id}
           />
         ))}
       </div>
@@ -107,12 +103,6 @@ const LearnRequestProposalList: React.FC<LearnRequestProposalListProps> = ({
         setIsOpen={setIsSheetOpen}
         learnRequestId={learnRequestId}
         learnRequestStatus={learnRequestStatus}
-        onHire={(proposalId) => hireMutation.mutate(proposalId)}
-        isHiring={
-          !!selectedProposal &&
-          hireMutation.isPending &&
-          hireMutation.variables === selectedProposal.id
-        }
       />
     </div>
   )
