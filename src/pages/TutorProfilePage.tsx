@@ -21,7 +21,6 @@ const TutorProfilePage = () => {
           <MyProfileMainContent myProfile={myProfile} />
         </div>
       </div>
-
       <CertificationsSection certifications={myProfile?.tutorProfile?.certifications ?? []} />
       <EmploymentSection employment={myProfile?.tutorProfile?.employment ?? []} />
     </>

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore } from '@/store/store'
 import SearchInput from '@/components/ui/SearchInput'
 import FiltersModal from '@/features/Accueil/components/ui/FiltersModal'
@@ -22,6 +22,9 @@ import LearningRequestCustomToggle from '@/features/Accueil/components/ui/Custom
 
 const TutorAccueilPage = () => {
   const user = useStore((state) => state.auth.user)
+  const isNotVerified =
+    user?.tutorProfile?.verificationStatus && user?.tutorProfile?.verificationStatus !== 'APPROVED'
+  const navigate = useNavigate()
   const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebounce(searchInput)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -131,6 +134,20 @@ const TutorAccueilPage = () => {
 
   return (
     <>
+      {isNotVerified && (
+        <div className="text-center">
+          {' '}
+          <span className="text-[14px] font-semibold text-red-600">
+            Complete verification to start proposing
+          </span>
+          <span
+            onClick={() => navigate('/profile')}
+            className="ml-2 cursor-pointer text-[14px] text-red-600 underline"
+          >
+            You need an approved profile before you can submit proposals to learners.
+          </span>{' '}
+        </div>
+      )}
       <div className="grid w-full grid-cols-1 gap-10 lg:grid-cols-[1fr_350px]">
         <div className="space-y-8">
           <div className="relative overflow-hidden rounded-2xl bg-[#143681] px-8 py-10 text-white">

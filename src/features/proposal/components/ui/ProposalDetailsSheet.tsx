@@ -18,6 +18,7 @@ import { languageLevelLabels } from '@/lib/Constants'
 import { Language } from '@/features/myProfile/store/types'
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
 import SendMessageModal from '@/features/messaging/components/ui/SendMessageModal'
+import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
 import useToggleShortlistProposal from '@/features/learn-requests/hooks/useToggleShortlistProposal'
 
@@ -96,7 +97,10 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                   </AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold text-[#1E293B]">{fullName}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-bold text-[#1E293B]">{fullName}</p>
+                    <VerifiedBadge status={tutor.tutorProfile?.verificationStatus} />
+                  </div>
                   <div className="flex flex-wrap items-center gap-1 text-base text-[#565a60]">
                     {tutor.country && (
                       <span className="flex items-center gap-1">

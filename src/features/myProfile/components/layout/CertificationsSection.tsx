@@ -1,5 +1,6 @@
 import { TutorProfile } from '../../store/types'
-import AddButton from '../ui/AddButton'
+import CertificationForm from '../ui/CertificationForm'
+import CertificationItem from '../ui/CertificationItem'
 
 interface CertificationsSectionProps {
   certifications: TutorProfile['certifications']
@@ -10,19 +11,14 @@ function CertificationsSection({ certifications }: CertificationsSectionProps) {
     <div className="rounded-lg border border-[#D1D5DA] p-8">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-semibold text-[#143681]">Certifications</h2>
-        <AddButton label="Add certification" />
+        <CertificationForm edit={false} />
       </div>
 
-      <ul className="mt-4 space-y-4">
-        {certifications.map((cert) => (
-          <li key={cert.id} className="border-t border-border pt-4">
-            <p className="text-sm font-semibold text-foreground">{cert.title}</p>
-            <p className="text-xs text-muted-foreground">
-              {cert.issuer} · {cert.issuedAt}
-            </p>
-          </li>
+      <div className="space-y-4 divide-y divide-[#D1D5DA] divide-border">
+        {certifications.map((certification) => (
+          <CertificationItem key={certification.id} {...certification} />
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
