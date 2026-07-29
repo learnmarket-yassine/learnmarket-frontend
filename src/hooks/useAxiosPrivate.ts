@@ -1,17 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useStore } from '@/store/store'
 import { axiosPrivate } from '@/lib/api/client'
 import useRefreshToken from '@/features/auth/hooks/useRefreshToken'
 
 const useAxiosPrivate = () => {
-  const auth = useStore((state) => state.auth)
   const getNewAccessToken = useRefreshToken()
-  const accessToken = auth?.authenticationResult?.token
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       async (config) => {
-        let interceptedAccessToken = accessToken
+        // Read the token live from the store instead of a value captured when this
+        // effect first ran, so a token refreshed after mount is actually picked up.
+        let interceptedAccessToken = useStore.getState().auth.authenticationResult?.token
         if (!interceptedAccessToken) {
           const refreshedTokens = await getNewAccessToken() // Await refresh
           interceptedAccessToken = refreshedTokens.token
@@ -46,7 +45,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept)
       axiosPrivate.interceptors.response.eject(responseIntercept)
     }
-  }, [])
+  }, [getNewAccessToken])
 
   return axiosPrivate
 }

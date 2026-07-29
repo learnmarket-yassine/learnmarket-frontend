@@ -26,7 +26,7 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
     resolver: schema ? zodResolver(schema) : undefined,
     mode: 'onChange',
     defaultValues: {
-      sessionDurationMinutes: 60,
+      sessionDurationMinutes: 10,
       totalPrice: undefined,
       payoutMethod: 'ON_COMPLETION',
       message: '',
