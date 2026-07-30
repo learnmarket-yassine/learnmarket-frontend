@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ProposalFormValues } from '../schemas'
 import { AxiosInstance } from 'axios'
+import { isInsufficientSparksError } from '@/features/sparks/utils/errors'
 
 type CreateProposalPayload = {
   learnRequestId: string
@@ -38,5 +39,6 @@ export default function useCreateProposal() {
   return {
     handleCreateProposal,
     isPending: createProposalMutation.isPending,
+    isInsufficientSparks: isInsufficientSparksError(createProposalMutation.error),
   }
 }

@@ -6,6 +6,7 @@ export const tableFiltersSlice: StateCreator<TableFiltersSlice> = (set) => ({
     filters: {
       payments: [],
       payouts: [],
+      sparks: [],
     },
     setTableFilters: (filterType, filters) =>
       set((state) => ({

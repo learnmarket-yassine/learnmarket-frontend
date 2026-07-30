@@ -1,6 +1,6 @@
 // New filterable tables register their domain here, exactly like SitesPage/store/types.ts's
 // FilterType did in the reference project -- add a literal and a matching TableFilters entry.
-export type FilterType = 'payments' | 'payouts'
+export type FilterType = 'payments' | 'payouts' | 'sparks'
 
 export type TableFilter = {
   optionName: string
