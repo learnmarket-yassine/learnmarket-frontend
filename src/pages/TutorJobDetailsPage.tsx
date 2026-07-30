@@ -7,11 +7,14 @@ import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverL
 import ProposalStatusBadge from '@/features/proposal/components/ui/ProposalStatusBadge'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
+import FeedbackSection from '@/features/feedback/components/ui/FeedbackSection'
+import { useStore } from '@/store/store'
 
 const TutorJobDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data: proposal, isLoading, isError } = useGetMyProposal(id)
   const [selected, setSelected] = useState(1)
+  const currentUserId = useStore((state) => state.auth.user?.id)
 
   if (isLoading) {
     return (
@@ -59,6 +62,21 @@ const TutorJobDetailsPage = () => {
       show: true,
       name: 'Sessions',
       enabled: true,
+    },
+    {
+      stepNumber: 3,
+      component:
+        currentUserId && proposal.learnRequest.learner ? (
+          <FeedbackSection
+            proposalId={proposal.id}
+            currentUserId={currentUserId}
+            counterpartId={proposal.learnRequest.learner.id}
+            counterpartName={`${proposal.learnRequest.learner.firstname} ${proposal.learnRequest.learner.lastname}`}
+          />
+        ) : null,
+      show: true,
+      name: 'Feedback',
+      enabled: proposal.learnRequest.status === 'COMPLETED',
     },
   ]
   const currentStep = steps.find((step) => step.stepNumber === selected)

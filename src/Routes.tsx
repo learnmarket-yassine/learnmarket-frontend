@@ -27,6 +27,7 @@ import TutorJobDetailsPage from './pages/TutorJobDetailsPage'
 import StripeReturnPage from './pages/StripeReturnPage'
 import ProfileSettingsPage from './pages/ProfileSettingsPage'
 import BuySparksPage from './pages/BuySparksPage'
+import TutorPublicProfilePage from './pages/TutorPublicProfilePage'
 
 const AppRoutes = () => {
   return (
@@ -49,6 +50,7 @@ const AppRoutes = () => {
               <Route path="/messages" element={<MessagingPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/settings" element={<ProfileSettingsPage />} />
+              <Route path="/tutors/:id" element={<TutorPublicProfilePage />} />
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
                 <Route path="/proposals" element={<MyProposalsPage />} />
