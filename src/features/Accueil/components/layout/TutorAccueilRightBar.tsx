@@ -55,7 +55,7 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
 
       <div className="space-y-3 rounded-3xl border border-gray-200 bg-white p-6 text-center shadow-sm">
         <h1 className="flex items-center gap-2 text-lg font-bold">
-          Connects:<span className="font-semibold">77</span>
+          Sparks:<span className="font-semibold">77</span>
         </h1>
         <div className="flex w-full items-center justify-center">
           <Button
@@ -63,7 +63,7 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
             variant={'outline'}
             className="h-full w-full whitespace-nowrap rounded-full bg-white px-6 py-3 font-semibold text-[#2563EB] hover:bg-white hover:text-[#2563EB]"
           >
-            Buy Connects
+            Buy Sparks
           </Button>
         </div>
       </div>

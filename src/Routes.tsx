@@ -26,6 +26,7 @@ import SessionsPage from './pages/SessionsPage'
 import TutorJobDetailsPage from './pages/TutorJobDetailsPage'
 import StripeReturnPage from './pages/StripeReturnPage'
 import ProfileSettingsPage from './pages/ProfileSettingsPage'
+import BuySparksPage from './pages/BuySparksPage'
 
 const AppRoutes = () => {
   return (
@@ -56,6 +57,7 @@ const AppRoutes = () => {
                 <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
                 <Route path="/jobs/:id" element={<TutorJobDetailsPage />} />
                 <Route path="/profile/stripe-return" element={<StripeReturnPage />} />
+                <Route path="/sparks/buy" element={<BuySparksPage />} />
               </Route>
               <Route element={<RequireRole role="LEARNER" />}>
                 <Route path="/proposals/:proposalId/book" element={<BookingFlowPage />} />

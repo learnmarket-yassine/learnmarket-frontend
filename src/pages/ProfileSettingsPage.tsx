@@ -1,11 +1,15 @@
 import NavGroupItem from '@/features/settings/components/ui/NavGroupItem'
 import MyEarningsSection from '@/features/payments/components/MyEarningsSection'
 import MyPaymentsSection from '@/features/payments/components/MyPaymentsSection'
+import SparksSection from '@/features/sparks/components/SparksSection'
 import { useStore } from '@/store/store'
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const ProfileSettingsPage = () => {
-  const [selectedSection, setSelectedSection] = useState(1)
+  const location = useLocation()
+  const initialSection = (location.state as { section?: number } | null)?.section ?? 1
+  const [selectedSection, setSelectedSection] = useState(initialSection)
   const user = useStore((state) => state.auth.user)
   const isTutor = user?.role === 'TUTOR'
   const NAV_GROUPS = [
@@ -37,8 +41,8 @@ const ProfileSettingsPage = () => {
         },
         {
           stepNumber: 5,
-          label: 'Connects',
-          component: <h1>hello Connects</h1>,
+          label: 'Sparks',
+          component: <SparksSection />,
           show: isTutor,
         },
         {
@@ -56,7 +60,7 @@ const ProfileSettingsPage = () => {
   )
 
   return (
-    <>
+    <div className="space-y-4">
       <h1 className="text-4xl font-semibold">Settings</h1>
       <div className="grid grid-cols-[240px_1fr] gap-8">
         <nav className="space-y-6">
@@ -72,7 +76,7 @@ const ProfileSettingsPage = () => {
         </nav>
         <div>{selectedItem?.component}</div>
       </div>
-    </>
+    </div>
   )
 }
 

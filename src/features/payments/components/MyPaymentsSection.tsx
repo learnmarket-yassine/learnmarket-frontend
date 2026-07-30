@@ -32,15 +32,8 @@ const HEADERS = [
 ]
 
 const MyPaymentsSection = () => {
-  const {
-    data,
-    isLoading,
-    isError,
-    isPlaceholderData,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useGetMyPayments()
+  const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useGetMyPayments()
   const { ref: sentinelRef, inView } = useInView()
 
   useEffect(() => {
@@ -68,12 +61,21 @@ const MyPaymentsSection = () => {
   }
 
   return (
-    <div className={`space-y-6 ${isPlaceholderData ? 'opacity-60' : ''}`}>
-      <div>
-        <h2 className="text-2xl font-semibold text-[#1E293B]">Payments</h2>
-        <p className="mt-1 text-lg font-bold text-[#1E293B]">
-          Total spent: {formatBudget(totalSpent)} TND
-        </p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-3">
+          <h2 className="text-4xl font-semibold">Payments</h2>
+          <p className="max-w-[540px]">
+            Track your total spending, see exactly what you paid for each course, and follow the
+            status of every refund, all in one place.
+          </p>
+        </div>
+        <div className="w-72 rounded-2xl bg-blue-900 text-white">
+          <div className="flex flex-col gap-2 p-4">
+            <span className="text-sm font-normal">Total payments</span>
+            <span className="text-4xl font-bold">{formatBudget(totalSpent)} USD</span>
+          </div>
+        </div>
       </div>
       <CustomTable
         filterType={MY_PAYMENTS_FILTER_TYPE}

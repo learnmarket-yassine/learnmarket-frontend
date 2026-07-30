@@ -194,3 +194,26 @@ body {
   pointer-events: none;
   color: #9ca3af;
 }
+
+.verification-scroll {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #5f0c0c #fee2e2; /* thumb track */
+}
+
+.verification-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.verification-scroll::-webkit-scrollbar-track {
+  background: #5f0c0c;
+  border-radius: 9999px;
+}
+
+.verification-scroll::-webkit-scrollbar-thumb {
+  background: #5f0c0c;
+  border-radius: 9999px;
+}
+
+.verification-scroll::-webkit-scrollbar-thumb:hover {
+  background: #5f0c0c;
+}

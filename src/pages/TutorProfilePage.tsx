@@ -4,13 +4,21 @@ import EmploymentSection from '@/features/myProfile/components/layout/Employment
 import MyProfileHeader from '@/features/myProfile/components/layout/MyProfileHeader'
 import MyProfileLeftSidebar from '@/features/myProfile/components/layout/MyProfileLeftSidebar'
 import MyProfileMainContent from '@/features/myProfile/components/layout/MyProfileMainContent'
+import PayoutDisabledAlert from '@/features/myProfile/components/ui/PayoutDisabledAlert'
+import ProfileUnderReviewAlert from '@/features/tutor-verification/components/ui/ProfileUnderReviewAlert'
 import { useStore } from '@/store/store'
 
 const TutorProfilePage = () => {
   const user = useStore((state) => state.auth.user)
   const myProfile = user ?? ({} as AuthUser)
+  const tutorProfile = user?.tutorProfile
+  const isConnected = !!tutorProfile?.stripeAccountId
+  const isPayoutsEnabled =
+    !!tutorProfile?.stripeChargesEnabled && !!tutorProfile?.stripePayoutsEnabled
   return (
     <>
+      <ProfileUnderReviewAlert />
+      <PayoutDisabledAlert isConnected={isConnected} isPayoutEnabled={isPayoutsEnabled} />
       <div className="rounded-lg border border-[#D1D5DA]">
         {/* 1. Full-width profile header */}
         <MyProfileHeader profile={myProfile} />

@@ -13,6 +13,7 @@ import ProposalJobDetailsCard from './ProposalJobDetailsCard'
 import ProposalFormSessionsSection from './ProposalSessionsSection'
 import ProposalTermsSection from './ProposalTermsSection'
 import { MyProposalDetail } from '@/features/proposal/store/types'
+import SparksBalancePill from '@/features/sparks/components/ui/SparksBalancePill'
 
 type CreateProposalFormProps = {
   learnrequest: LearnRequest
@@ -60,13 +61,17 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
     })
   }, [isEditMode, existingProposal, reset])
 
-  const { handleCreateProposal, isPending: createProposalLoading } = useCreateProposal()
+  const {
+    handleCreateProposal,
+    isPending: createProposalLoading,
+    isInsufficientSparks,
+  } = useCreateProposal()
   const { handleUpdateProposal, isPending: updateProposalLoading } = useUpdateProposal()
   const isPending = isEditMode ? updateProposalLoading : createProposalLoading
 
   const isSingleSession = fields.length === 1
 
-  const onSubmit = (values: ProposalFormValues) => {
+  const onSubmit = async (values: ProposalFormValues) => {
     const payload = {
       ...values,
       sessionPlans: values.sessionPlans.map(({ title, objective }) => ({
@@ -74,17 +79,39 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
         objective,
       })),
     }
-    if (isEditMode) {
-      handleUpdateProposal({ proposalId: existingProposal.id, payload })
-    } else {
-      handleCreateProposal({ learnRequestId: learnrequest.id, payload })
+    try {
+      if (isEditMode) {
+        await handleUpdateProposal({ proposalId: existingProposal.id, payload })
+      } else {
+        await handleCreateProposal({ learnRequestId: learnrequest.id, payload })
+      }
+    } catch {
+      // surfaced reactively below via isInsufficientSparks -- nothing else to do here
     }
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
-      <h1 className="text-4xl font-bold text-[#1E293B]">
-        {isEditMode ? 'Edit your proposal' : 'Submit a proposal'}
-      </h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-4xl font-bold text-[#1E293B]">
+          {isEditMode ? 'Edit your proposal' : 'Submit a proposal'}
+        </h1>
+        {!isEditMode && <SparksBalancePill />}
+      </div>
+      {isInsufficientSparks && (
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-red-200 bg-red-50 px-5 py-4">
+          <p className="text-sm text-red-600">
+            You don't have enough Sparks to send this proposal. Purchase more to continue.
+          </p>
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto shrink-0 p-0 text-sm font-medium text-blue-600"
+            onClick={() => navigate('/settings', { state: { section: 5 } })}
+          >
+            Buy Sparks
+          </Button>
+        </div>
+      )}
       <div className="rounded-3xl border border-[#E0E2E6]">
         <ProposalJobDetailsCard learnrequest={learnrequest} />
       </div>
