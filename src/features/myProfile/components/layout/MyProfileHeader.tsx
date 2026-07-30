@@ -1,4 +1,4 @@
-import { BadgeCheck, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
