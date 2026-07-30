@@ -6,6 +6,8 @@ export type LearnRequestType = 'ONE_TIME' | 'COURSE'
 export type ProficiencyLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
 export type LearnRequestStatus = 'DRAFT' | 'OPEN' | 'CLOSED' | 'CANCELLED' | 'COMPLETED' | 'REMOVED'
 
+export type FilterType = 'payout'
+
 export interface LearnRequest {
   id: string
   learnerId: string
@@ -27,10 +29,6 @@ export interface LearnRequest {
   skills: { skill: Skill }[]
   proposals?: Proposal[]
   actionNeeded: boolean
-  // Optional: only populated by endpoints that include the savedBy join
-  // (main feed, Saved tab) -- other LearnRequest call sites in the codebase
-  // don't set it, so treat a missing value as "not saved" rather than
-  // assuming it's always sent.
   isSavedByMe?: boolean
   createdAt: string
   updatedAt: string

@@ -19,8 +19,6 @@ type LearnRequestProposalCardProps = {
   proposal: Proposal
   learnRequestId: string
   learnRequestStatus: LearnRequestStatus
-  onHire: (proposalId: string) => void
-  isHiring: boolean
   onSelect: () => void
 }
 
@@ -30,8 +28,6 @@ const LearnRequestProposalCard = ({
   proposal,
   learnRequestId,
   learnRequestStatus,
-  onHire,
-  isHiring,
   onSelect,
 }: LearnRequestProposalCardProps) => {
   const { tutor } = proposal
@@ -113,10 +109,9 @@ const LearnRequestProposalCard = ({
                 <HireProposalAction
                   proposalId={proposal.id}
                   proposalStatus={proposal.status}
+                  learnRequestId={learnRequestId}
                   learnRequestStatus={learnRequestStatus}
                   tutorName={fullName}
-                  onHire={onHire}
-                  isHiring={isHiring}
                 />
               </div>
             </div>

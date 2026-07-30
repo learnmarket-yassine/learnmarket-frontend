@@ -97,6 +97,9 @@ export interface TutorProfile {
   employment: EmploymentEntry[]
   completedJobs: number
   inProgressJobs: number
+  stripeAccountId?: string | null
+  stripeChargesEnabled: boolean
+  stripePayoutsEnabled: boolean
 }
 
 export type AvailabilityDay = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'

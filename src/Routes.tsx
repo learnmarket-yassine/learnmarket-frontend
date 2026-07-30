@@ -24,6 +24,8 @@ import EditProposalPage from './pages/EditProposalPage'
 import MessagingPage from './pages/MessagingPage'
 import SessionsPage from './pages/SessionsPage'
 import TutorJobDetailsPage from './pages/TutorJobDetailsPage'
+import StripeReturnPage from './pages/StripeReturnPage'
+import ProfileSettingsPage from './pages/ProfileSettingsPage'
 
 const AppRoutes = () => {
   return (
@@ -45,6 +47,7 @@ const AppRoutes = () => {
               <Route path="/accueil" element={<AccueilPage />} />
               <Route path="/messages" element={<MessagingPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
+              <Route path="/settings" element={<ProfileSettingsPage />} />
               <Route element={<RequireRole role="TUTOR" />}>
                 <Route path="/availability" element={<TutorAvailabilityPage />} />
                 <Route path="/proposals" element={<MyProposalsPage />} />
@@ -52,6 +55,7 @@ const AppRoutes = () => {
                 <Route path="/proposals/:id/edit" element={<EditProposalPage />} />
                 <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
                 <Route path="/jobs/:id" element={<TutorJobDetailsPage />} />
+                <Route path="/profile/stripe-return" element={<StripeReturnPage />} />
               </Route>
               <Route element={<RequireRole role="LEARNER" />}>
                 <Route path="/proposals/:proposalId/book" element={<BookingFlowPage />} />

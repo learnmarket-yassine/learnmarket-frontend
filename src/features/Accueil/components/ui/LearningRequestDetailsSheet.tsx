@@ -118,8 +118,8 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
             <div className="flex flex-col gap-3">
               <Button
                 type="button"
-                disabled={(request.proposals && request.proposals.length > 0) || isNotVerified}
-                onClick={() => navigate(`/proposals/${request.id}/create`)}
+                disabled={request.proposals && request.proposals.length > 0}
+                onClick={() => navigate(`/proposals/${request.id}/create`) || isNotVerified}
                 className="w-full whitespace-nowrap rounded-full bg-[#2563EB] py-6 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed"
               >
                 Apply now

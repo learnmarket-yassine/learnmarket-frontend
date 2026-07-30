@@ -8,14 +8,17 @@ import { onBoardingSlice } from '@/features/onboarding/store/OnboardingSlice'
 import { OnBoardingSlice } from '@/features/onboarding/store/types'
 import { sessionsSlice } from '@/features/sessions/store/sessionsSlice'
 import { SessionsSlice } from '@/features/sessions/store/types'
+import { tableFiltersSlice } from '@/features/table-filters/store/tableFiltersSlice'
+import { TableFiltersSlice } from '@/features/table-filters/store/types'
 import { create } from 'zustand'
 
 export const useStore = create<
-  AuthSlice & MyProfileSlice & OnBoardingSlice & MessagingSlice & SessionsSlice
+  AuthSlice & MyProfileSlice & OnBoardingSlice & MessagingSlice & SessionsSlice & TableFiltersSlice
 >()((...a) => ({
   ...authSlice(...a),
   ...myProfileSlice(...a),
   ...onBoardingSlice(...a),
   ...messagingSlice(...a),
   ...sessionsSlice(...a),
+  ...tableFiltersSlice(...a),
 }))
