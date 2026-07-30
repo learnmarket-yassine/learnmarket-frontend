@@ -3,12 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 
-// Landed on after the tutor finishes (or bails out of) Stripe's hosted
-// Connect onboarding flow. stripeChargesEnabled/stripePayoutsEnabled are
-// synced via the account.updated webhook, which may lag slightly behind
-// this redirect -- refetching /users/me here just picks up whatever the
-// backend currently has; StripeConnectSection shows the "finishing setup"
-// transitional state itself if onboarding is still incomplete.
 const StripeReturnPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()

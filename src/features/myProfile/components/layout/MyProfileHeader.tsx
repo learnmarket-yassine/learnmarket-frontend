@@ -1,11 +1,11 @@
 import { BadgeCheck, MapPin } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
 import { getAssetUrl } from '@/lib/utils'
 import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
 import TutorVerificationModal from '@/features/tutor-verification/components/ui/TutorVerificationModal'
+import { Link } from 'react-router-dom'
 
 interface ProfileHeaderProps {
   profile: AuthUser
@@ -35,12 +35,7 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
             <h1 className="text-2xl font-bold text-[#143681]">
               {profile.firstname} {profile.lastname}
             </h1>
-            {profile.tutorProfile?.verificationStatus && (
-              <div className="flex items-center gap-1">
-                <BadgeCheck className="size-3.5" aria-hidden="true" />
-                <TutorVerificationModal />
-              </div>
-            )}
+            <TutorVerificationModal />
             <VerifiedBadge status={profile?.tutorProfile?.verificationStatus} />
           </div>
           <div className="flex flex-wrap items-center gap-1 text-base text-[#143681]">
@@ -63,18 +58,12 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
 
       {/* Right: action buttons */}
       <div className="flex shrink-0 items-center gap-2">
-        <Button
-          variant="default"
+        <Link
+          to="/settings"
           className="h-12 rounded-full bg-[#2563EB] px-6 py-3 text-base font-semibold text-white hover:bg-[#2563EB]/90"
         >
-          See public view
-        </Button>
-        <Button
-          variant="outline"
-          className="h-12 rounded-full border-[#2563EB] bg-white px-6 py-3 text-base font-semibold text-[#2563EB] hover:bg-white/90 hover:text-[#2563EB]/90"
-        >
-          Share
-        </Button>
+          Profile Settings
+        </Link>
       </div>
     </div>
   )

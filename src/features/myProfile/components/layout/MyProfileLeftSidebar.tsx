@@ -11,7 +11,7 @@ import { AuthUser } from '@/features/auth/store/types'
 import useEditTutorProfile from '../../hooks/useEditTutorProfile'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 import useDeleteEducation from '../../hooks/useDeleteEducation'
-import StripeConnectSection from '../ui/StripeConnectSection'
+import SparksCard from '../ui/SparksCard'
 
 interface MyProfileLeftSidebarProps {
   myProfile: AuthUser
@@ -26,8 +26,7 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
 
   return (
     <div className="flex flex-col bg-white p-8">
-      {/* Payouts */}
-      <StripeConnectSection tutorProfile={myProfile.tutorProfile} />
+      <SparksCard />
       {/* Video introduction */}
       <div className="px-5 py-4">
         {!videoIntroUrl ? (

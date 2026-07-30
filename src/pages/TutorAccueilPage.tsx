@@ -19,6 +19,7 @@ import {
   parseLearnRequestFeedParams,
 } from '@/features/learn-requests/utils/learnRequestFeedParams'
 import LearningRequestCustomToggle from '@/features/Accueil/components/ui/CustomLearningRequestTab'
+import PayoutDisabledAlert from '@/features/myProfile/components/ui/PayoutDisabledAlert'
 
 const TutorAccueilPage = () => {
   const user = useStore((state) => state.auth.user)
@@ -132,6 +133,11 @@ const TutorAccueilPage = () => {
   const visibleSteps = steps.filter((step) => step.show)
   const currentStep = visibleSteps.find((step) => step.stepNumber === selected)
 
+  const tutorProfile = user?.tutorProfile
+  const isConnected = !!tutorProfile?.stripeAccountId
+  const isPayoutsEnabled =
+    !!tutorProfile?.stripeChargesEnabled && !!tutorProfile?.stripePayoutsEnabled
+
   return (
     <>
       {isNotVerified && (
@@ -148,6 +154,7 @@ const TutorAccueilPage = () => {
           </span>{' '}
         </div>
       )}
+      <PayoutDisabledAlert isConnected={isConnected} isPayoutEnabled={isPayoutsEnabled} />
       <div className="grid w-full grid-cols-1 gap-10 lg:grid-cols-[1fr_350px]">
         <div className="space-y-8">
           <div className="relative overflow-hidden rounded-2xl bg-[#143681] px-8 py-10 text-white">
