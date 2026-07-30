@@ -9,12 +9,16 @@ import LearnRequestProposalStep from '@/features/learn-requests/components/ui/Le
 import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 import CancelEngagementAction from '@/features/payments/components/CancelEngagementAction'
+import FeedbackSection from '@/features/feedback/components/ui/FeedbackSection'
+import { useStore } from '@/store/store'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data } = useGetLearnRequest(id)
   const [selected, setSelected] = useState(1)
   const acceptedProposal = data?.proposals?.find((proposal) => proposal.status === 'ACCEPTED')
+  const currentUserId = useStore((state) => state.auth.user?.id)
+  const isCompleted = data?.status === 'COMPLETED'
   const steps = [
     {
       stepNumber: 1,
@@ -45,6 +49,21 @@ const LearnRequestDetailsPage = () => {
       show: true,
       name: 'Sessions',
       enabled: !!acceptedProposal,
+    },
+    {
+      stepNumber: 5,
+      component:
+        acceptedProposal && currentUserId ? (
+          <FeedbackSection
+            proposalId={acceptedProposal.id}
+            currentUserId={currentUserId}
+            counterpartId={acceptedProposal.tutor.id}
+            counterpartName={`${acceptedProposal.tutor.firstname} ${acceptedProposal.tutor.lastname}`}
+          />
+        ) : null,
+      show: true,
+      name: 'Feedback',
+      enabled: !!acceptedProposal && isCompleted,
     },
   ]
   const visibleSteps = steps.filter((step) => step.show)

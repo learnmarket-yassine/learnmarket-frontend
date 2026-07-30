@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button'
 import SendMessageModal from '@/features/messaging/components/ui/SendMessageModal'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
 import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
+import useGetTutorRating from '@/features/feedback/hooks/useGetTutorRating'
+import TutorRatingBadge from '@/features/feedback/components/ui/TutorRatingBadge'
 import useToggleShortlistProposal from '../../hooks/useToggleShortlistProposal'
 
 type LearnRequestProposalCardProps = {
@@ -34,6 +36,7 @@ const LearnRequestProposalCard = ({
   const [isMessageOpen, setIsMessageOpen] = useState(false)
   const navigate = useNavigate()
   const { data: conversations } = useGetConversations()
+  const { data: rating } = useGetTutorRating(tutor.id)
   const toggleShortlist = useToggleShortlistProposal(learnRequestId, proposal.id)
 
   const initials =
@@ -66,11 +69,21 @@ const LearnRequestProposalCard = ({
               <div className="flex items-center gap-4">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{fullName}</p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/tutors/${tutor.id}`)
+                      }}
+                      className="text-sm font-medium hover:underline"
+                    >
+                      {fullName}
+                    </button>
                     <VerifiedBadge status={tutor.tutorProfile?.verificationStatus} />
                   </div>
                   {tutor.headline && <p className="text-sm font-bold">{tutor.headline}</p>}
                   {tutor.country && <span className="text-sm">{tutor.country}</span>}
+                  <TutorRatingBadge summary={rating} />
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-3">

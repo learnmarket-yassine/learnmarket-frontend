@@ -12,6 +12,9 @@ export interface LearnRequest {
   id: string
   learnerId: string
   learner?: {
+    id: string
+    firstname: string
+    lastname: string
     city: string
     country: string
   } | null
