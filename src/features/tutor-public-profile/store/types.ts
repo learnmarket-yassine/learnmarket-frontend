@@ -1,5 +1,6 @@
 import {
   Certification,
+  Education,
   EmploymentEntry,
   Language,
   PortfolioItem,
@@ -18,6 +19,7 @@ export interface PublicTutorProfile {
   country: string | null
   city: string | null
   languages: Language[]
+  education: Education[]
   tutorProfile: {
     videoIntroUrl: string | null
     verificationStatus: TutorVerificationStatus

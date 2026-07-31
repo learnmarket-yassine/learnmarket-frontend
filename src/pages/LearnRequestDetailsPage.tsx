@@ -9,7 +9,7 @@ import LearnRequestProposalStep from '@/features/learn-requests/components/ui/Le
 import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 import CancelEngagementAction from '@/features/payments/components/CancelEngagementAction'
-import FeedbackSection from '@/features/feedback/components/ui/FeedbackSection'
+import LeaveFeedbackButton from '@/features/feedback/components/ui/LeaveFeedbackButton'
 import { useStore } from '@/store/store'
 
 const LearnRequestDetailsPage = () => {
@@ -50,21 +50,6 @@ const LearnRequestDetailsPage = () => {
       name: 'Sessions',
       enabled: !!acceptedProposal,
     },
-    {
-      stepNumber: 5,
-      component:
-        acceptedProposal && currentUserId ? (
-          <FeedbackSection
-            proposalId={acceptedProposal.id}
-            currentUserId={currentUserId}
-            counterpartId={acceptedProposal.tutor.id}
-            counterpartName={`${acceptedProposal.tutor.firstname} ${acceptedProposal.tutor.lastname}`}
-          />
-        ) : null,
-      show: true,
-      name: 'Feedback',
-      enabled: !!acceptedProposal && isCompleted,
-    },
   ]
   const visibleSteps = steps.filter((step) => step.show)
   const currentStep = visibleSteps.find((step) => step.stepNumber === selected)
@@ -76,15 +61,23 @@ const LearnRequestDetailsPage = () => {
           <>
             <h1 className="text-2xl font-semibold">{data.title}</h1>
             <div className="flex items-center gap-3">
-              <span className="rounded-full border bg-[#143681] px-4 py-1 text-sm text-white">
-                {STATUS_LABELS[data.status]}
-              </span>
+              {acceptedProposal && isCompleted && currentUserId && (
+                <LeaveFeedbackButton
+                  proposalId={acceptedProposal.id}
+                  currentUserId={currentUserId}
+                  counterpartId={acceptedProposal.tutor.id}
+                  counterpartName={`${acceptedProposal.tutor.firstname} ${acceptedProposal.tutor.lastname}`}
+                />
+              )}
               {data.status === 'CLOSED' && acceptedProposal && (
                 <CancelEngagementAction
                   learnRequestId={id as string}
                   proposalId={acceptedProposal.id}
                 />
               )}
+              <span className="rounded-md border bg-[#143681] px-4 py-1 text-sm text-white">
+                {STATUS_LABELS[data.status]}
+              </span>
             </div>
           </>
         ) : (

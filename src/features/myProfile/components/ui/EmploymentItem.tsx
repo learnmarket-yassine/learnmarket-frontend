@@ -13,6 +13,7 @@ interface EmploymentItemProps {
   startDate: string
   endDate?: string
   current?: boolean
+  readOnly?: boolean
 }
 
 function EmploymentItem({
@@ -23,6 +24,7 @@ function EmploymentItem({
   endDate,
   description,
   current = false,
+  readOnly = false,
 }: EmploymentItemProps) {
   const { handleDeleteEmployment, isPending } = useDeleteEmployment()
   return (
@@ -41,18 +43,20 @@ function EmploymentItem({
                 : null}
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <EmploymentForm id={id} edit />
-          <ConfirmModal
-            name="employment"
-            type="delete"
-            title={'Delete employment'}
-            description={'Are you sure you want to delete this employment experience ?'}
-            handleConfirm={() => handleDeleteEmployment(id)}
-            buttonClassName="border-none"
-            isLoading={isPending}
-          />
-        </div>
+        {!readOnly && (
+          <div className="flex shrink-0 items-center gap-1">
+            <EmploymentForm id={id} edit />
+            <ConfirmModal
+              name="employment"
+              type="delete"
+              title={'Delete employment'}
+              description={'Are you sure you want to delete this employment experience ?'}
+              handleConfirm={() => handleDeleteEmployment(id)}
+              buttonClassName="border-none"
+              isLoading={isPending}
+            />
+          </div>
+        )}
       </div>
       <p className="text-base leading-relaxed text-[#143681]">{description}</p>
     </div>

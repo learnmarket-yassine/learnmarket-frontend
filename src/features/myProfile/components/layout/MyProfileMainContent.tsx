@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import HeadlineForm from '../ui/HeadLineForm'
 import PortfolioForm from '../ui/PortfolioForm'
@@ -10,11 +9,10 @@ import SpecialtiesForm from '../ui/SpecialtiesForm'
 
 interface MyProfileMainContentProps {
   myProfile: AuthUser
+  readOnly?: boolean
 }
 
-function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
-  const [activeWorkTab, setActiveWorkTab] = useState<'completed' | 'in_progress'>('completed')
-
+function MyProfileMainContent({ myProfile, readOnly = false }: MyProfileMainContentProps) {
   return (
     <div className="flex flex-col divide-y-[0.5px] divide-[#E0E2E6] border-l border-l-[#E0E2E6] bg-white">
       {/* Headline + rate */}
@@ -24,17 +22,21 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
             <h2 className="max-w-4xl flex-1 text-2xl font-semibold leading-snug text-[#143681]">
               {myProfile.headline}
             </h2>
-            <div>
-              <HeadlineForm />
-            </div>
+            {!readOnly && (
+              <div>
+                <HeadlineForm />
+              </div>
+            )}
           </div>
         </div>
         {/* Bio */}
 
         <div className="relative p-8">
-          <div className="absolute right-4 top-4">
-            <OverviewForm />
-          </div>
+          {!readOnly && (
+            <div className="absolute right-4 top-4">
+              <OverviewForm />
+            </div>
+          )}
           <p className="max-w-5xl whitespace-pre-wrap break-words pr-5 text-xl text-[#143681]">
             {myProfile.bio}
           </p>
@@ -42,92 +44,58 @@ function MyProfileMainContent({ myProfile }: MyProfileMainContentProps) {
       </div>
 
       {/* Portfolio */}
-      <div className="space-y-5 p-8">
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
-          <PortfolioForm edit={false} />
+      {(!readOnly || (myProfile.tutorProfile?.portfolio ?? []).length > 0) && (
+        <div className="space-y-5 p-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
+            {!readOnly && <PortfolioForm edit={false} />}
+          </div>
+          <PortfolioList portfolio={myProfile.tutorProfile?.portfolio ?? []} readOnly={readOnly} />
         </div>
-        <PortfolioList portfolio={myProfile.tutorProfile?.portfolio ?? []} />
-      </div>
-
-      {/* Work history */}
-      <div className="space-y-5 p-8">
-        <h3 className="mb-3 text-2xl font-semibold text-[#143681]">Work history</h3>
-        {/* Tabs */}
-        <div className="flex gap-4">
-          <WorkHistoryTab
-            label={`Completed jobs (${myProfile.tutorProfile?.completedJobs})`}
-            active={activeWorkTab === 'completed'}
-            onClick={() => setActiveWorkTab('completed')}
-          />
-          <WorkHistoryTab
-            label={`In progress (${myProfile.tutorProfile?.inProgressJobs})`}
-            active={activeWorkTab === 'in_progress'}
-            onClick={() => setActiveWorkTab('in_progress')}
-          />
-        </div>
-      </div>
+      )}
 
       {/* Specialties */}
-      <div className="space-y-5 p-8">
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-[#143681]">Specialties</h3>
-          <SpecialtiesForm />
+      {(!readOnly || (myProfile.tutorProfile?.specialties ?? []).length > 0) && (
+        <div className="space-y-5 p-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold text-[#143681]">Specialties</h3>
+            {!readOnly && <SpecialtiesForm />}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {myProfile.tutorProfile?.specialties.map((specialty) => (
+              <Badge
+                key={specialty.id}
+                variant="secondary"
+                className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
+              >
+                {specialty.name}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {myProfile.tutorProfile?.specialties.map((specialty) => (
-            <Badge
-              key={specialty.id}
-              variant="secondary"
-              className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
-            >
-              {specialty.name}
-            </Badge>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Skills */}
-      <div className="space-y-5 p-8">
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-[#143681]">Skills</h3>
-          <SkillsForm />
+      {(!readOnly || (myProfile.tutorProfile?.skills ?? []).length > 0) && (
+        <div className="space-y-5 p-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold text-[#143681]">Skills</h3>
+            {!readOnly && <SkillsForm />}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {myProfile.tutorProfile?.skills.map((skill) => (
+              <Badge
+                key={skill.id}
+                variant="secondary"
+                className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
+              >
+                {skill.name}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {myProfile.tutorProfile?.skills.map((skill) => (
-            <Badge
-              key={skill.id}
-              variant="secondary"
-              className="h-9 rounded-lg border-none bg-[#F5F6F7] px-4 py-2 text-sm text-[#102A63]"
-            >
-              {skill.name}
-            </Badge>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   )
 }
 export default MyProfileMainContent
-// ── Internal tab button ───────────────────────────────────────────────────────
-function WorkHistoryTab({
-  label,
-  active,
-  onClick,
-}: {
-  label: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`border-b-2 py-2.5 pr-2.5 text-xl text-[#143681] transition-colors ${
-        active ? 'border-[#143681] font-semibold' : 'border-transparent font-light'
-      }`}
-    >
-      {label}
-    </button>
-  )
-}

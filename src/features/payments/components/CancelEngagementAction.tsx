@@ -8,9 +8,6 @@ interface CancelEngagementActionProps {
   proposalId: string
 }
 
-// Learner-only: cancels an already-hired, not-yet-completed engagement.
-// Sessions that already happened are unaffected; the un-transferred
-// portion of what was paid gets refunded server-side.
 const CancelEngagementAction = ({ learnRequestId, proposalId }: CancelEngagementActionProps) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const cancelProposal = useCancelProposal(learnRequestId)
@@ -19,11 +16,10 @@ const CancelEngagementAction = ({ learnRequestId, proposalId }: CancelEngagement
     <>
       <Button
         type="button"
-        variant="outline"
-        className="rounded-full border-red-300 px-6 text-red-600 hover:bg-red-50 hover:text-red-600"
+        className="bg-white px-5 font-medium text-red-600 transition-all duration-200 hover:text-red-700 hover:underline"
         onClick={() => setIsConfirmOpen(true)}
       >
-        Cancel engagement
+        Cancel Engagement
       </Button>
       <ConfirmModal
         name="Event Exception Modal"

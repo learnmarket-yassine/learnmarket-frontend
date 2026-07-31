@@ -3,6 +3,7 @@ import AuthLayout from '@/features/auth/components/layout/AuthLayout'
 import ForgotPasswordForm from '@/features/auth/components/ui/ForgotPasswordForm'
 import StepBox from '@/features/auth/components/ui/StepBox'
 import { useStore } from '@/store/store'
+import { useNavigate } from 'react-router-dom'
 
 const ForgotPasswordPage = () => {
   const STEPS = [
@@ -11,11 +12,14 @@ const ForgotPasswordPage = () => {
     { id: 3, label: 'Reset' },
   ]
   const { currentStep } = useStore((state) => state.auth)
+  const navigate = useNavigate()
   return (
     <AuthLayout>
       <section className="flex w-[650px] flex-col rounded-2xl bg-white/80 px-12 py-16 backdrop-blur-sm">
         <div className="flex items-center">
-          <ArrowLeft />
+          <button type="button" aria-label="Go back" onClick={() => navigate(-1)}>
+            <ArrowLeft />
+          </button>
           <div className="mx-auto flex items-center justify-center gap-3">
             {STEPS.map((step) => (
               <StepBox
