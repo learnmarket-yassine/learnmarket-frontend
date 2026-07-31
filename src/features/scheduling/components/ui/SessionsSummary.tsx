@@ -6,6 +6,7 @@ const STATUS_TEXT_CLASSNAMES: Record<Session['status'], string> = {
   PENDING_SCHEDULE: 'text-gray-400',
   HELD: 'text-gray-400',
   BOOKED: 'text-emerald-600',
+  PENDING_REVIEW: 'text-amber-600',
   COMPLETED: 'text-[#2563EB]',
   CANCELLED: 'text-gray-400',
 }
