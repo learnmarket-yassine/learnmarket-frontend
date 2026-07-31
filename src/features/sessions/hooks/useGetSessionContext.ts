@@ -12,6 +12,11 @@ export interface SessionContext {
   tutor: { firstname: string; lastname: string }
   tutorJoinedAt: string | null
   learnerJoinedAt: string | null
+  summary: string | null
+  summarySubmittedAt: string | null
+  learnerConfirmedAt: string | null
+  disputeReason: string | null
+  disputedAt: string | null
   booking: { id: string; status: BookingStatus; startTime: string; endTime: string } | null
 }
 

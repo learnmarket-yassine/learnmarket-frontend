@@ -9,7 +9,7 @@ type SessionCardProps = {
   onSelectSession: (id: string) => void
 }
 
-const JOINABLE_STATUSES: Session['status'][] = ['BOOKED', 'COMPLETED']
+const JOINABLE_STATUSES: Session['status'][] = ['BOOKED', 'PENDING_REVIEW', 'COMPLETED']
 
 const SessionCard: React.FC<SessionCardProps> = ({
   session,

@@ -169,15 +169,14 @@ export interface Session {
 }
 
 // GET /sessions/:id/meeting -- shape already role-scoped server-side.
-// joinUrl is whichever of start_url/join_url is correct for the caller;
-// the frontend never distinguishes the two.
+// joinUrl carries a short-lived, per-caller Daily.co meeting token; owner
+// privileges are baked into the token server-side, never a separate field.
 export type MeetingDetails =
   | { status: 'not_provisioned'; canJoinYet: false }
   | {
       status: 'provisioned'
       canJoinYet: boolean
       joinUrl: string
-      password: string | null
     }
 
 export interface CommentAuthor {

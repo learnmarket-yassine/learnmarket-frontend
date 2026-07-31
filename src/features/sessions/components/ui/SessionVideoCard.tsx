@@ -1,31 +1,58 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Daily, { DailyCall } from '@daily-co/daily-js'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, Video } from 'lucide-react'
 import useRetryMeeting from '../../hooks/useRetryMeeting'
-import useJoinSession from '../../hooks/useJoinSession'
 import { useCountdown } from '@/features/scheduling/hooks/useCountdown'
 import { MeetingDetails } from '@/features/scheduling/types/dto'
 import { SessionContext } from '../../hooks/useGetSessionContext'
 
-interface SessionZoomProps {
+interface SessionVideoCardProps {
   meeting: MeetingDetails
   sessionId: string
   context: SessionContext
 }
 
-const SessionZoom = ({ meeting, sessionId, context }: SessionZoomProps) => {
+const SessionVideoCard = ({ meeting, sessionId, context }: SessionVideoCardProps) => {
   const { handleRetryMeeting, isPending: isRetrying } = useRetryMeeting(sessionId)
-  const { handleJoinSession, hasFired } = useJoinSession(sessionId)
+  const [isCallActive, setIsCallActive] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const callFrameRef = useRef<DailyCall | null>(null)
 
   const canJoinYet = meeting?.canJoinYet ?? false
 
   const countdown = useCountdown(canJoinYet ? null : (context?.booking?.startTime ?? null), 'long')
 
+  // Embeds Daily's prebuilt call UI in place, rather than opening the
+  // meeting in a separate tab. Only mounted once the learner/tutor
+  // explicitly clicks "Join Session" -- never auto-joins on render, so a
+  // camera/mic permission prompt is always the result of a deliberate click.
   useEffect(() => {
-    if (canJoinYet && !hasFired) {
-      handleJoinSession()
+    if (!isCallActive || meeting.status !== 'provisioned' || !containerRef.current) return
+
+    const callFrame = Daily.createFrame(containerRef.current, {
+      iframeStyle: {
+        width: '100%',
+        height: '100%',
+        border: '0',
+        borderRadius: '1rem',
+      },
+      showLeaveButton: true,
+    })
+    callFrameRef.current = callFrame
+
+    callFrame.on('left-meeting', () => setIsCallActive(false))
+    callFrame.join({ url: meeting.joinUrl })
+
+    return () => {
+      callFrame.destroy()
+      callFrameRef.current = null
     }
-  }, [canJoinYet, hasFired, handleJoinSession])
+    // meeting.joinUrl is intentionally excluded -- it's a short-lived token
+    // that may get re-minted by a background refetch while the call is
+    // already active, and rejoining mid-call would disrupt the session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCallActive, meeting.status])
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0F3D91] via-[#2563EB] to-[#60A5FA] p-8 text-white shadow-2xl">
@@ -72,7 +99,14 @@ const SessionZoom = ({ meeting, sessionId, context }: SessionZoomProps) => {
           </div>
         )}
 
-        {meeting.status === 'provisioned' && (
+        {meeting.status === 'provisioned' && isCallActive && (
+          <div
+            ref={containerRef}
+            className="h-[560px] w-full overflow-hidden rounded-2xl bg-black"
+          />
+        )}
+
+        {meeting.status === 'provisioned' && !isCallActive && (
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-wide text-blue-100">Session starts in</p>
@@ -81,25 +115,14 @@ const SessionZoom = ({ meeting, sessionId, context }: SessionZoomProps) => {
                 {canJoinYet ? 'Ready to join' : countdown.formatted}
               </p>
             </div>
-            {canJoinYet ? (
-              <Button
-                asChild
-                className="h-12 rounded-xl bg-white px-6 font-semibold text-[#2563EB] shadow-lg transition hover:bg-slate-100"
-              >
-                <a href={meeting.joinUrl} target="_blank" rel="noopener noreferrer">
-                  <Video className="mr-2 size-5" />
-                  Join Session
-                </a>
-              </Button>
-            ) : (
-              <Button
-                disabled
-                className="h-12 rounded-xl bg-white px-6 font-semibold text-[#2563EB] opacity-60 shadow-lg"
-              >
-                <Video className="mr-2 size-5" />
-                Join Session
-              </Button>
-            )}
+            <Button
+              className="h-12 rounded-xl bg-white px-6 font-semibold text-[#2563EB] shadow-lg transition hover:bg-slate-100 disabled:opacity-60"
+              disabled={!canJoinYet}
+              onClick={() => setIsCallActive(true)}
+            >
+              <Video className="mr-2 size-5" />
+              Join Session
+            </Button>
           </div>
         )}
       </div>
@@ -107,4 +130,4 @@ const SessionZoom = ({ meeting, sessionId, context }: SessionZoomProps) => {
   )
 }
 
-export default SessionZoom
+export default SessionVideoCard

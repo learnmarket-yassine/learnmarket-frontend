@@ -9,7 +9,8 @@ import { useSessionSocketConnection } from '../../hooks/useSessionSocketConnecti
 import ClassroomFeed from './ClassroomFeed'
 import AssignmentCard from './AssignmentCard'
 import ProposalSessionObjective from '@/features/proposal/components/ui/ProposalSessionObjective'
-import SessionZoom from './SessionZoom'
+import SessionVideoCard from './SessionVideoCard'
+import SessionReviewGate from './SessionReviewGate'
 import RescheduleSessionAction from './RescheduleSessionAction'
 
 interface SessionRoomDetailsProps {
@@ -75,7 +76,8 @@ const SessionRoomDetails = ({ sessionId, proposalId }: SessionRoomDetailsProps) 
         <ProposalSessionObjective className="text-base font-medium" objective={context.objective} />
       </div>
       <div className="space-y-8">
-        <SessionZoom context={context} meeting={meeting} sessionId={sessionId} />
+        <SessionVideoCard context={context} meeting={meeting} sessionId={sessionId} />
+        <SessionReviewGate sessionId={sessionId} context={context} />
         <ClassroomFeed
           sessionId={sessionId}
           isTutor={context.isTutor}

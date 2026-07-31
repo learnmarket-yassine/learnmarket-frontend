@@ -17,6 +17,7 @@ export const SESSION_STATUS_LABELS: Record<SessionStatus, string> = {
   PENDING_SCHEDULE: 'Needs scheduling',
   HELD: 'Pending confirmation',
   BOOKED: 'Booked',
+  PENDING_REVIEW: 'Awaiting review',
   COMPLETED: 'Completed',
   CANCELLED: 'Cancelled',
 }
@@ -26,6 +27,7 @@ export const SESSION_STATUS_ICON: Record<SessionStatus, LucideIcon> = {
   PENDING_SCHEDULE: Circle,
   HELD: Circle,
   BOOKED: CheckCircle2,
+  PENDING_REVIEW: Circle,
   COMPLETED: CheckCircle2,
   CANCELLED: Circle,
 }
