@@ -1,12 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { getBrowserTimezone } from '../../utils/timezones'
-import SlotSelectionGrid from './SlotSelectionGrid'
-import CourseList from './CourseList'
-import HoldSlotModal from './HoldModal'
-import SessionsSummary from './SessionsSummary'
-import SuccessModal from '@/components/ui/SuccessModal'
 import { useGetProposal } from '../../hooks/useGetProposal'
-import { useBookingFlow } from '../../hooks/useBookingFlow'
+import SessionsList from './SessionsList'
 
 interface BookingFlowProps {
   proposalId: string
@@ -14,20 +8,6 @@ interface BookingFlowProps {
 
 const BookingFlow = ({ proposalId }: BookingFlowProps) => {
   const proposalQuery = useGetProposal(proposalId)
-  const timezone = getBrowserTimezone()
-  const sessions = proposalQuery.data?.sessions ?? []
-  const {
-    state,
-    activeSession,
-    isConfirming,
-    selectSession,
-    selectSlot,
-    confirm,
-    chooseDifferentTime,
-    modalState,
-    handleCloseModal,
-  } = useBookingFlow(sessions)
-
   if (proposalQuery.isPending) {
     return (
       <div className="rounded-3xl border border-[#E0E2E6] bg-white p-6">
@@ -48,49 +28,11 @@ const BookingFlow = ({ proposalId }: BookingFlowProps) => {
   }
 
   const proposal = proposalQuery.data
+  const orderedSessions = [...proposal.sessions].sort((a, b) => a.sessionNumber - b.sessionNumber)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#E0E2E6] bg-white">
-      {activeSession ? (
-        <div className="flex flex-row">
-          <CourseList
-            sessions={proposal.sessions}
-            activeSessionId={activeSession.id}
-            onSelectSession={(session) => selectSession(session.id)}
-          />
-          <div className="flex-1 p-6">
-            <SlotSelectionGrid
-              tutorId={proposal.tutorId}
-              sessionId={activeSession.id}
-              durationMinutes={proposal.sessionDurationMinutes}
-              onHoldCreated={selectSlot}
-            />
-          </div>
-        </div>
-      ) : (
-        <SessionsSummary sessions={proposal.sessions} />
-      )}
-
-      {state.step === 'holding' && (
-        <HoldSlotModal
-          open
-          onOpenChange={(open) => !open && chooseDifferentTime()}
-          hold={state.hold}
-          timezone={timezone}
-          isConfirming={isConfirming}
-          onConfirm={confirm}
-          onChooseDifferentTime={chooseDifferentTime}
-        />
-      )}
-
-      <SuccessModal
-        name="confirm hold"
-        {...modalState}
-        setIsOpen={(open) => !open && handleCloseModal()}
-        onButtonClick={handleCloseModal}
-        isLoading={false}
-        titleButton={modalState.type === 'error' ? 'Go Back' : 'Back to Home'}
-      />
+    <div className="flex flex-col gap-4 rounded-3xl border border-[#E0E2E6] bg-white p-6">
+      <SessionsList sessions={orderedSessions} proposal={proposal} />
     </div>
   )
 }

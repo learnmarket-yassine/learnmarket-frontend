@@ -4,9 +4,9 @@ import { useCountdown } from '../../hooks/useCountdown'
 import type { CountdownUrgency } from '../../utils/countdown'
 
 const URGENCY_CLASSNAMES: Record<CountdownUrgency, string> = {
-  normal: 'bg-blue-50 text-[#2563EB]',
-  warning: 'bg-amber-50 text-amber-700',
-  critical: 'bg-red-50 text-red-600',
+  normal: 'bg-blue-900',
+  warning: 'bg-amber-900',
+  critical: 'bg-red-900',
 }
 
 interface HoldCountdownBadgeProps {
@@ -18,7 +18,7 @@ const HoldCountdownBadge = ({ expiresAt }: HoldCountdownBadgeProps) => {
   return (
     <span
       className={cn(
-        'mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
+        'mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-white',
         URGENCY_CLASSNAMES[countdown.urgency]
       )}
     >

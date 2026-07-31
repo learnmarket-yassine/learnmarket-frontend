@@ -74,7 +74,7 @@ const SlotSelectionGrid = ({
   }
 
   if (slotsQuery.isError) {
-    return <p className="text-sm text-destructive">Couldn&apos;t load available times.</p>
+    return <p className="text-sm text-destructive">Couldn't load available times.</p>
   }
 
   const currentSlots = new Set((slotsQuery.data?.slots ?? []).filter(isFutureSlot))
@@ -115,11 +115,9 @@ const SlotSelectionGrid = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-[#6B7280]">
-        Times shown in <span className="font-medium text-[#1E293B]">{learnerTimezone}</span>
-      </p>
+      <p className="text-sm text-[#6B7280]">Choose dates and times to learn</p>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_400px]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[400px_1fr]">
         <div className="h-full w-full">
           <Calendar
             mode="single"

@@ -141,8 +141,6 @@ export interface LearnRequest {
   updatedAt: string
 }
 
-// The tutor's pitch, submitted before acceptance -- no status at all.
-// Session count before acceptance is contextual: sessionPlans.length.
 export interface ProposalSessionPlan {
   id: string
   proposalId: string
@@ -153,8 +151,6 @@ export interface ProposalSessionPlan {
   updatedAt: string
 }
 
-// The real, committed session -- created only once the Proposal is
-// accepted. Session count after acceptance is contextual: sessions.length.
 export interface Session {
   id: string
   proposalId: string
@@ -164,13 +160,9 @@ export interface Session {
   status: SessionStatus
   createdAt: string
   updatedAt: string
-  // Present when status is HELD (or was, until the next refetch catches up).
   slotHold?: SlotHold | null
 }
 
-// GET /sessions/:id/meeting -- shape already role-scoped server-side.
-// joinUrl carries a short-lived, per-caller Daily.co meeting token; owner
-// privileges are baked into the token server-side, never a separate field.
 export type MeetingDetails =
   | { status: 'not_provisioned'; canJoinYet: false }
   | {

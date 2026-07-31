@@ -28,6 +28,7 @@ import StripeReturnPage from './pages/StripeReturnPage'
 import ProfileSettingsPage from './pages/ProfileSettingsPage'
 import BuySparksPage from './pages/BuySparksPage'
 import TutorPublicProfilePage from './pages/TutorPublicProfilePage'
+import SessionDetailPage from './pages/SessionDetailPage'
 
 const AppRoutes = () => {
   return (
@@ -49,6 +50,10 @@ const AppRoutes = () => {
               <Route path="/accueil" element={<AccueilPage />} />
               <Route path="/messages" element={<MessagingPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
+              <Route
+                path="/proposals/:proposalId/sessions/:sessionId"
+                element={<SessionDetailPage />}
+              />
               <Route path="/settings" element={<ProfileSettingsPage />} />
               <Route path="/tutors/:id" element={<TutorPublicProfilePage />} />
               <Route element={<RequireRole role="TUTOR" />}>

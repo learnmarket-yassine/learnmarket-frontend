@@ -28,12 +28,12 @@ const getSessionContext = async (
   return response.data
 }
 
-export default function useGetSessionContext(sessionId: string) {
+export default function useGetSessionContext(sessionId: string, enabled = true) {
   const axiosPrivate = useAxiosPrivate()
 
   return useQuery({
     queryKey: ['session', sessionId, 'context'],
     queryFn: () => getSessionContext(axiosPrivate, sessionId),
-    enabled: !!sessionId,
+    enabled: !!sessionId && enabled,
   })
 }
