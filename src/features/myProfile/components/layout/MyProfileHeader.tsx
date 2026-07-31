@@ -9,9 +9,10 @@ import { Link } from 'react-router-dom'
 
 interface ProfileHeaderProps {
   profile: AuthUser
+  readOnly?: boolean
 }
 
-function MyProfileHeader({ profile }: ProfileHeaderProps) {
+function MyProfileHeader({ profile, readOnly = false }: ProfileHeaderProps) {
   const initials = `${profile.firstname} ${profile.lastname}`
     .split(' ')
     .map((n) => n[0])
@@ -35,7 +36,7 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
             <h1 className="text-2xl font-bold text-[#143681]">
               {profile.firstname} {profile.lastname}
             </h1>
-            <TutorVerificationModal />
+            {!readOnly && <TutorVerificationModal />}
             <VerifiedBadge status={profile?.tutorProfile?.verificationStatus} />
           </div>
           <div className="flex flex-wrap items-center gap-1 text-base text-[#143681]">
@@ -57,14 +58,16 @@ function MyProfileHeader({ profile }: ProfileHeaderProps) {
       </div>
 
       {/* Right: action buttons */}
-      <div className="flex shrink-0 items-center gap-2">
-        <Link
-          to="/settings"
-          className="h-12 rounded-full bg-[#2563EB] px-6 py-3 text-base font-semibold text-white hover:bg-[#2563EB]/90"
-        >
-          Profile Settings
-        </Link>
-      </div>
+      {!readOnly && (
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            to="/settings"
+            className="h-12 rounded-full bg-[#2563EB] px-6 py-3 text-base font-semibold text-white hover:bg-[#2563EB]/90"
+          >
+            Profile Settings
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

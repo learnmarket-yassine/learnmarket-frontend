@@ -6,11 +6,12 @@ import EmptyState from './EmptyState'
 
 interface PortfolioListProps {
   portfolio: TutorProfile['portfolio']
+  readOnly?: boolean
 }
 
 const PAGE_SIZE = 6
 
-function PortfolioList({ portfolio }: PortfolioListProps) {
+function PortfolioList({ portfolio, readOnly = false }: PortfolioListProps) {
   const [page, setPage] = useState(1)
 
   if (portfolio.length === 0) {
@@ -25,7 +26,7 @@ function PortfolioList({ portfolio }: PortfolioListProps) {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
         {visibleItems.map((item) => (
-          <PortfolioItemCard key={item.id} item={item} />
+          <PortfolioItemCard key={item.id} item={item} readOnly={readOnly} />
         ))}
       </div>
 

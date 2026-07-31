@@ -8,19 +8,6 @@ export interface Feedback {
   createdAt: string
 }
 
-export interface HiddenFeedback {
-  id: string
-  authorId: string
-  aboutUserId: string
-  status: 'hidden'
-}
-
-export type FeedbackEntry = Feedback | HiddenFeedback
-
-export function isHiddenFeedback(entry: FeedbackEntry): entry is HiddenFeedback {
-  return (entry as HiddenFeedback).status === 'hidden'
-}
-
 export interface SubmitFeedbackInput {
   rating: number
   comment?: string
@@ -29,4 +16,21 @@ export interface SubmitFeedbackInput {
 export interface TutorRatingSummary {
   averageRating: number | null
   reviewCount: number
+}
+
+export interface TutorFeedbackEntry {
+  id: string
+  rating: number
+  comment: string | null
+  createdAt: string
+  author: {
+    id: string
+    firstname: string
+    lastname: string
+    avatar: string | null
+  }
+  learnRequestTitle: string
+  engagementStart: string
+  engagementEnd: string | null
+  billedAmount: number | string
 }

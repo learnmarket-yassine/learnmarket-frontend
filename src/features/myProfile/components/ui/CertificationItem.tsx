@@ -7,7 +7,7 @@ import { Certification } from '../../store/types'
 import useDeleteCertification from '../../hooks/useDeleteCertification'
 import CertificationForm from './CertificationForm'
 
-type CertificationItemProps = Certification
+type CertificationItemProps = Certification & { readOnly?: boolean }
 
 function CertificationItem({
   id,
@@ -17,6 +17,7 @@ function CertificationItem({
   expiresAt,
   credentialUrl,
   files,
+  readOnly = false,
 }: CertificationItemProps) {
   const { handleDeleteCertification, isPending: isDeletingCertification } = useDeleteCertification()
   const { handleDownload } = useDownloadClassroomAttachment()
@@ -45,18 +46,20 @@ function CertificationItem({
             </a>
           )}
         </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <CertificationForm id={id} edit />
-          <ConfirmModal
-            name="certification"
-            type="delete"
-            title="Delete certification"
-            description="Are you sure you want to delete this certification?"
-            handleConfirm={() => handleDeleteCertification(id)}
-            buttonClassName="border-none"
-            isLoading={isDeletingCertification}
-          />
-        </div>
+        {!readOnly && (
+          <div className="flex shrink-0 items-center gap-1">
+            <CertificationForm id={id} edit />
+            <ConfirmModal
+              name="certification"
+              type="delete"
+              title="Delete certification"
+              description="Are you sure you want to delete this certification?"
+              handleConfirm={() => handleDeleteCertification(id)}
+              buttonClassName="border-none"
+              isLoading={isDeletingCertification}
+            />
+          </div>
+        )}
       </div>
 
       {files.length > 0 && (

@@ -6,9 +6,10 @@ import { getAssetUrl } from '@/lib/utils'
 
 interface PortfolioItemCardProps {
   item: PortfolioItem
+  readOnly?: boolean
 }
 
-function PortfolioItemCard({ item }: PortfolioItemCardProps) {
+function PortfolioItemCard({ item, readOnly = false }: PortfolioItemCardProps) {
   const thumbnail = item.media?.find((media) => media.type === 'IMAGE')
   const thumbnailUrl = thumbnail && getAssetUrl(thumbnail.key ?? thumbnail.url)
 
@@ -24,7 +25,7 @@ function PortfolioItemCard({ item }: PortfolioItemCardProps) {
         )}
         <div className="absolute right-2 top-2 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           <PortfolioViewModal item={item} />
-          <PortfolioForm edit id={item.id} />
+          {!readOnly && <PortfolioForm edit id={item.id} />}
         </div>
       </div>
       <p className="truncate px-2 text-xl font-bold text-[#42444a] hover:cursor-pointer hover:underline">

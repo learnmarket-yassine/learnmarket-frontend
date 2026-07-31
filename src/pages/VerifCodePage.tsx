@@ -2,8 +2,9 @@ import ArrowLeft from '@/assets/ArrowLeft'
 import AuthLayout from '@/features/auth/components/layout/AuthLayout'
 import StepBox from '@/features/auth/components/ui/StepBox'
 import VerifCodeForm from '@/features/auth/components/ui/VerifCodeForm'
+import useForgotPassword from '@/features/auth/hooks/useForgotPassword'
 import { useStore } from '@/store/store'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const VerifCodePage = () => {
   const STEPS = [
@@ -13,13 +14,27 @@ const VerifCodePage = () => {
   ]
   const [searchParams] = useSearchParams()
   const email = searchParams.get('email') ?? ''
-  const { currentStep } = useStore((state) => state.auth)
+  const { currentStep, setCurrentStep } = useStore((state) => state.auth)
+  const navigate = useNavigate()
+  const resendCode = useForgotPassword()
+
+  const handleBack = () => {
+    setCurrentStep(1)
+    navigate(-1)
+  }
+
+  const handleResend = () => {
+    if (!email || resendCode.isPending) return
+    resendCode.mutate({ email })
+  }
 
   return (
     <AuthLayout>
       <section className="flex w-[650px] flex-col rounded-2xl bg-white/80 px-12 py-16 backdrop-blur-sm">
         <div className="flex items-center">
-          <ArrowLeft />
+          <button type="button" aria-label="Go back" onClick={handleBack}>
+            <ArrowLeft />
+          </button>
           <div className="mx-auto flex items-center justify-center gap-3">
             {STEPS.map((step) => (
               <StepBox
@@ -36,7 +51,21 @@ const VerifCodePage = () => {
             A 6-digit code has been sent to your email address <strong>{email}.</strong>
           </p>
           <VerifCodeForm />
-          <p className="cursor-pointer text-[#6B7280] underline">Resend code</p>
+          <p
+            role="button"
+            onClick={handleResend}
+            className={
+              resendCode.isPending
+                ? 'cursor-not-allowed text-[#8E949F] underline'
+                : 'cursor-pointer text-[#6B7280] underline'
+            }
+          >
+            {resendCode.isPending
+              ? 'Sending...'
+              : resendCode.isSuccess
+                ? 'Code resent'
+                : 'Resend code'}
+          </p>
         </div>
       </section>
     </AuthLayout>

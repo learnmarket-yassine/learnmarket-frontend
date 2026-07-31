@@ -15,9 +15,10 @@ import SparksCard from '../ui/SparksCard'
 
 interface MyProfileLeftSidebarProps {
   myProfile: AuthUser
+  readOnly?: boolean
 }
 
-function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
+function MyProfileLeftSidebar({ myProfile, readOnly = false }: MyProfileLeftSidebarProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const videoIntroUrl = myProfile.tutorProfile?.videoIntroUrl
   const videoThumbnailUrl = videoIntroUrl ? getYoutubeThumbnailUrl(videoIntroUrl) : undefined
@@ -26,94 +27,106 @@ function MyProfileLeftSidebar({ myProfile }: MyProfileLeftSidebarProps) {
 
   return (
     <div className="flex flex-col bg-white p-8">
-      <SparksCard />
+      {!readOnly && <SparksCard />}
       {/* Video introduction */}
-      <div className="px-5 py-4">
-        {!videoIntroUrl ? (
-          <div className="flex items-center justify-between">
-            <p className="text-xl font-semibold text-[#143681]">Video introduction</p>
-            <VideoIntroForm edit={!!videoIntroUrl} />
-          </div>
-        ) : (
-          <>
+      {(videoIntroUrl || !readOnly) && (
+        <div className="px-5 py-4">
+          {!videoIntroUrl ? (
             <div className="flex items-center justify-between">
-              <p className="text-xl font-semibold text-[#143681]">Meet {myProfile.firstname}</p>
-              <ConfirmModal
-                name="faq"
-                type="delete"
-                title={'Delete video introduction'}
-                description={'Are you sure you want to delete this video introduction ?'}
-                handleConfirm={() => editTutorProfile({ videoIntroUrl: null })}
-                buttonClassName="border-none"
-                isLoading={isPending}
-              />
+              <p className="text-xl font-semibold text-[#143681]">Video introduction</p>
+              <VideoIntroForm edit={!!videoIntroUrl} />
             </div>
-            <button
-              type="button"
-              onClick={() => setIsVideoOpen(true)}
-              className="relative mt-3 block aspect-video w-full overflow-hidden rounded-[16px] bg-[#F5F6F7]"
-            >
-              <img
-                src={videoThumbnailUrl}
-                alt="Video introduction preview"
-                className="h-full w-full object-cover"
-              />
-            </button>
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-xl font-semibold text-[#143681]">Meet {myProfile.firstname}</p>
+                {!readOnly && (
+                  <ConfirmModal
+                    name="faq"
+                    type="delete"
+                    title={'Delete video introduction'}
+                    description={'Are you sure you want to delete this video introduction ?'}
+                    handleConfirm={() => editTutorProfile({ videoIntroUrl: null })}
+                    buttonClassName="border-none"
+                    isLoading={isPending}
+                  />
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsVideoOpen(true)}
+                className="relative mt-3 block aspect-video w-full overflow-hidden rounded-[16px] bg-[#F5F6F7]"
+              >
+                <img
+                  src={videoThumbnailUrl}
+                  alt="Video introduction preview"
+                  className="h-full w-full object-cover"
+                />
+              </button>
+            </>
+          )}
+        </div>
+      )}
       {videoIntroUrl && (
         <VideoModal isOpen={isVideoOpen} setIsOpen={setIsVideoOpen} videoUrl={videoIntroUrl} />
       )}
       {/* Languages */}
-      <div className="px-5 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold text-[#143681]">Languages</p>
-          <div className="flex gap-1">
-            <CreateLanguageForm />
-            {(myProfile.languages ?? []).length > 0 && <EditLanguagesForm />}
+      {(!readOnly || myProfile.languages.length > 0) && (
+        <div className="px-5 py-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xl font-semibold text-[#143681]">Languages</p>
+            {!readOnly && (
+              <div className="flex gap-1">
+                <CreateLanguageForm />
+                {(myProfile.languages ?? []).length > 0 && <EditLanguagesForm />}
+              </div>
+            )}
           </div>
+          <ul className="mt-1 space-y-0.5">
+            {myProfile.languages.map((lang: Language) => (
+              <li key={lang.language} className="text-sm font-normal text-[#143681]">
+                <span className="font-semibold">{lang.language}</span>:{' '}
+                {languageLevelLabels[lang.level] ?? lang.level}
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="mt-1 space-y-0.5">
-          {myProfile.languages.map((lang: Language) => (
-            <li key={lang.language} className="text-sm font-normal text-[#143681]">
-              <span className="font-semibold">{lang.language}</span>:{' '}
-              {languageLevelLabels[lang.level] ?? lang.level}
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
 
       {/* Education */}
-      <div className="px-5 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold text-[#143681]">Education</p>
-          <EducationForm edit={false} />
-        </div>
-        {myProfile.education.map((edu: Education) => (
-          <div key={edu.id} className="flex items-center justify-between">
-            <div className="text-sm font-normal text-[#143681]">
-              <p className="font-semibold">{edu.institution}</p>
-              <p>{edu.degree}</p>
-              <p>
-                {edu.startYear} - {edu.endYear}
-              </p>
-            </div>
-            <div className="mt-1 flex gap-1">
-              <EducationForm edit={true} id={edu.id} />
-              <ConfirmModal
-                name="education"
-                type="delete"
-                title={'Delete education'}
-                description={'Are you sure you want to delete this education ?'}
-                handleConfirm={() => handleDeleteEducation(edu?.id ?? '')}
-                buttonClassName="border-none"
-                isLoading={loadingDeleteEducation}
-              />
-            </div>
+      {(!readOnly || myProfile.education.length > 0) && (
+        <div className="px-5 py-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xl font-semibold text-[#143681]">Education</p>
+            {!readOnly && <EducationForm edit={false} />}
           </div>
-        ))}
-      </div>
+          {myProfile.education.map((edu: Education) => (
+            <div key={edu.id} className="flex items-center justify-between">
+              <div className="text-sm font-normal text-[#143681]">
+                <p className="font-semibold">{edu.institution}</p>
+                <p>{edu.degree}</p>
+                <p>
+                  {edu.startYear} - {edu.endYear}
+                </p>
+              </div>
+              {!readOnly && (
+                <div className="mt-1 flex gap-1">
+                  <EducationForm edit={true} id={edu.id} />
+                  <ConfirmModal
+                    name="education"
+                    type="delete"
+                    title={'Delete education'}
+                    description={'Are you sure you want to delete this education ?'}
+                    handleConfirm={() => handleDeleteEducation(edu?.id ?? '')}
+                    buttonClassName="border-none"
+                    isLoading={loadingDeleteEducation}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

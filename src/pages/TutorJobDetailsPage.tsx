@@ -7,14 +7,12 @@ import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverL
 import ProposalStatusBadge from '@/features/proposal/components/ui/ProposalStatusBadge'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
 import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
-import FeedbackSection from '@/features/feedback/components/ui/FeedbackSection'
-import { useStore } from '@/store/store'
+import ViewFeedbackButton from '@/features/feedback/components/ui/ViewFeedbackButton'
 
 const TutorJobDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data: proposal, isLoading, isError } = useGetMyProposal(id)
   const [selected, setSelected] = useState(1)
-  const currentUserId = useStore((state) => state.auth.user?.id)
 
   if (isLoading) {
     return (
@@ -63,21 +61,6 @@ const TutorJobDetailsPage = () => {
       name: 'Sessions',
       enabled: true,
     },
-    {
-      stepNumber: 3,
-      component:
-        currentUserId && proposal.learnRequest.learner ? (
-          <FeedbackSection
-            proposalId={proposal.id}
-            currentUserId={currentUserId}
-            counterpartId={proposal.learnRequest.learner.id}
-            counterpartName={`${proposal.learnRequest.learner.firstname} ${proposal.learnRequest.learner.lastname}`}
-          />
-        ) : null,
-      show: true,
-      name: 'Feedback',
-      enabled: proposal.learnRequest.status === 'COMPLETED',
-    },
   ]
   const currentStep = steps.find((step) => step.stepNumber === selected)
 
@@ -85,7 +68,16 @@ const TutorJobDetailsPage = () => {
     <div className="flex w-full flex-col gap-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{proposal.learnRequest.title}</h1>
-        <ProposalStatusBadge status={proposal.status} />
+        <div className="flex items-center gap-3">
+          {proposal.learnRequest.status === 'COMPLETED' && proposal.learnRequest.learner && (
+            <ViewFeedbackButton
+              proposalId={proposal.id}
+              counterpartId={proposal.learnRequest.learner.id}
+              counterpartName={`${proposal.learnRequest.learner.firstname} ${proposal.learnRequest.learner.lastname}`}
+            />
+          )}
+          <ProposalStatusBadge status={proposal.status} />
+        </div>
       </div>
       <div className="w-full space-y-2">
         <ChevronStepper selected={selected} setSelected={setSelected} steps={steps} />

@@ -1,5 +1,4 @@
 import AuthLayout from '@/features/auth/components/layout/AuthLayout'
-import GoogleButton from '@/features/auth/components/ui/GoogleButton'
 import LoginForm from '@/features/auth/components/ui/LoginForm'
 
 const LoginPage = () => {
@@ -9,12 +8,6 @@ const LoginPage = () => {
         <div className="flex w-full flex-col items-center justify-center gap-7">
           <h1 className="text-3xl font-bold text-[#102A63]">Welcome back</h1>
           <p className="text-[#8E949F]">Enter your email and password to access your account.</p>
-          <GoogleButton />
-          <div className="flex w-full items-center justify-center gap-2">
-            <hr className="flex-grow border-t border-[#ADADAD]" />
-            <div className="text-[#102A63]">Or</div>
-            <hr className="flex-grow border-t border-[#ADADAD]" />
-          </div>
           <LoginForm />
         </div>
       </section>

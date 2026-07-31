@@ -2,12 +2,13 @@ import { Star } from 'lucide-react'
 
 interface StarRatingProps {
   rating: number
-  size?: 'sm' | 'md'
+  size?: 'sm' | 'md' | 'xl'
 }
 
 const SIZE_CLASSES: Record<NonNullable<StarRatingProps['size']>, string> = {
   sm: 'size-3.5',
   md: 'size-5',
+  xl: 'size-8',
 }
 
 function StarRating({ rating, size = 'md' }: StarRatingProps) {
