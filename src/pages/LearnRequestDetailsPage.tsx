@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
 import BookingFlow from '@/features/scheduling/learner-booking/BookingFlow'
+import SessionsTab from '@/features/sessions/components/SessionsTab'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -39,10 +40,10 @@ const LearnRequestDetailsPage = () => {
     },
     {
       stepNumber: 4,
-      component: <h1>Sessions</h1>,
+      component: acceptedProposal ? <SessionsTab proposalId={acceptedProposal.id} /> : null,
       show: true,
       name: 'Sessions',
-      enabled: true,
+      enabled: !!acceptedProposal,
     },
   ]
   const visibleSteps = steps.filter((step) => step.show)

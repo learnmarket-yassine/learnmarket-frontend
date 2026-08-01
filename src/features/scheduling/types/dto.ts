@@ -150,6 +150,30 @@ export interface Session {
   slotHold?: SlotHold | null
 }
 
+// GET /sessions/:id/meeting -- shape already role-scoped server-side.
+// joinUrl is whichever of start_url/join_url is correct for the caller;
+// the frontend never distinguishes the two.
+export type MeetingDetails =
+  | { status: 'not_provisioned'; canJoinYet: false }
+  | {
+      status: 'provisioned'
+      canJoinYet: boolean
+      joinUrl: string
+      password: string | null
+    }
+
+export interface SessionAttachment {
+  id: string
+  sessionId: string
+  uploaderId: string
+  key: string
+  fileName: string
+  mimeType: string | null
+  fileSize: number | null
+  createdAt: string
+  uploader: { id: string; firstname: string; lastname: string }
+}
+
 export interface Proposal {
   id: string
   learnRequestId: string
