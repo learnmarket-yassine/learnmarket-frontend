@@ -46,3 +46,13 @@ export const formatBudget = (value: number | string | null | undefined) => {
 
   return new Intl.NumberFormat('en-US').format(Number(value))
 }
+
+export function formatAcceptLabel(accept?: string[]): string {
+  if (!accept || accept.length === 0) return 'Any file type'
+  return accept.map((type) => type.split('/')[1]?.toUpperCase() ?? type).join(', ')
+}
+
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}

@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Paperclip, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,6 +21,7 @@ import { AssignmentFormData, AssignmentSchema } from '../../schemas'
 import useCreateAssignment from '../../hooks/useCreateAssignment'
 import useUpdateAssignment from '../../hooks/useUpdateAssignment'
 import PlusIcon from '@/assets/PlusIcon'
+import FileUpload from '@/components/ui/FileUploader'
 
 type AssignmentModalProps = {
   sessionId: string
@@ -66,6 +67,7 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
         title: data.title,
         instructions,
         dueAt: data.dueAt || undefined,
+        files,
       })
     } else {
       await handleCreate({
@@ -95,7 +97,7 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
         )}
       </DialogTrigger>
       <DialogContent
-        className="flex h-[600px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[600px]"
+        className="flex w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[600px]"
         style={{
           boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
         }}
@@ -103,7 +105,7 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
         <DialogHeader>
           <DialogTitle>
             <div className="flex w-full items-center justify-between">
-              <span className="text-4xl font-bold text-[#143681]">
+              <span className="text-2xl font-bold text-[#143681]">
                 {isEditMode ? 'Edit Assignment' : 'New Assignment'}
               </span>
               <button type="button" onClick={() => setIsOpen(false)}>
@@ -114,7 +116,7 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
         </DialogHeader>
 
         <form
-          className="flex flex-1 flex-col overflow-hidden"
+          className="flex flex-1 flex-col gap-5 overflow-hidden"
           onSubmit={(e) => {
             e.preventDefault()
             handleSubmit(onSubmit)(e)
@@ -123,15 +125,19 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
         >
           <div className="flex-1 space-y-4 overflow-y-auto">
             <div className="flex flex-col gap-2">
-              <Label className="text-base font-bold">Title</Label>
-              <Input {...register('title')} placeholder="e.g. Practice worksheet #1" />
+              <Label className="text-base">Title</Label>
+              <Input
+                {...register('title')}
+                placeholder="e.g. Practice worksheet #1"
+                className={`border-[0.5px] ${formState.errors.title ? 'border-red-600' : 'border-[#9CA3AF]'}`}
+              />
               {formState.errors.title && (
                 <p className="text-xs text-red-600">{formState.errors.title.message}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label className="text-base font-bold">Instructions</Label>
+              <Label className="text-base">Instructions</Label>
               <Controller
                 name="instructions"
                 control={control}
@@ -141,14 +147,15 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
                     onChange={field.onChange}
                     onBlur={field.onBlur}
                     placeholder="What should the learner do?"
-                    contentClassName="min-h-[140px]"
+                    className="border-[0.5px] border-[#9CA3AF]"
+                    contentClassName="min-h-[120px]"
                   />
                 )}
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label className="text-base font-bold">Due date (optional)</Label>
+              <Label className="text-base">Due date (optional)</Label>
               <Controller
                 name="dueAt"
                 control={control}
@@ -164,39 +171,34 @@ function AssignmentModal({ sessionId, assignment }: AssignmentModalProps) {
               />
             </div>
 
-            {!isEditMode && (
-              <div className="flex flex-col gap-2">
-                <label className="flex w-fit cursor-pointer items-center gap-2 text-sm font-medium text-[#2563EB]">
-                  <Paperclip className="size-4" />
-                  Attach reference materials
-                  <input
-                    type="file"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-                  />
-                </label>
-                {files.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {files.map((file, idx) => (
-                      <span
-                        key={`${file.name}-${idx}`}
-                        className="flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-xs text-[#374151]"
+            <div className="flex flex-col gap-2">
+              <FileUpload
+                accept={['application/pdf']}
+                maxSizeMB={25}
+                resetAfterUpload
+                uploadFn={(file) => Promise.resolve(file)}
+                onUploaded={(file) => setFiles((prev) => [...prev, file])}
+              />
+              {files.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {files.map((file, idx) => (
+                    <span
+                      key={`${file.name}-${idx}`}
+                      className="flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-xs text-[#374151]"
+                    >
+                      {file.name}
+                      <button
+                        type="button"
+                        onClick={() => setFiles((prev) => prev.filter((_, i) => i !== idx))}
+                        aria-label="Remove file"
                       >
-                        {file.name}
-                        <button
-                          type="button"
-                          onClick={() => setFiles((prev) => prev.filter((_, i) => i !== idx))}
-                          aria-label="Remove file"
-                        >
-                          <X className="size-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+                        <X className="size-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3">

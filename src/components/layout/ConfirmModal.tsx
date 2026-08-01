@@ -78,19 +78,21 @@ const ConfirmModal = (props: Props) => {
           </DialogHeader>
 
           <DialogFooter className="w-full justify-center gap-2">
-            <Button
-              type="button"
-              className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
-              onClick={(e) => {
-                if (props?.handleClickCancel) {
-                  props.handleClickCancel(e)
-                } else {
-                  e.stopPropagation()
-                }
-              }}
-            >
-              {props.cancelButtonText || 'cancel'}
-            </Button>
+            <DialogTrigger asChild>
+              <Button
+                type="button"
+                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
+                onClick={(e) => {
+                  if (props?.handleClickCancel) {
+                    props.handleClickCancel(e)
+                  } else {
+                    e.stopPropagation()
+                  }
+                }}
+              >
+                {props.cancelButtonText || 'cancel'}
+              </Button>
+            </DialogTrigger>
             <Button
               type="button"
               disabled={

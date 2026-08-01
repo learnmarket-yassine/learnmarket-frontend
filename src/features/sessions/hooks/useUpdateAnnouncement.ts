@@ -2,13 +2,28 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { Announcement } from '../../scheduling/types/dto'
+import { uploadFileToStorage } from '../utils/uploadFile'
+
+export interface UpdateAnnouncementInput {
+  announcementId: string
+  content: string
+  files?: File[]
+}
 
 async function updateAnnouncement(
   api: AxiosInstance,
-  announcementId: string,
-  content: string
+  input: UpdateAnnouncementInput
 ): Promise<Announcement> {
-  const { data } = await api.patch(`/announcements/${announcementId}`, { content })
+  const attachments = []
+  for (const file of input.files ?? []) {
+    const key = await uploadFileToStorage(api, file, 'announcement-attachment')
+    attachments.push({ key, fileName: file.name, mimeType: file.type })
+  }
+
+  const { data } = await api.patch(`/announcements/${input.announcementId}`, {
+    content: input.content,
+    attachments,
+  })
   return data
 }
 
@@ -17,8 +32,7 @@ export default function useUpdateAnnouncement(sessionId: string) {
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation({
-    mutationFn: ({ announcementId, content }: { announcementId: string; content: string }) =>
-      updateAnnouncement(axiosPrivate, announcementId, content),
+    mutationFn: (input: UpdateAnnouncementInput) => updateAnnouncement(axiosPrivate, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'announcements'] })
     },

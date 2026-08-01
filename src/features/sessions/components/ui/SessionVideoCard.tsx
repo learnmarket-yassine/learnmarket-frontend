@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import Daily, { DailyCall } from '@daily-co/daily-js'
+import { CalendarIcon, Clock, RefreshCw, Video, VideoOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Video } from 'lucide-react'
 import useRetryMeeting from '../../hooks/useRetryMeeting'
 import { useCountdown } from '@/features/scheduling/hooks/useCountdown'
+import { formatDateLabel, formatSlotTime } from '@/features/scheduling/utils/time'
+import { getBrowserTimezone } from '@/features/scheduling/utils/timezones'
 import { MeetingDetails } from '@/features/scheduling/types/dto'
 import { SessionContext } from '../../hooks/useGetSessionContext'
 
@@ -15,117 +15,99 @@ interface SessionVideoCardProps {
 
 const SessionVideoCard = ({ meeting, sessionId, context }: SessionVideoCardProps) => {
   const { handleRetryMeeting, isPending: isRetrying } = useRetryMeeting(sessionId)
-  const [isCallActive, setIsCallActive] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const callFrameRef = useRef<DailyCall | null>(null)
-
+  const timezone = getBrowserTimezone()
   const canJoinYet = meeting?.canJoinYet ?? false
-
+  const endedAt = context.booking
+    ? new Date(new Date(context.booking.endTime).getTime() + 30 * 60_000).toISOString()
+    : null
+  const hasEnded = useCountdown(endedAt, 'long').isExpired
   const countdown = useCountdown(canJoinYet ? null : (context?.booking?.startTime ?? null), 'long')
 
-  // Embeds Daily's prebuilt call UI in place, rather than opening the
-  // meeting in a separate tab. Only mounted once the learner/tutor
-  // explicitly clicks "Join Session" -- never auto-joins on render, so a
-  // camera/mic permission prompt is always the result of a deliberate click.
-  useEffect(() => {
-    if (!isCallActive || meeting.status !== 'provisioned' || !containerRef.current) return
-
-    const callFrame = Daily.createFrame(containerRef.current, {
-      iframeStyle: {
-        width: '100%',
-        height: '100%',
-        border: '0',
-        borderRadius: '1rem',
-      },
-      showLeaveButton: true,
-    })
-    callFrameRef.current = callFrame
-
-    callFrame.on('left-meeting', () => setIsCallActive(false))
-    callFrame.join({ url: meeting.joinUrl })
-
-    return () => {
-      callFrame.destroy()
-      callFrameRef.current = null
-    }
-    // meeting.joinUrl is intentionally excluded -- it's a short-lived token
-    // that may get re-minted by a background refetch while the call is
-    // already active, and rejoining mid-call would disrupt the session.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCallActive, meeting.status])
-
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0F3D91] via-[#2563EB] to-[#60A5FA] p-8 text-white shadow-2xl">
-      {/* Decorative glow */}
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
-      <div className="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-cyan-300/10 blur-3xl" />
-
-      {/* Decorative rings */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute right-0 top-0 h-80 w-80 rounded-full border border-white" />
-        <div className="absolute -right-12 -top-12 h-[26rem] w-[26rem] rounded-full border border-white" />
+    <div className="flex flex-col items-center gap-5 rounded-3xl border border-[#E0E2E6] bg-white p-6">
+      <div className="flex items-center gap-2 text-[#6B7280]">
+        <Video className="size-4" />
+        <h2 className="text-sm font-semibold uppercase tracking-wide">Video session</h2>
+      </div>
+      <div className="flex items-center gap-3">
+        <div>
+          <p className="text-base font-semibold text-[#1E293B]">
+            {context.tutor.firstname} {context.tutor.lastname}
+          </p>
+          <p className="text-sm text-[#6B7280]">
+            {context.learner
+              ? `${context.learner.firstname} ${context.learner.lastname}`
+              : context.isTutor
+                ? 'Learner'
+                : 'Tutor'}
+          </p>
+        </div>
       </div>
 
-      <div className="relative flex flex-col gap-8">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur">
-            <Video className="size-7" />
+      {context.booking && (
+        <div className="flex flex-col gap-2 rounded-2xl bg-[#F9FAFB] p-4 text-sm">
+          <div className="flex items-center gap-2 text-[#1E293B]">
+            <CalendarIcon className="size-4 text-[#2563EB]" />
+            {formatDateLabel(context.booking.startTime, timezone)}
           </div>
-          <div>
-            <h2 className="text-xl font-semibold">Video Session</h2>
-            <p className="text-sm text-blue-100">
-              Meet live with your {context.isTutor ? 'learner' : 'tutor'}.
-            </p>
+          <div className="flex items-center gap-2 text-[#1E293B]">
+            <Clock className="size-4 text-[#2563EB]" />
+            {formatSlotTime(context.booking.startTime, timezone)} –{' '}
+            {formatSlotTime(context.booking.endTime, timezone)}
           </div>
         </div>
+      )}
 
-        {meeting.status === 'not_provisioned' && (
-          <div className="flex flex-col gap-5">
-            <p className="text-blue-50">
-              We're preparing your video meeting. This usually takes just a few seconds.
-            </p>
-
-            {context.isTutor && (
-              <Button
-                variant="secondary"
-                className="w-fit bg-white text-[#2563EB] hover:bg-slate-100"
-                onClick={() => handleRetryMeeting()}
-                disabled={isRetrying}
-              >
-                <RefreshCw className={`mr-2 size-4 ${isRetrying ? 'animate-spin' : ''}`} />
-                {isRetrying ? 'Retrying…' : 'Retry setup'}
-              </Button>
-            )}
-          </div>
-        )}
-
-        {meeting.status === 'provisioned' && isCallActive && (
-          <div
-            ref={containerRef}
-            className="h-[560px] w-full overflow-hidden rounded-2xl bg-black"
-          />
-        )}
-
-        {meeting.status === 'provisioned' && !isCallActive && (
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-blue-100">Session starts in</p>
-
-              <p className="mt-1 text-3xl font-bold">
-                {canJoinYet ? 'Ready to join' : countdown.formatted}
-              </p>
-            </div>
+      {hasEnded ? (
+        <div className="flex items-center gap-2 rounded-2xl bg-[#F3F4F6] p-4 text-sm text-[#6B7280]">
+          <VideoOff className="size-4" />
+          This video session has ended.
+        </div>
+      ) : meeting.status === 'not_provisioned' ? (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm text-[#6B7280]">
+            We're preparing your video meeting. This usually takes just a few seconds.
+          </p>
+          {context.isTutor && (
             <Button
-              className="h-12 rounded-xl bg-white px-6 font-semibold text-[#2563EB] shadow-lg transition hover:bg-slate-100 disabled:opacity-60"
-              disabled={!canJoinYet}
-              onClick={() => setIsCallActive(true)}
+              type="button"
+              variant="outline"
+              className="w-fit rounded-full"
+              onClick={() => handleRetryMeeting()}
+              disabled={isRetrying}
             >
-              <Video className="mr-2 size-5" />
-              Join Session
+              <RefreshCw className={`mr-2 size-4 ${isRetrying ? 'animate-spin' : ''}`} />
+              {isRetrying ? 'Retrying…' : 'Retry setup'}
             </Button>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {!canJoinYet && (
+            <p className="text-sm text-[#6B7280]">Session starts in {countdown.formatted}</p>
+          )}
+          {canJoinYet ? (
+            <a
+              href={meeting.joinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#2563EB] font-semibold text-white transition hover:bg-[#1d4fd8]"
+            >
+              <Video className="size-4" />
+              Join meeting
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="flex h-11 w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-[#E5E7EB] font-semibold text-[#9CA3AF]"
+            >
+              <Video className="size-4" />
+              Join meeting
+            </button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

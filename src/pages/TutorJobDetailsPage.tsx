@@ -6,7 +6,6 @@ import ProposalLearnRequestContextCard from '@/features/proposal/components/ui/P
 import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverLetterSection'
 import ProposalStatusBadge from '@/features/proposal/components/ui/ProposalStatusBadge'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
-import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 import ViewFeedbackButton from '@/features/feedback/components/ui/ViewFeedbackButton'
 
 const TutorJobDetailsPage = () => {
@@ -56,7 +55,7 @@ const TutorJobDetailsPage = () => {
     },
     {
       stepNumber: 2,
-      component: <SessionsTab proposalId={proposal.id} />,
+      component: <h1>sessions</h1>,
       show: true,
       name: 'Sessions',
       enabled: true,

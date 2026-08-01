@@ -1,14 +1,73 @@
 import { useParams } from 'react-router-dom'
-import SessionRoomDetails from '@/features/sessions/components/ui/SessionRoomDetails'
+import { useSessionSocketConnection } from '@/features/sessions/hooks/useSessionSocketConnection'
+import useGetSessionContext from '@/features/sessions/hooks/useGetSessionContext'
+import useGetMeetingDetails from '@/features/sessions/hooks/useGetMeetingDetails'
+import SessionRoomDetailsLayout from '@/features/sessions/components/layout/SessionRoomDetailsLayout'
+import CustomSessionDetailsTabToggle from '@/features/sessions/components/ui/CustomSessionDetailsToggle'
+import { useState } from 'react'
+import ClassroomFeed from '@/features/sessions/components/ui/ClassroomFeed'
+import AssignmentsTab from '@/features/sessions/components/ui/AssignmentsTab'
 
 const SessionDetailPage = () => {
-  const { proposalId, sessionId } = useParams<{ proposalId: string; sessionId: string }>()
-  if (!proposalId || !sessionId) return null
+  useSessionSocketConnection()
+  const { proposalId, sessionId } = useParams<{
+    proposalId: string
+    sessionId: string
+  }>()
+  const [selectedStep, setSelectedStep] = useState(1)
+
+  const { data: context, isLoading: isContextLoading } = useGetSessionContext(sessionId)
+
+  const { data: meeting, isLoading: isMeetingLoading } = useGetMeetingDetails(sessionId)
+
+  if (!proposalId || !sessionId) {
+    return null
+  }
+
+  if (isContextLoading || isMeetingLoading || !context || !meeting) {
+    return <div className="p-6 text-sm text-gray-500">Loading session…</div>
+  }
+
+  const steps = [
+    {
+      stepNumber: 1,
+      component: <ClassroomFeed sessionId={sessionId} />,
+      show: true,
+      name: 'Session announcement',
+      enabled: true,
+    },
+    {
+      stepNumber: 2,
+      component: <AssignmentsTab sessionId={sessionId} isTutor={context.isTutor} />,
+      show: true,
+      name: 'Session announcement',
+      enabled: true,
+    },
+    {
+      stepNumber: 3,
+      component: <h1>Feedback</h1>,
+      show: true,
+      name: 'Session Feedback',
+      enabled: true,
+    },
+  ]
+
+  const visibleSteps = steps.filter((step) => step.show)
+  const currentStep = visibleSteps.find((step) => step.stepNumber === selectedStep)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#E0E2E6] bg-white p-6">
-      <SessionRoomDetails sessionId={sessionId} proposalId={proposalId} />
-    </div>
+    <SessionRoomDetailsLayout sessionId={sessionId} context={context} meeting={meeting}>
+      <div className="space-y-10">
+        <div className="flex items-center border-b-[1px] border-[#E0E2E6]">
+          <CustomSessionDetailsTabToggle
+            steps={steps}
+            selected={selectedStep}
+            setSelected={setSelectedStep}
+          />
+        </div>
+        <div className="flex-1">{currentStep?.component || null}</div>
+      </div>
+    </SessionRoomDetailsLayout>
   )
 }
 

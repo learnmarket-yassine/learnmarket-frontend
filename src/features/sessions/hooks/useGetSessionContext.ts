@@ -9,7 +9,8 @@ export interface SessionContext {
   objective: string | null
   status: SessionStatus
   isTutor: boolean
-  tutor: { firstname: string; lastname: string }
+  tutor: { firstname: string; lastname: string; avatar: string | null }
+  learner: { firstname: string; lastname: string; avatar: string | null } | null
   tutorJoinedAt: string | null
   learnerJoinedAt: string | null
   summary: string | null
@@ -28,12 +29,12 @@ const getSessionContext = async (
   return response.data
 }
 
-export default function useGetSessionContext(sessionId: string, enabled = true) {
+export default function useGetSessionContext(sessionId?: string, enabled = true) {
   const axiosPrivate = useAxiosPrivate()
 
   return useQuery({
     queryKey: ['session', sessionId, 'context'],
-    queryFn: () => getSessionContext(axiosPrivate, sessionId),
+    queryFn: () => getSessionContext(axiosPrivate, sessionId!),
     enabled: !!sessionId && enabled,
   })
 }

@@ -47,7 +47,7 @@ const AssignmentFileUploader = ({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+    <div className="flex h-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
       <div className="flex items-center justify-between">
         <p className="font-semibold">{isTutor ? "Learner's submission" : 'Your submission'}</p>
         {isTutor && assignment.submission.status !== 'SUBMITTED' && (

@@ -7,11 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { ArrowRight, BookOpen, Calendar, CalendarIcon, Clock, Eye } from 'lucide-react'
+import { ArrowRight, BookOpen, CalendarIcon, Eye } from 'lucide-react'
 import { Session } from '../../types/dto'
 import useGetSessionContext from '@/features/sessions/hooks/useGetSessionContext'
 import { getBrowserTimezone } from '../../utils/timezones'
 import { formatDateLabel, formatSlotTime } from '../../utils/time'
+import { useNavigate } from 'react-router-dom'
 
 interface ViewSessionDetailsModalProps {
   session: Session
@@ -19,6 +20,7 @@ interface ViewSessionDetailsModalProps {
 
 const ViewSessionDetailsModal = ({ session }: ViewSessionDetailsModalProps) => {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
   const { data: context } = useGetSessionContext(session.id, open)
   const timezone = getBrowserTimezone()
 
@@ -82,6 +84,7 @@ const ViewSessionDetailsModal = ({ session }: ViewSessionDetailsModalProps) => {
               type="button"
               onClick={() => {
                 setOpen(false)
+                navigate(`/proposals/${session.proposalId}/sessions/${session.id}`)
               }}
               className="flex items-center gap-2 rounded-xl bg-[#1D50BB] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98]"
             >

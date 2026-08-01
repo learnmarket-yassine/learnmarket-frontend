@@ -32,7 +32,7 @@ const BackButton = ({ disabled, text = 'Back', className, route = -1 }: Props) =
       type="button"
       disabled={disabled}
       className={cn(
-        'text-label flex items-center font-semibold disabled:text-[#999999]',
+        'text-label flex items-center gap-3 font-semibold disabled:text-[#999999]',
         className
       )}
       onClick={handleNavigation}
