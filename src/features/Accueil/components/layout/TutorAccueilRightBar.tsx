@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
+import useGetSparksBalance from '@/features/sparks/hooks/useGetSparksBalance'
 
 interface TutorAccueilRightBarProps {
   user?: AuthUser | null
@@ -17,6 +18,8 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
   isLoading,
   proposalsCount = 0,
 }) => {
+  const navigate = useNavigate()
+  const { data: sparksBalance, isLoading: isSparksLoading } = useGetSparksBalance()
   if (isLoading || !user) {
     return (
       <div className="space-y-4">
@@ -28,7 +31,6 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
 
   const initial = user.firstname?.charAt(0) ?? ''
   const displayName = `${user.firstname} ${user.lastname?.charAt(0) ?? ''}.`
-
   return (
     <div className="space-y-20">
       {/* Profile summary  */}
@@ -55,20 +57,27 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
 
       <div className="space-y-3 rounded-3xl border border-gray-200 bg-white p-6 text-center shadow-sm">
         <h1 className="flex items-center gap-2 text-lg font-bold">
-          Sparks:<span className="font-semibold">77</span>
+          Sparks:
+          <span className="font-semibold">
+            {isSparksLoading ? (
+              <Skeleton className="h-5 w-8" />
+            ) : (
+              (sparksBalance?.sparksBalance ?? 0)
+            )}
+          </span>
         </h1>
         <div className="flex w-full items-center justify-center">
           <Button
             type="submit"
             variant={'outline'}
             className="h-full w-full whitespace-nowrap rounded-full bg-white px-6 py-3 font-semibold text-[#2563EB] hover:bg-white hover:text-[#2563EB]"
+            onClick={() => navigate('/sparks/buy')}
           >
             Buy Sparks
           </Button>
         </div>
       </div>
 
-      {/* Proposals -- real count, no fabricated data */}
       <div className="space-y-3 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-bold text-[#1E293B]">Proposals</h3>

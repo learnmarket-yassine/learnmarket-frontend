@@ -1,11 +1,12 @@
 import { Proposal, Session } from '../../types/dto'
-import ViewSessionDetailsModal from './viewSessionDetailsModal'
 import { SessionStatus } from '../../types/enums'
 import ScheduleSessionModal from './ScheduleSessionModal'
+import ViewSessionDetailsModal from './ViewSessionDetailsModal'
 
 type SessionItemProps = {
   session: Session
   proposal: Proposal
+  canSchedule?: boolean
 }
 
 type StatusConfig = {
@@ -15,7 +16,7 @@ type StatusConfig = {
 
 const STATUS_CONFIG: Record<SessionStatus, StatusConfig> = {
   LOCKED: {
-    label: 'Locked',
+    label: 'Not Ready',
     headerBg: 'bg-slate-400',
   },
   PENDING_SCHEDULE: {
@@ -44,9 +45,11 @@ const STATUS_CONFIG: Record<SessionStatus, StatusConfig> = {
   },
 }
 
-const SessionItem = ({ session, proposal }: SessionItemProps) => {
-  const config = STATUS_CONFIG[session.status]
+const JOINABLE_STATUSES: Session['status'][] = ['BOOKED', 'PENDING_REVIEW', 'COMPLETED']
 
+const SessionItem = ({ session, proposal, canSchedule = true }: SessionItemProps) => {
+  const config = STATUS_CONFIG[session.status]
+  const isJoinable = JOINABLE_STATUSES.includes(session.status)
   return (
     <div className="flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
       <div>
@@ -63,9 +66,9 @@ const SessionItem = ({ session, proposal }: SessionItemProps) => {
             <h3 className="text-base font-bold text-slate-900">{session.title}</h3>
 
             <div className="flex items-center gap-2">
-              <ViewSessionDetailsModal session={session} />
+              <ViewSessionDetailsModal isJoinable={isJoinable} session={session} />
 
-              {['HELD', 'PENDING_SCHEDULE'].includes(session.status) && (
+              {['HELD', 'PENDING_SCHEDULE'].includes(session.status) && canSchedule && (
                 <ScheduleSessionModal
                   session={session}
                   tutorId={proposal.tutorId}

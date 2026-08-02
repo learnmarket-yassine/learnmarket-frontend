@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import MyBookingsList from '@/features/scheduling/components/ui/MyBookingsList'
+import MySessionsLayout from '@/features/sessions/components/layout/MySessionsPageLayout'
 
 export type SessionsTabKey = 'UPCOMING' | 'PAST'
 
@@ -25,8 +26,7 @@ const SessionsPage = () => {
   )
 
   return (
-    <div className="flex flex-col space-y-8">
-      <h1 className="text-3xl font-bold text-[#1E293B]">Sessions</h1>
+    <MySessionsLayout>
       <div className="flex-1 space-y-8">
         <div className="flex items-center gap-3">
           {SESSIONS_TABS.map((step) => (
@@ -48,7 +48,7 @@ const SessionsPage = () => {
         </div>
         <MyBookingsList tab={tab} />
       </div>
-    </div>
+    </MySessionsLayout>
   )
 }
 

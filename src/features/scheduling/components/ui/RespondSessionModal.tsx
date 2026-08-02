@@ -10,8 +10,6 @@ interface RespondSessionModalProps {
   session: Session
 }
 
-// Wraps the existing tutor-summary / learner-confirm-or-dispute components
-// as-is -- SessionReviewGate is already role-aware via context.isTutor.
 const RespondSessionModal = ({ open, onOpenChange, session }: RespondSessionModalProps) => {
   const { data: context, isLoading } = useGetSessionContext(session.id, open)
 

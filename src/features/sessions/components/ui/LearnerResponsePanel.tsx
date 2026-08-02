@@ -1,6 +1,5 @@
 import { MessageSquareWarning } from 'lucide-react'
 import { SessionContext } from '../../hooks/useGetSessionContext'
-import useDisputeSession from '../../hooks/useDisputeSession'
 import SessionReportModal from './SessionReportModal'
 import ConfirmSessionModal from './ConfirmSessionModal'
 

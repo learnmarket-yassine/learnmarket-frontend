@@ -59,7 +59,7 @@ const SessionVideoCard = ({ meeting, sessionId, context }: SessionVideoCardProps
       )}
 
       {hasEnded ? (
-        <div className="flex items-center gap-2 rounded-2xl bg-[#F3F4F6] p-4 text-sm text-[#6B7280]">
+        <div className="flex items-center justify-end gap-2 rounded-2xl bg-[#F3F4F6] p-4 text-sm text-[#6B7280]">
           <VideoOff className="size-4" />
           This video session has ended.
         </div>

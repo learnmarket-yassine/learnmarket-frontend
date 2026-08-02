@@ -17,6 +17,7 @@ import useUploadSubmissionAttachment from '../../hooks/useUploadSubmissionAttach
 import useDeleteAssignmentAttachment from '../../hooks/useDeleteAssignmentAttachment'
 import FileUpload from '@/components/ui/FileUploader'
 import CommentThread from './CommentThread'
+import { useState } from 'react'
 
 interface AssignmentCardProps {
   sessionId: string
@@ -25,6 +26,7 @@ interface AssignmentCardProps {
 }
 
 const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps) => {
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false)
   const { handleDownload } = useDownloadClassroomAttachment()
   const { handleCreateComment } = useCreateAssignmentComment(sessionId, assignment.id)
   const { handleUpdateComment } = useUpdateAssignmentComment(sessionId)
@@ -58,6 +60,22 @@ const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps)
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-semibold">{assignment.title}</h2>
           <div className="flex items-center gap-1">
+            {isTutor && !isExcused && assignment.submission.status !== 'SUBMITTED' && (
+              <ConfirmModal
+                name="excuse learner"
+                type="inactive"
+                title="Excuse learner from this assignment?"
+                description="This will mark the learner as excused, meaning they will no longer be required to submit this assignment. Use this only when submission is no longer expected."
+                handleConfirm={async (e) => {
+                  e.stopPropagation()
+                  await handleExcuse()
+                }}
+                isLoading={isExcusing}
+                isOpen={isActivateModalOpen}
+                setIsOpen={() => setIsActivateModalOpen(!isActivateModalOpen)}
+                buttonClassName="h-10 w-10 flex !rounded-full items-center justify-center rounded-full border border-[#2563EB] text-[#2563EB]"
+              />
+            )}
             {isAssigned && <AssignmentModal sessionId={sessionId} assignment={assignment} />}
             {canDelete && (
               <ConfirmModal
@@ -210,21 +228,6 @@ const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps)
           )}
         </div>
       )}
-
-      {isTutor && !isExcused && assignment.submission.status !== 'SUBMITTED' && (
-        <div className="flex items-center justify-end p-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => handleExcuse()}
-            disabled={isExcusing}
-            className="h-full rounded-full px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isExcusing ? 'Excusing…' : 'Excuse learner'}
-          </Button>
-        </div>
-      )}
-
       <div className="p-4">
         <CommentThread
           comments={assignment.comments}

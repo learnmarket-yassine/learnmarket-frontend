@@ -11,13 +11,15 @@ import { formatBudget } from '@/lib/utils'
 import { GraduationCap, Tag, Wallet } from 'lucide-react'
 import React from 'react'
 
-type ProposalJobDetailsCardProps = {
+type ProposalLearnRequestDetailsCardProps = {
   learnrequest: LearnRequest
 }
 
 const DESCRIPTION_LINES = 3
 
-const ProposalJobDetailsCard: React.FC<ProposalJobDetailsCardProps> = ({ learnrequest }) => {
+const ProposalLearnRequestDetailsCard: React.FC<ProposalLearnRequestDetailsCardProps> = ({
+  learnrequest,
+}) => {
   const {
     ref: descriptionRef,
     isExpanded,
@@ -35,7 +37,7 @@ const ProposalJobDetailsCard: React.FC<ProposalJobDetailsCardProps> = ({ learnre
 
   return (
     <div className="flex flex-col space-y-4 p-5">
-      <h3 className="text-xl font-bold">Job Details</h3>
+      <h3 className="text-xl font-bold">Learn Request Details</h3>
       <div className="divide-y divide-[#E0E2E6]">
         <div className="flex overflow-y-auto">
           <div className="flex-1 space-y-5 pb-5 pr-5">
@@ -132,4 +134,4 @@ const ProposalJobDetailsCard: React.FC<ProposalJobDetailsCardProps> = ({ learnre
   )
 }
 
-export default ProposalJobDetailsCard
+export default ProposalLearnRequestDetailsCard

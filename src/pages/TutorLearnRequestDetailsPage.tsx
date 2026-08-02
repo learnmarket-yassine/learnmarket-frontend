@@ -7,8 +7,9 @@ import CoverLetterSection from '@/features/proposal/components/ui/ProposalCoverL
 import ProposalStatusBadge from '@/features/proposal/components/ui/ProposalStatusBadge'
 import ChevronStepper from '@/features/learn-requests/components/ui/ChevronStepper'
 import ViewFeedbackButton from '@/features/feedback/components/ui/ViewFeedbackButton'
+import SessionsFlow from '@/features/sessions/components/ui/SessionsFlow'
 
-const TutorJobDetailsPage = () => {
+const TutorLearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data: proposal, isLoading, isError } = useGetMyProposal(id)
   const [selected, setSelected] = useState(1)
@@ -22,10 +23,12 @@ const TutorJobDetailsPage = () => {
     )
   }
 
-  if (isError || !proposal) {
+  if (isError || !id || !proposal) {
     return (
       <div className="space-y-4 rounded-3xl border border-[#E0E2E6] bg-white p-8 text-center">
-        <p className="text-lg font-semibold text-[#1E293B]">This job couldn't be found.</p>
+        <p className="text-lg font-semibold text-[#1E293B]">
+          This learn request couldn't be found.
+        </p>
         <Link
           to="/accueil"
           className="inline-block text-sm font-semibold text-[#2563EB] underline underline-offset-2"
@@ -50,12 +53,12 @@ const TutorJobDetailsPage = () => {
         </div>
       ),
       show: true,
-      name: 'Job details',
+      name: 'Learn request details',
       enabled: true,
     },
     {
       stepNumber: 2,
-      component: <h1>sessions</h1>,
+      component: <SessionsFlow proposalId={id} />,
       show: true,
       name: 'Sessions',
       enabled: true,
@@ -86,4 +89,4 @@ const TutorJobDetailsPage = () => {
   )
 }
 
-export default TutorJobDetailsPage
+export default TutorLearnRequestDetailsPage

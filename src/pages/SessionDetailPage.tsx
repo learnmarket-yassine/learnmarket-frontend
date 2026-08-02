@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import { useSessionSocketConnection } from '@/features/sessions/hooks/useSessionSocketConnection'
 import useGetSessionContext from '@/features/sessions/hooks/useGetSessionContext'
 import useGetMeetingDetails from '@/features/sessions/hooks/useGetMeetingDetails'
 import SessionRoomDetailsLayout from '@/features/sessions/components/layout/SessionRoomDetailsLayout'
@@ -11,7 +10,6 @@ import SessionTutorSummary from '@/features/sessions/components/ui/SessionTutorS
 import LearnerResponsePanel from '@/features/sessions/components/ui/LearnerResponsePanel'
 
 const SessionDetailPage = () => {
-  useSessionSocketConnection()
   const { proposalId, sessionId } = useParams<{
     proposalId: string
     sessionId: string
@@ -54,7 +52,7 @@ const SessionDetailPage = () => {
       ),
       show: true,
       name: 'Session Feedback',
-      enabled: true,
+      enabled: context.status === 'PENDING_REVIEW' || context.status === 'COMPLETED',
     },
   ]
 
@@ -62,7 +60,12 @@ const SessionDetailPage = () => {
   const currentStep = visibleSteps.find((step) => step.stepNumber === selectedStep)
 
   return (
-    <SessionRoomDetailsLayout sessionId={sessionId} context={context} meeting={meeting}>
+    <SessionRoomDetailsLayout
+      sessionId={sessionId}
+      proposalId={proposalId}
+      context={context}
+      meeting={meeting}
+    >
       <div className="space-y-10">
         <div className="flex items-center border-b-[1px] border-[#E0E2E6]">
           <CustomSessionDetailsTabToggle

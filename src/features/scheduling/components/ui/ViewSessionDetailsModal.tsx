@@ -16,9 +16,10 @@ import { useNavigate } from 'react-router-dom'
 
 interface ViewSessionDetailsModalProps {
   session: Session
+  isJoinable?: boolean
 }
 
-const ViewSessionDetailsModal = ({ session }: ViewSessionDetailsModalProps) => {
+const ViewSessionDetailsModal = ({ session, isJoinable = true }: ViewSessionDetailsModalProps) => {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const { data: context } = useGetSessionContext(session.id, open)
@@ -86,7 +87,8 @@ const ViewSessionDetailsModal = ({ session }: ViewSessionDetailsModalProps) => {
                 setOpen(false)
                 navigate(`/proposals/${session.proposalId}/sessions/${session.id}`)
               }}
-              className="flex items-center gap-2 rounded-xl bg-[#1D50BB] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98]"
+              disabled={!isJoinable}
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-[#1D50BB] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-blue-700/50"
             >
               Full Details
               <ArrowRight className="size-4" />

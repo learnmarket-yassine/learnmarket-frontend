@@ -1,3 +1,7 @@
+import ActiveIcon from '@/assets/ActiveIcon'
+import ActiveImage from '@/assets/ActiveImage'
+import IgnoreIcon from '@/assets/IgnoreIcon'
+import IgnoreImage from '@/assets/IgnoreImage'
 import SaveImage from '@/assets/SaveImage'
 import TrashImage from '@/assets/TrashImage'
 import { Button } from '@/components/ui/button'
@@ -16,7 +20,7 @@ import { MouseEventHandler } from 'react'
 
 type Props = {
   name: string
-  type: 'delete' | 'confirm' | 'save'
+  type: 'delete' | 'confirm' | 'save' | 'inactive' | 'active'
   title: string
   description: string
   handleConfirm?: MouseEventHandler<HTMLButtonElement>
@@ -54,6 +58,10 @@ const ConfirmModal = (props: Props) => {
             >
               {props.type === 'delete' ? (
                 <DeleteButton label="delete" />
+              ) : props.type === 'inactive' ? (
+                <IgnoreIcon />
+              ) : props.type === 'active' ? (
+                <ActiveIcon />
               ) : props.buttonTitle ? (
                 <Button
                   type="button"
@@ -72,6 +80,10 @@ const ConfirmModal = (props: Props) => {
             <DialogTitle className="flex justify-center">
               {props.type === 'delete' ? (
                 <TrashImage />
+              ) : props.type === 'inactive' ? (
+                <IgnoreImage />
+              ) : props.type === 'active' ? (
+                <ActiveImage />
               ) : props.type === 'save' ? (
                 <SaveImage />
               ) : null}

@@ -79,11 +79,6 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
             onClick={() => onNavigate?.('/profile')}
           />
           <MenuItem
-            icon={<LayoutIcon />}
-            label="Dashboard"
-            onClick={() => onNavigate?.('/dashboard')}
-          />
-          <MenuItem
             icon={<VideoIcon />}
             label="Sessions"
             onClick={() => onNavigate?.('/sessions')}

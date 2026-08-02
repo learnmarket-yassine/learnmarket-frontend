@@ -118,10 +118,6 @@ export interface MyBooking {
   startTime: string
   endTime: string
   sessionId: string | null
-  // proposalId is present for a tutor's own bookings (-> /jobs/:proposalId);
-  // proposal.learnRequestId is present for a learner's own bookings
-  // (-> /learn-requests/:learnRequestId). Only one side is ever populated,
-  // matching whichever of findConfirmedByTutor/findConfirmedByLearner ran.
   session: {
     title: string
     proposalId?: string

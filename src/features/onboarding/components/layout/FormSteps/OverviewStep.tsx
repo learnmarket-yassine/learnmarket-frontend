@@ -90,7 +90,7 @@ const OverviewStep = forwardRef<StepHandle, OverviewStepProps>(({ onValidityChan
             <p className="flex items-center gap-2 text-sm text-[#4B5563]">$75.00/hr</p>
             <p className="flex items-center gap-2 text-sm text-[#4B5563]">
               <UserIcon className="h-4 w-4" />
-              14 jobs
+              14 requests
             </p>
           </div>
         </div>

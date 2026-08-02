@@ -1,17 +1,21 @@
 import { useMemo } from 'react'
-import { CalendarClock } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import EmptyState from '@/features/myProfile/components/ui/EmptyState'
 import useGetMyBookings from '../../hooks/useGetMyBookings'
 import MyBookingCard from './MyBookingCard'
-import { SessionsTabKey } from '@/pages/SessionsPage'
+import { SessionsTabKey } from '@/pages/MySessionsPage'
+import { EmptyPage } from '@/features/sessions/components/ui/EmptyPage'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 const EMPTY_STATE_COPY: Record<SessionsTabKey, string> = {
-  UPCOMING: 'No scheduled sessions yet.',
-  PAST: 'No session history yet.',
+  UPCOMING:
+    "You don't have any upcoming sessions. Once a booking is confirmed, it will appear here.",
+  PAST: "Your completed and cancelled sessions will appear here once you've attended or finished a booking.",
 }
 
 const MyBookingsList = ({ tab }: { tab: SessionsTabKey }) => {
+  const navigate = useNavigate()
   const now = useMemo(() => new Date().toISOString(), [])
   const params = useMemo(() => (tab === 'UPCOMING' ? { from: now } : { to: now }), [tab, now])
   const { data, isLoading, isError } = useGetMyBookings(params)
@@ -32,7 +36,21 @@ const MyBookingsList = ({ tab }: { tab: SessionsTabKey }) => {
   }
 
   if (bookings.length === 0) {
-    return <EmptyState icon={CalendarClock} message={EMPTY_STATE_COPY[tab]} />
+    return (
+      <EmptyPage
+        description={EMPTY_STATE_COPY[tab]}
+        actionButton={
+          <Button
+            type="button"
+            onClick={() => navigate('/accueil')}
+            aria-label="Create Announcement"
+            className={`h-full border border-[#2563EB] bg-[#2563EB] p-3 text-white hover:bg-[#2563EB]`}
+          >
+            <span>Go to Accueil</span>
+          </Button>
+        }
+      />
+    )
   }
 
   return (

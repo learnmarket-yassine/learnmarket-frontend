@@ -10,6 +10,7 @@ import CancelEngagementAction from '@/features/payments/components/CancelEngagem
 import LeaveFeedbackButton from '@/features/feedback/components/ui/LeaveFeedbackButton'
 import { useStore } from '@/store/store'
 import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
+import SessionsFlow from '@/features/sessions/components/ui/SessionsFlow'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -44,7 +45,7 @@ const LearnRequestDetailsPage = () => {
     },
     {
       stepNumber: 4,
-      component: acceptedProposal ? <h1>test</h1> : null,
+      component: acceptedProposal ? <SessionsFlow proposalId={acceptedProposal.id} /> : null,
       show: true,
       name: 'Sessions',
       enabled: !!acceptedProposal,

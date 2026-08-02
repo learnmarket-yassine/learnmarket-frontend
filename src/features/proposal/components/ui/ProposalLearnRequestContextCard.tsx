@@ -1,7 +1,7 @@
-import ProposalJobDetailsCard from './CreateProposalForm/ProposalJobDetailsCard'
 import { MyProposalDetail } from '../../store/types'
 import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
 import { formatBudget } from '@/lib/utils'
+import ProposalLearnRequestDetailsCard from './CreateProposalForm/ProposalLearnRequestDetailsCard'
 
 type ProposalLearnRequestContextCardProps = {
   proposal: MyProposalDetail
@@ -10,7 +10,7 @@ type ProposalLearnRequestContextCardProps = {
 const ProposalLearnRequestContextCard = ({ proposal }: ProposalLearnRequestContextCardProps) => {
   return (
     <div className="flex flex-col divide-y divide-[#E0E2E6] rounded-3xl border border-[#E0E2E6] bg-white p-5">
-      <ProposalJobDetailsCard learnrequest={proposal.learnRequest} />
+      <ProposalLearnRequestDetailsCard learnrequest={proposal.learnRequest} />
       <div className="space-y-6 p-5">
         <h3 className="text-xl font-bold">Your proposed terms</h3>
         <div className="space-y-1">
