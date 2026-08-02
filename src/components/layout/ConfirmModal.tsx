@@ -1,3 +1,4 @@
+import SaveImage from '@/assets/SaveImage'
 import TrashImage from '@/assets/TrashImage'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,7 +16,7 @@ import { MouseEventHandler } from 'react'
 
 type Props = {
   name: string
-  type: 'delete' | 'confirm'
+  type: 'delete' | 'confirm' | 'save'
   title: string
   description: string
   handleConfirm?: MouseEventHandler<HTMLButtonElement>
@@ -69,7 +70,11 @@ const ConfirmModal = (props: Props) => {
         <DialogContent className="flex max-w-[300px] flex-wrap justify-center py-[2rem] sm:max-w-[335px] lg:max-h-[650px] lg:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex justify-center">
-              {props.type === 'delete' ? <TrashImage /> : null}
+              {props.type === 'delete' ? (
+                <TrashImage />
+              ) : props.type === 'save' ? (
+                <SaveImage />
+              ) : null}
             </DialogTitle>
             <DialogDescription className="flex flex-col items-center text-[#2C2C2C]">
               <span className="mb-4 text-center text-3xl font-[600]">{props.title}</span>

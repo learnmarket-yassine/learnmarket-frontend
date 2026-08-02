@@ -7,6 +7,8 @@ import CustomSessionDetailsTabToggle from '@/features/sessions/components/ui/Cus
 import { useState } from 'react'
 import ClassroomFeed from '@/features/sessions/components/ui/ClassroomFeed'
 import AssignmentsTab from '@/features/sessions/components/ui/AssignmentsTab'
+import SessionTutorSummary from '@/features/sessions/components/ui/SessionTutorSummary'
+import LearnerResponsePanel from '@/features/sessions/components/ui/LearnerResponsePanel'
 
 const SessionDetailPage = () => {
   useSessionSocketConnection()
@@ -45,7 +47,11 @@ const SessionDetailPage = () => {
     },
     {
       stepNumber: 3,
-      component: <h1>Feedback</h1>,
+      component: context.isTutor ? (
+        <SessionTutorSummary sessionId={sessionId} context={context} />
+      ) : (
+        <LearnerResponsePanel sessionId={sessionId} context={context} />
+      ),
       show: true,
       name: 'Session Feedback',
       enabled: true,

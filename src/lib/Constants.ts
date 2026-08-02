@@ -212,3 +212,10 @@ export const languageLevelLabels: Record<LanguageLevel, string> = {
 }
 
 export const SERVICE_FEE_PERCENT = 0.1
+
+export const SESSION_REPORT_REASONS = [
+  'Tutor No Show',
+  'Audio/Video Issues',
+  'Session Content Not As Described',
+  'Inappropriate Behavior',
+]

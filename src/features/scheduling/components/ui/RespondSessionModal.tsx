@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import SessionReviewGate from '@/features/sessions/components/ui/SessionReviewGate'
+import SessionReviewGate from '@/features/sessions/components/ui/LearnerResponsePanel'
 import useGetSessionContext from '@/features/sessions/hooks/useGetSessionContext'
 import type { Session } from '../../types/dto'
 
