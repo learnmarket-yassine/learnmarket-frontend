@@ -9,9 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Loader } from 'lucide-react'
 import { MouseEventHandler } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Loader from './Loader/Loader'
 
 type successModalProps = {
   disabled?: boolean

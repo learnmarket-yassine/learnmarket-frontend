@@ -12,6 +12,7 @@ import {
 } from '@/features/learn-requests/validation'
 import WizardFooter from '../../ui/WizardFooter'
 import { TYPE_LABELS, LEVEL_LABELS } from '@/features/learn-requests/constants/labels'
+import Loader from '@/components/ui/Loader/Loader'
 
 const STEP = {
   FORMAT: 0,
@@ -38,7 +39,7 @@ const ReviewStep = ({ draftId, onEdit, onBack, onSaveDraft, onPublished }: Revie
   const [errorFields, setErrorFields] = useState<Set<PublishErrorField>>(new Set())
 
   if (isLoading || !data) {
-    return <p className="text-sm text-[#6B7280]">Loading your request…</p>
+    return <Loader className="flex h-full w-full items-center justify-center" />
   }
 
   const wizardState = mapLearnRequestToWizardState(data)

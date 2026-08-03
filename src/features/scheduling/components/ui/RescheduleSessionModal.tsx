@@ -59,10 +59,6 @@ const RescheduleSessionModal = ({ open, onOpenChange, session }: RescheduleSessi
   )
 }
 
-// RescheduleSessionAction silently renders null once inside the 2-hour
-// cutoff -- surface why, rather than leaving the modal looking empty.
-// Uses the same RESCHEDULE_CUTOFF_HOURS threshold, for messaging only; the
-// mutation/confirm logic itself lives entirely in RescheduleSessionAction.
 const CutoffAwareAction = ({
   sessionId,
   proposalId,

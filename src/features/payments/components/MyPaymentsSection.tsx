@@ -7,6 +7,7 @@ import { formatBudget } from '@/lib/utils'
 import EmptyState from '@/features/myProfile/components/ui/EmptyState'
 import useGetMyPayments, { MY_PAYMENTS_FILTER_TYPE } from '../hooks/useGetMyPayments'
 import PaymentStatusBadge from './ui/PaymentStatusBadge'
+import Loader from '@/components/ui/Loader/Loader'
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -107,7 +108,7 @@ const MyPaymentsSection = () => {
                   <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
                   {isFetchingNextPage && (
                     <div className="flex justify-center py-4 text-sm text-muted-foreground">
-                      Loading more...
+                      <Loader className="h-4 w-4 animate-spin" />
                     </div>
                   )}
                 </TableCell>

@@ -1,3 +1,4 @@
+import Loader from '@/components/ui/Loader/Loader'
 import useGetAssignment from '../../hooks/useGetAssignment'
 import AssignmentCard from './AssignmentCard'
 import AssignmentModal from './AssignmentModal'
@@ -12,7 +13,7 @@ const AssignmentsTab = ({ sessionId, isTutor }: AssignmentsTabProps) => {
   const { data: assignmentResponse, isLoading } = useGetAssignment(sessionId)
   const assignment = assignmentResponse?.exists ? assignmentResponse : null
 
-  if (isLoading) return <p className="text-sm text-gray-400">Loading…</p>
+  if (isLoading) return <Loader className="h-4 w-4 animate-spin" />
 
   if (assignment) {
     return <AssignmentCard sessionId={sessionId} isTutor={isTutor} assignment={assignment} />

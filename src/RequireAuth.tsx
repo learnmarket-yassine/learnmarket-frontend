@@ -1,6 +1,7 @@
 import { useStore } from '@/store/store'
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import useGetUser from './features/auth/hooks/useGetUser'
+import Loader from './components/ui/Loader/Loader'
 
 const RequireAuth = () => {
   const auth = useStore((state) => state.auth.authenticationResult)
@@ -12,7 +13,7 @@ const RequireAuth = () => {
   }
 
   if (getUserQuery.isPending) {
-    return <h1>loading...</h1>
+    return <Loader className="flex h-full w-full items-center justify-center" />
   }
 
   if (getUserQuery.isError) {

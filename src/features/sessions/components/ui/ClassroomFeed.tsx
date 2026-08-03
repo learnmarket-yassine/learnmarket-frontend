@@ -1,3 +1,4 @@
+import Loader from '@/components/ui/Loader/Loader'
 import useGetSessionAnnouncements from '../../hooks/useGetSessionAnnouncements'
 import AnnouncementCard from './AnnouncementCard'
 import AnnouncementModal from './AnnouncementModal'
@@ -13,7 +14,7 @@ const ClassroomFeed = ({ sessionId }: ClassroomFeedProps) => {
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
 
-  if (isLoading) return <p className="text-sm text-gray-400">Loading…</p>
+  if (isLoading) return <Loader className="h-4 w-4 animate-spin" />
   if (!isLoading && ordered.length <= 0)
     return (
       <EmptyPage

@@ -20,18 +20,20 @@ const SessionRoomDetailsLayout = ({
   proposalId,
 }: SessionRoomDetailsLayoutProps) => {
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="w-full space-y-8">
+      <div className="flex w-full items-center justify-between">
         <BackButton />
-        {context.booking && (
-          <RescheduleSessionAction
-            sessionId={sessionId}
-            proposalId={proposalId}
-            bookingId={context.booking.id}
-            bookingStatus={context.booking.status}
-            startTime={context.booking.startTime}
-          />
-        )}
+        <div>
+          {context.booking && (
+            <RescheduleSessionAction
+              sessionId={sessionId}
+              proposalId={proposalId}
+              bookingId={context.booking.id}
+              bookingStatus={context.booking.status}
+              startTime={context.booking.startTime}
+            />
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-[380px_1fr] gap-6">
         <MeetingCard context={context} meeting={meeting} sessionId={sessionId} />

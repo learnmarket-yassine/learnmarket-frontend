@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '@/store/store'
 import useGetUser from '../../hooks/useGetUser'
 import { useEffect } from 'react'
+import Loader from '@/components/ui/Loader/Loader'
 
 type RegisterLayoutProps = {
   children: React.ReactNode
@@ -24,7 +25,7 @@ const RegisterLayout = ({ children }: RegisterLayoutProps) => {
     }
   }, [auth, user, navigate, getUserQuery.isLoading, getUserQuery.data])
   return auth && !user ? (
-    <div className="flex h-full w-full items-center justify-center"> ...loading</div>
+    <Loader className="flex h-full w-full items-center justify-center" />
   ) : (
     <div className="min-h-screen bg-[#f7f7f7] py-8">
       <div className="container">

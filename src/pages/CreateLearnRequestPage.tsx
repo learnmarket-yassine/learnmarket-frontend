@@ -5,6 +5,7 @@ import AddLearnRequestForm from '@/features/learn-requests/components/layout/Add
 import useLearnRequest from '@/features/learn-requests/hooks/useGetLearnRequest'
 import { INITIAL_WIZARD_STATE } from '@/features/learn-requests/store/types'
 import { mapLearnRequestToWizardState } from '@/features/learn-requests/validation'
+import Loader from '@/components/ui/Loader/Loader'
 
 const CreateLearnRequestPage = () => {
   const { id: routeDraftId } = useParams<{ id: string }>()
@@ -20,7 +21,7 @@ const CreateLearnRequestPage = () => {
     return (
       <CreateLearnRequestLayout>
         <div className="container flex flex-1 items-center justify-center px-4 py-8">
-          <p className="text-sm text-[#6B7280]">Loading your request…</p>
+          <Loader className="h-4 w-4 animate-spin" />
         </div>
       </CreateLearnRequestLayout>
     )

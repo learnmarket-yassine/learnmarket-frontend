@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import useRefreshToken from './features/auth/hooks/useRefreshToken'
+import Loader from './components/ui/Loader/Loader'
 
 const PersistLogin = () => {
   const getNewAccessToken = useRefreshToken()
@@ -19,7 +20,11 @@ const PersistLogin = () => {
   }, [getNewAccessToken])
   return (
     <>
-      {isLoading ? <div className="flex items-center justify-center">loading...</div> : <Outlet />}
+      {isLoading ? (
+        <Loader className="flex h-full w-full items-center justify-center" />
+      ) : (
+        <Outlet />
+      )}
     </>
   )
 }

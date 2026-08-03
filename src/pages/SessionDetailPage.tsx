@@ -8,6 +8,7 @@ import ClassroomFeed from '@/features/sessions/components/ui/ClassroomFeed'
 import AssignmentsTab from '@/features/sessions/components/ui/AssignmentsTab'
 import SessionTutorSummary from '@/features/sessions/components/ui/SessionTutorSummary'
 import LearnerResponsePanel from '@/features/sessions/components/ui/LearnerResponsePanel'
+import Loader from '@/components/ui/Loader/Loader'
 
 const SessionDetailPage = () => {
   const { proposalId, sessionId } = useParams<{
@@ -25,7 +26,7 @@ const SessionDetailPage = () => {
   }
 
   if (isContextLoading || isMeetingLoading || !context || !meeting) {
-    return <div className="p-6 text-sm text-gray-500">Loading session…</div>
+    return <Loader className="h-4 w-4 animate-spin" />
   }
 
   const steps = [
@@ -52,7 +53,7 @@ const SessionDetailPage = () => {
       ),
       show: true,
       name: 'Session Feedback',
-      enabled: context.status === 'PENDING_REVIEW' || context.status === 'COMPLETED',
+      enabled: context.status === 'PENDING_REVIEW',
     },
   ]
 
