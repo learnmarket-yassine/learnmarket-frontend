@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 function useSubmitForVerification() {
   const axiosPrivate = useAxiosPrivate()
@@ -12,6 +13,13 @@ function useSubmitForVerification() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Verification request submitted.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to submit your verification request. Please try again.',
+      })
     },
   })
 }

@@ -2,6 +2,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { AnnouncementComment } from '../../scheduling/types/dto'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 async function updateComment(
   api: AxiosInstance,
@@ -21,6 +22,10 @@ export default function useUpdateAnnouncementComment(sessionId: string) {
       updateComment(axiosPrivate, commentId, content),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'announcements'] })
+      ToastMessage({ type: 'success', message: 'Comment updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update comment. Please try again.' })
     },
   })
 

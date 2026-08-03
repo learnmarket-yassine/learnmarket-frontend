@@ -3,6 +3,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { Certification } from '../store/types'
 import { CertificationFormData } from '../schemas'
 import { toCertificationPayload } from '../utils/toCertificationPayload'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type EditCertificationVariables = {
   id: string
@@ -23,6 +24,10 @@ const useEditCertification = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Certification updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update certification. Please try again.' })
     },
   })
 }

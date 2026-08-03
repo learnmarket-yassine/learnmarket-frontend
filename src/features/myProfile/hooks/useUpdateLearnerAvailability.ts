@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { AvailabilitySlotValue } from '@/features/myProfile/store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useUpdateLearnerAvailability = () => {
   const queryClient = useQueryClient()
@@ -13,6 +14,10 @@ const useUpdateLearnerAvailability = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Availability updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update availability. Please try again.' })
     },
   })
 }

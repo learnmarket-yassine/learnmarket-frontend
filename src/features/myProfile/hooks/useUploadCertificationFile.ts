@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { CertificationFile } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 interface PresignResponse {
   key: string
@@ -45,6 +46,10 @@ const useUploadCertificationFile = (certId: string) => {
     mutationFn: (file: File) => uploadCertificationFile(axiosPrivate, certId, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'File uploaded.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to upload file. Please try again.' })
     },
   })
 

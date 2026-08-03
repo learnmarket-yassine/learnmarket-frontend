@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { Announcement } from '../../scheduling/types/dto'
 import { uploadFileToStorage } from '../utils/uploadFile'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export interface CreateAnnouncementInput {
   content: string
@@ -36,6 +37,10 @@ export default function useCreateAnnouncement(sessionId: string) {
       createAnnouncement(axiosPrivate, sessionId, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'announcements'] })
+      ToastMessage({ type: 'success', message: 'Announcement posted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to post announcement. Please try again.' })
     },
   })
 

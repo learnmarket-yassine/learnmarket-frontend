@@ -1,6 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const getAttachmentUrl = async (
   api: AxiosInstance,
@@ -15,6 +16,9 @@ export default function useDownloadClassroomAttachment() {
 
   const downloadMutation = useMutation({
     mutationFn: (path: string) => getAttachmentUrl(axiosPrivate, path),
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to download attachment. Please try again.' })
+    },
   })
 
   const handleDownload = async (path: string) => {

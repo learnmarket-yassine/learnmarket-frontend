@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useDeleteLearnRequest = () => {
   const axiosPrivate = useAxiosPrivate()
@@ -12,6 +13,13 @@ const useDeleteLearnRequest = () => {
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: ['learnRequest', id] })
       queryClient.invalidateQueries({ queryKey: ['myLearnRequests'] })
+      ToastMessage({ type: 'success', message: 'Learning request deleted.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to delete the learning request. Please try again.',
+      })
     },
   })
 }

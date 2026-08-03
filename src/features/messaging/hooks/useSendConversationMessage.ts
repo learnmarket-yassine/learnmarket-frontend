@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { Message } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type SendConversationMessagePayload = {
   conversationId: string
@@ -32,6 +33,10 @@ const useSendConversationMessage = () => {
     onSuccess: (_data, { conversationId }) => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] })
       queryClient.invalidateQueries({ queryKey: ['messages', conversationId] })
+      ToastMessage({ type: 'success', message: 'Message sent.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to send the message. Please try again.' })
     },
   })
 }

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const deleteEmployment = async (id: string, axiosPrivate: AxiosInstance) => {
   const response = await axiosPrivate.delete(`/tutor/employment/${id}`)
@@ -14,6 +15,13 @@ const useDeleteEmployment = () => {
     mutationFn: (id: string) => deleteEmployment(id, axiosPrivate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Employment entry deleted.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to delete employment entry. Please try again.',
+      })
     },
   })
 

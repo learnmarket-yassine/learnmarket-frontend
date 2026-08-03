@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { EmploymentFormData } from '../schemas'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type EditEmploymentnVariables = {
   id: string
@@ -26,6 +27,13 @@ const useEditEmployment = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Employment entry updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update employment entry. Please try again.',
+      })
     },
   })
 }

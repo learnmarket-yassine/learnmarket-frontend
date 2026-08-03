@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { TutorProfile } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useEditTutorProfile = () => {
   const queryClient = useQueryClient()
@@ -18,6 +19,10 @@ const useEditTutorProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Tutor profile updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update tutor profile. Please try again.' })
     },
   })
 }

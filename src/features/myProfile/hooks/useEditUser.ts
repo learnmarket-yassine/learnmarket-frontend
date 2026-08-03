@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { userToEdit } from '../types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useEditUserInfo = () => {
   const queryClient = useQueryClient()
@@ -14,6 +15,10 @@ const useEditUserInfo = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Profile updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update profile. Please try again.' })
     },
   })
 }

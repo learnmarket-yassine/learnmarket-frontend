@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { AddLanguageFormData } from '../schemas'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useCreateLanguage = () => {
   const queryClient = useQueryClient()
@@ -18,6 +19,10 @@ const useCreateLanguage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Language added.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to add language. Please try again.' })
     },
   })
 }

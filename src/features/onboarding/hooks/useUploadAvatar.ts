@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type PresignResponse = {
   key: string
@@ -33,6 +34,13 @@ const useUploadAvatar = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Profile photo updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update your profile photo. Please try again.',
+      })
     },
   })
 }

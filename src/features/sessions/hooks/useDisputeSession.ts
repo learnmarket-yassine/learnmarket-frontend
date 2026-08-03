@@ -1,6 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const disputeSession = async (
   api: AxiosInstance,
@@ -18,6 +19,10 @@ export default function useDisputeSession(sessionId: string) {
     mutationFn: (reason: string) => disputeSession(axiosPrivate, sessionId, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'context'] })
+      ToastMessage({ type: 'success', message: 'Session dispute submitted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to submit the dispute. Please try again.' })
     },
   })
 

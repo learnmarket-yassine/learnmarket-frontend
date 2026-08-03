@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { AvailabilityRule } from '../types/dto'
 import { WeeklyHoursMutations } from '../components/ui/weeklyHoursDiff'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const updateWeeklyHours = async (
   axiosPrivate: AxiosInstance,
@@ -17,6 +18,15 @@ export default function useUpdateWeeklyHours() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (diff: WeeklyHoursMutations) => updateWeeklyHours(axiosPrivate, diff),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['availabilityRules'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availabilityRules'] })
+      ToastMessage({ type: 'success', message: 'Your weekly availability has been updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update your weekly availability. Please try again.',
+      })
+    },
   })
 }

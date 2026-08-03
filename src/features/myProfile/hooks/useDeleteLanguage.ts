@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const deleteLanguage = async (id: string, axiosPrivate: AxiosInstance) => {
   const response = await axiosPrivate.delete(`/users/me/languages/${id}`)
@@ -14,6 +15,10 @@ const useDeleteLanguage = () => {
     mutationFn: (id: string) => deleteLanguage(id, axiosPrivate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Language deleted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to delete language. Please try again.' })
     },
   })
 

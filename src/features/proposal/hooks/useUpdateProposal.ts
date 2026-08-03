@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ProposalFormValues } from '../schemas'
 import { AxiosInstance } from 'axios'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type UpdateProposalPayload = {
   proposalId: string
@@ -26,6 +27,10 @@ export default function useUpdateProposal() {
     onSuccess: (_data, { proposalId }) => {
       queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] })
       queryClient.invalidateQueries({ queryKey: ['proposals', 'mine'] })
+      ToastMessage({ type: 'success', message: 'Proposal updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update proposal. Please try again.' })
     },
   })
 

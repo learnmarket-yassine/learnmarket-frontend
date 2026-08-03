@@ -2,6 +2,7 @@ import { useStore } from '@/store/store'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import axios from '@/lib/api/client'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type UserCredentials = {
   email: string
@@ -25,7 +26,11 @@ const useLogin = () => {
     mutationFn: async (userCredentials: UserCredentials) => await loginUser(userCredentials),
     onSuccess: (data) => {
       setUser(data)
+      ToastMessage({ type: 'success', message: 'You have successfully logged in.' })
       navigate('/')
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Incorrect email or password. Please try again.' })
     },
   })
 }

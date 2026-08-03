@@ -2,6 +2,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { AssignmentComment } from '../../scheduling/types/dto'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 async function createComment(
   api: AxiosInstance,
@@ -20,6 +21,10 @@ export default function useCreateAssignmentComment(sessionId: string, assignment
     mutationFn: (content: string) => createComment(axiosPrivate, assignmentId, content),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'assignment'] })
+      ToastMessage({ type: 'success', message: 'Comment posted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to post comment. Please try again.' })
     },
   })
 

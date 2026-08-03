@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { Assignment } from '../../scheduling/types/dto'
 import { uploadFileToStorage } from '../utils/uploadFile'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export interface CreateAssignmentInput {
   title: string
@@ -39,6 +40,10 @@ export default function useCreateAssignment(sessionId: string) {
     mutationFn: (input: CreateAssignmentInput) => createAssignment(axiosPrivate, sessionId, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'assignment'] })
+      ToastMessage({ type: 'success', message: 'Assignment created.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to create assignment. Please try again.' })
     },
   })
 
