@@ -1,4 +1,4 @@
-import { AlertCircle, CalendarIcon, Clock, RefreshCw, Video, VideoOff } from 'lucide-react'
+import { AlertCircle, CalendarIcon, Clock, RefreshCw, Video } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import useRetryMeeting from '../../hooks/useRetryMeeting'
 import { useCountdown } from '@/features/scheduling/hooks/useCountdown'

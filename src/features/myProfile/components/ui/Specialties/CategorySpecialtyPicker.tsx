@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Specialty } from '@/types/category'
 import useCategories from '@/hooks/useCategories'
