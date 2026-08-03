@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { FileText, Trash2, X } from 'lucide-react'
@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { CustomInput } from '@/components/ui/CustomInput'
 import { DatePickerField } from '@/components/ui/date-picker-field'
+import FileUpload from '@/components/ui/FileUploader'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useDownloadClassroomAttachment from '@/features/sessions/hooks/useDownloadClassroomAttachment'
 import { useStore } from '@/store/store'
@@ -24,6 +25,7 @@ import useDeleteCertificationFile from '../../hooks/useDeleteCertificationFile'
 import useUploadCertificationFile, {
   uploadCertificationFile,
 } from '../../hooks/useUploadCertificationFile'
+import { CertificationFile } from '../../store/types'
 import EditButton from './EditButton'
 import AddButton from './AddButton'
 
@@ -44,7 +46,6 @@ function CertificationForm({ edit, id }: CertificationFormProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [isUploadingPending, setIsUploadingPending] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const axiosPrivate = useAxiosPrivate()
   const queryClient = useQueryClient()
@@ -85,13 +86,6 @@ function CertificationForm({ edit, id }: CertificationFormProps) {
       reset(EMPTY_VALUES)
     }
   }, [edit, isOpen, reset, selectedCertification])
-
-  const onPendingFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setPendingFiles((prev) => [...prev, ...Array.from(e.target.files!)])
-    }
-    e.target.value = ''
-  }
 
   const onSubmit: SubmitHandler<CertificationFormData> = async (data) => {
     if (edit && id) {
@@ -294,31 +288,18 @@ function CertificationForm({ edit, id }: CertificationFormProps) {
                   ))}
               </div>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
+              <FileUpload<File | CertificationFile>
+                accept={['image/jpeg', 'image/png', 'image/webp', 'application/pdf']}
+                maxSizeMB={25}
                 disabled={isUploadingToExisting}
-                className="h-10 rounded-full border-[#2563EB] bg-white px-4 text-sm font-medium text-[#2563EB] hover:bg-blue-50 hover:text-[#2563EB]/90"
-              >
-                {isUploadingToExisting ? 'Uploading…' : 'Attach a file'}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,application/pdf"
-                  className="hidden"
-                  onChange={
-                    edit
-                      ? (e) => {
-                          const file = e.target.files?.[0]
-                          if (file) uploadToExisting(file)
-                          e.target.value = ''
-                        }
-                      : onPendingFilesSelected
-                  }
-                  disabled={isUploadingToExisting}
-                />
-              </Button>
+                resetAfterUpload
+                uploadFn={async (file): Promise<File | CertificationFile> =>
+                  edit ? uploadToExisting(file) : file
+                }
+                onUploaded={(result) => {
+                  if (!edit) setPendingFiles((prev) => [...prev, result as File])
+                }}
+              />
             </div>
           </div>
           <div className="flex justify-end gap-3">

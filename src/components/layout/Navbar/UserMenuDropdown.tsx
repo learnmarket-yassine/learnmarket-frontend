@@ -6,7 +6,6 @@ import { UserProfile } from '@/types/nav'
 import { useState } from 'react'
 import AvatarImg from '@/assets/images/avatar.png'
 import UserIcon from '@/assets/UserIcon'
-import LayoutIcon from '@/assets/LayoutIcon'
 import MessagesIcon from '@/assets/MessagesIcon'
 import SettingsIcon from '@/assets/SettingsIcon'
 import LogoutIcon from '@/assets/LogoutIcon'
@@ -77,11 +76,6 @@ export function UserMenuDropdown({ user, onNavigate, onLogout }: UserMenuDropdow
             icon={<UserIcon />}
             label="Your Profile"
             onClick={() => onNavigate?.('/profile')}
-          />
-          <MenuItem
-            icon={<LayoutIcon />}
-            label="Dashboard"
-            onClick={() => onNavigate?.('/dashboard')}
           />
           <MenuItem
             icon={<VideoIcon />}

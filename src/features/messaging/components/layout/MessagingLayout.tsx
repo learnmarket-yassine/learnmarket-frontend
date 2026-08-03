@@ -1,44 +1,23 @@
-import { useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useStore } from '@/store/store'
-import useGetConversations from '../../hooks/useGetConversations'
-import ConversationListPanel from './ConversationListPanel'
-import ConversationThread from '../ui/ConversationThread'
+import BackButton from '@/components/ui/BackButton'
 
-const MessagingLayout = () => {
-  const currentUserId = useStore((state) => state.auth.user?.id)
-  const { data: conversations = [], isPending } = useGetConversations()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const selectedConversationId = searchParams.get('conversationId') ?? undefined
+type MessagingLayoutProps = {
+  children: React.ReactNode
+}
 
-  useEffect(() => {
-    if (selectedConversationId || conversations.length === 0) return
-    setSearchParams({ conversationId: conversations[0].id }, { replace: true })
-  }, [selectedConversationId, conversations, setSearchParams])
-
-  const selectedConversation = conversations.find((c) => c.id === selectedConversationId)
-
+const MessagingLayout: React.FC<MessagingLayoutProps> = ({ children }) => {
   return (
-    <div className="flex h-[calc(100vh-14rem)] min-h-[500px] overflow-hidden rounded-3xl border border-[#E0E2E6] bg-white">
-      <ConversationListPanel
-        conversations={conversations}
-        currentUserId={currentUserId}
-        selectedConversationId={selectedConversationId}
-        onSelect={(conversationId) => setSearchParams({ conversationId })}
-      />
-      <div className="flex flex-1 flex-col">
-        {selectedConversation ? (
-          <ConversationThread
-            key={selectedConversation.id}
-            conversation={selectedConversation}
-            currentUserId={currentUserId}
-          />
-        ) : (
-          <div className="flex flex-1 items-center justify-center text-sm text-[#6B7280]">
-            {isPending ? 'Loading conversations…' : 'Select a conversation to start messaging.'}
-          </div>
-        )}
+    <div className="flex flex-col space-y-8">
+      <div className="flex items-center justify-between">
+        <BackButton text="" />
       </div>
+      <div className="w-full space-y-3">
+        <h1 className="text-3xl font-bold text-blue-600">Messages</h1>
+        <p className="text-text text-justify">
+          Communicate with others, discuss lesson details, ask questions, and keep track of your
+          conversations in one place.
+        </p>
+      </div>
+      <div className="flex-1 space-y-8">{children}</div>
     </div>
   )
 }

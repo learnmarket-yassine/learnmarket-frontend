@@ -22,12 +22,13 @@ import MyProposalsPage from './pages/MyProposalsPage'
 import MyProposalDetailsPage from './pages/MyProposalDetailsPage'
 import EditProposalPage from './pages/EditProposalPage'
 import MessagingPage from './pages/MessagingPage'
-import SessionsPage from './pages/SessionsPage'
-import TutorJobDetailsPage from './pages/TutorJobDetailsPage'
+import SessionsPage from './pages/MySessionsPage'
 import StripeReturnPage from './pages/StripeReturnPage'
 import ProfileSettingsPage from './pages/ProfileSettingsPage'
 import BuySparksPage from './pages/BuySparksPage'
 import TutorPublicProfilePage from './pages/TutorPublicProfilePage'
+import SessionDetailPage from './pages/SessionDetailPage'
+import TutorLearnRequestDetailsPage from './pages/TutorLearnRequestDetailsPage'
 
 const AppRoutes = () => {
   return (
@@ -49,6 +50,10 @@ const AppRoutes = () => {
               <Route path="/accueil" element={<AccueilPage />} />
               <Route path="/messages" element={<MessagingPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
+              <Route
+                path="/proposals/:proposalId/sessions/:sessionId"
+                element={<SessionDetailPage />}
+              />
               <Route path="/settings" element={<ProfileSettingsPage />} />
               <Route path="/tutors/:id" element={<TutorPublicProfilePage />} />
               <Route element={<RequireRole role="TUTOR" />}>
@@ -57,7 +62,7 @@ const AppRoutes = () => {
                 <Route path="/proposals/:id" element={<MyProposalDetailsPage />} />
                 <Route path="/proposals/:id/edit" element={<EditProposalPage />} />
                 <Route path="/proposals/:id/create" element={<CreateProposalPage />} />
-                <Route path="/jobs/:id" element={<TutorJobDetailsPage />} />
+                <Route path="/requests/:id" element={<TutorLearnRequestDetailsPage />} />
                 <Route path="/profile/stripe-return" element={<StripeReturnPage />} />
                 <Route path="/sparks/buy" element={<BuySparksPage />} />
               </Route>

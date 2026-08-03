@@ -11,12 +11,12 @@ const getMeetingDetails = async (
   return response.data
 }
 
-export default function useGetMeetingDetails(sessionId: string) {
+export default function useGetMeetingDetails(sessionId?: string) {
   const axiosPrivate = useAxiosPrivate()
 
   return useQuery({
     queryKey: ['session', sessionId, 'meeting'],
-    queryFn: () => getMeetingDetails(axiosPrivate, sessionId),
+    queryFn: () => getMeetingDetails(axiosPrivate, sessionId!),
     enabled: !!sessionId,
   })
 }

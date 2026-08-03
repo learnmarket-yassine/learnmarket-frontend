@@ -53,9 +53,9 @@ const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }
             Nearly there! What work are you here to do?
           </h1>
           <p className="max-w-[520px] text-sm text-[#4B5563]">
-            Your skills show clients what you can offer, and help us choose which jobs to recommend
-            to you. Add or remove the ones we've suggested, or start typing to pick more. It's up to
-            you.
+            Your skills help learners understand what you teach and help us recommend relevant
+            learning requests. Add or remove the suggested subjects, or search for additional ones
+            that match your expertise.
           </p>
           <p className="font-semibold text-[#2563EB]">Why choosing carefully matters</p>
         </div>
@@ -103,8 +103,8 @@ const SkillsStep = forwardRef<StepHandle, SkillsStepProps>(({ onValidityChange }
           </AvatarFallback>
         </Avatar>
         <p className="max-w-96 text-lg font-medium text-[#1E293B]">
-          "Yora's algorithm will recommend specific job posts to you based on your skills. So choose
-          them carefully to get the best match!"
+          Our matching system recommends relevant learning requests based on the subjects you teach.
+          Choose your subjects carefully to receive the best matches.
         </p>
         <p className="text-sm font-semibold text-[#6B7280]">Yora Learning Pro Tip</p>
       </div>

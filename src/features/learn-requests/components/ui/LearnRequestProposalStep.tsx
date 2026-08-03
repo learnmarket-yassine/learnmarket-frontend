@@ -37,8 +37,6 @@ const LearnRequestProposalStep = ({ learnRequestId, status }: LearnRequestPropos
     PROPOSALS_PAGE_SIZE
   )
   const proposals = data?.paginatedResult ?? []
-  // Client-side only -- filters within the already-fetched (and already
-  // search-narrowed) page, no separate endpoint for the Shortlisted tab.
   const displayedProposals =
     activeTab === 'shortlisted' ? proposals.filter((p) => p.isShortlisted) : proposals
   const totalCount =

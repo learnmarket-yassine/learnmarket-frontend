@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import EmptyState from '@/features/myProfile/components/ui/EmptyState'
 import useGetSparksHistory, { SPARKS_HISTORY_FILTER_TYPE } from '../../hooks/useGetSparksHistory'
 import { SparksTransactionType } from '../../store/types'
+import Loader from '@/components/ui/Loader/Loader'
 
 const TYPE_LABELS: Record<SparksTransactionType, string> = {
   MONTHLY_GRANT: 'Monthly grant',
@@ -90,7 +91,7 @@ const SparksHistoryList = () => {
                 <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
                 {isFetchingNextPage && (
                   <div className="flex justify-center py-4 text-sm text-muted-foreground">
-                    Loading more...
+                    <Loader />
                   </div>
                 )}
               </TableCell>

@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import useCreateProposal from '../../../hooks/useCreateProposal'
 import useUpdateProposal from '../../../hooks/useUpdateProposal'
-import ProposalJobDetailsCard from './ProposalJobDetailsCard'
 import ProposalFormSessionsSection from './ProposalSessionsSection'
 import ProposalTermsSection from './ProposalTermsSection'
 import { MyProposalDetail } from '@/features/proposal/store/types'
 import SparksBalancePill from '@/features/sparks/components/ui/SparksBalancePill'
+import ProposalLearnRequestDetailsCard from './ProposalLearnRequestDetailsCard'
+import ConfirmMessageModal from '@/components/layout/ConfirmMessageModal'
 
 type CreateProposalFormProps = {
   learnrequest: LearnRequest
@@ -64,7 +65,8 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
   const {
     handleCreateProposal,
     isPending: createProposalLoading,
-    isInsufficientSparks,
+    insufficientSparksState,
+    setInsufficientSparksState,
   } = useCreateProposal()
   const { handleUpdateProposal, isPending: updateProposalLoading } = useUpdateProposal()
   const isPending = isEditMode ? updateProposalLoading : createProposalLoading
@@ -79,16 +81,13 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
         objective,
       })),
     }
-    try {
-      if (isEditMode) {
-        await handleUpdateProposal({ proposalId: existingProposal.id, payload })
-      } else {
-        await handleCreateProposal({ learnRequestId: learnrequest.id, payload })
-      }
-    } catch {
-      // surfaced reactively below via isInsufficientSparks -- nothing else to do here
+    if (isEditMode) {
+      await handleUpdateProposal({ proposalId: existingProposal.id, payload })
+    } else {
+      await handleCreateProposal({ learnRequestId: learnrequest.id, payload })
     }
   }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <div className="flex items-center justify-between gap-4">
@@ -97,23 +96,8 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
         </h1>
         {!isEditMode && <SparksBalancePill />}
       </div>
-      {isInsufficientSparks && (
-        <div className="flex items-center justify-between gap-4 rounded-2xl border border-red-200 bg-red-50 px-5 py-4">
-          <p className="text-sm text-red-600">
-            You don't have enough Sparks to send this proposal. Purchase more to continue.
-          </p>
-          <Button
-            type="button"
-            variant="link"
-            className="h-auto shrink-0 p-0 text-sm font-medium text-blue-600"
-            onClick={() => navigate('/settings', { state: { section: 5 } })}
-          >
-            Buy Sparks
-          </Button>
-        </div>
-      )}
       <div className="rounded-3xl border border-[#E0E2E6]">
-        <ProposalJobDetailsCard learnrequest={learnrequest} />
+        <ProposalLearnRequestDetailsCard learnrequest={learnrequest} />
       </div>
       <ProposalFormSessionsSection
         learnRequestType={learnrequest.type}
@@ -167,6 +151,20 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
               : 'Submit proposal'}
         </Button>
       </div>
+      <ConfirmMessageModal
+        isOpen={insufficientSparksState}
+        type="stop"
+        title="Insufficient Sparks"
+        description="You don't have enough Sparks to submit this proposal. Please buy more Sparks to continue."
+        titleButton="Buy more Sparks"
+        name="edit susbcription"
+        setIsOpen={(open) => !open && setInsufficientSparksState(false)}
+        isLoading={false}
+        handleReturn={(e) => {
+          e.stopPropagation()
+          navigate('/buy-sparks')
+        }}
+      />
     </form>
   )
 }

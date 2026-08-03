@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns'
+import { Trash2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { RichTextContent } from '@/components/ui/rich-text-content'
 import { getAssetUrl } from '@/lib/utils'
@@ -9,6 +10,7 @@ import useUpdateAnnouncementComment from '../../hooks/useUpdateAnnouncementComme
 import useDeleteAnnouncementComment from '../../hooks/useDeleteAnnouncementComment'
 import useDownloadClassroomAttachment from '../../hooks/useDownloadClassroomAttachment'
 import useDeleteAnnouncement from '../../hooks/useDeleteAnnouncement'
+import useDeleteAnnouncementAttachment from '../../hooks/useDeleteAnnouncementAttachment'
 import { formatFileSize } from '../../utils/formatFileSize'
 import CommentThread from './CommentThread'
 import AnnouncementModal from './AnnouncementModal'
@@ -29,6 +31,8 @@ const AnnouncementCard = ({ sessionId, announcement }: AnnouncementCardProps) =>
     useDeleteAnnouncementComment(sessionId)
   const { handleDownload } = useDownloadClassroomAttachment()
   const { handleDelete, isPending: isDeleting } = useDeleteAnnouncement(sessionId)
+  const { handleDelete: handleDeleteAttachment, isPending: isDeletingAttachment } =
+    useDeleteAnnouncementAttachment(sessionId, announcement.id)
 
   return (
     <div className="flex flex-col gap-5 rounded-2xl border border-[#E0E2E6] bg-white p-4">
@@ -74,18 +78,33 @@ const AnnouncementCard = ({ sessionId, announcement }: AnnouncementCardProps) =>
         {announcement.attachments.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
             {announcement.attachments.map((attachment) => (
-              <button
+              <div
                 key={attachment.id}
-                type="button"
-                onClick={() =>
-                  handleDownload(
-                    `/announcements/${announcement.id}/attachments/${attachment.id}/url`
-                  )
-                }
-                className="rounded-full border border-[#E0E2E6] bg-[#F9FAFB] px-3 py-1 text-xs text-[#374151] hover:border-[#2563EB]"
+                className="flex items-center gap-1 rounded-full border border-[#E0E2E6] bg-[#F9FAFB] px-3 py-1 text-xs text-[#374151]"
               >
-                {attachment.fileName} {formatFileSize(attachment.fileSize)}
-              </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleDownload(
+                      `/announcements/${announcement.id}/attachments/${attachment.id}/url`
+                    )
+                  }
+                  className="hover:text-[#2563EB]"
+                >
+                  {attachment.fileName} {formatFileSize(attachment.fileSize)}
+                </button>
+                {isAuthor && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteAttachment(attachment.id)}
+                    disabled={isDeletingAttachment}
+                    aria-label="Remove"
+                    className="text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         )}

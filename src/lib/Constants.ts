@@ -1,5 +1,7 @@
 import { FooterColumn } from '@/components/layout/Footer/FooterColumn'
 import { LanguageLevel } from '@/features/myProfile/store/types'
+import { SessionStatus } from '@/features/scheduling/types/enums'
+import { SessionStatusConfig } from '@/features/sessions/components/ui/MeetingCard'
 import { NavItemConfig } from '@/types/nav'
 
 // features/auth/constants/passwordRules.ts
@@ -212,3 +214,28 @@ export const languageLevelLabels: Record<LanguageLevel, string> = {
 }
 
 export const SERVICE_FEE_PERCENT = 0.1
+
+export const SESSION_REPORT_REASONS = [
+  'Tutor No Show',
+  'Audio/Video Issues',
+  'Session Content Not As Described',
+  'Inappropriate Behavior',
+]
+
+export const SESSION_STATUS_CONFIG: Record<SessionStatus, SessionStatusConfig> = {
+  LOCKED: { label: 'Locked', badgeBg: 'bg-slate-100', badgeText: 'text-slate-600' },
+  PENDING_SCHEDULE: {
+    label: 'Ready to schedule',
+    badgeBg: 'bg-blue-100',
+    badgeText: 'text-[#2563EB]',
+  },
+  HELD: { label: 'Pending confirmation', badgeBg: 'bg-amber-100', badgeText: 'text-amber-700' },
+  BOOKED: { label: 'Booked', badgeBg: 'bg-emerald-100', badgeText: 'text-emerald-700' },
+  PENDING_REVIEW: {
+    label: 'Awaiting review',
+    badgeBg: 'bg-purple-100',
+    badgeText: 'text-purple-700',
+  },
+  COMPLETED: { label: 'Completed', badgeBg: 'bg-slate-200', badgeText: 'text-slate-700' },
+  CANCELLED: { label: 'Cancelled', badgeBg: 'bg-red-100', badgeText: 'text-red-700' },
+}

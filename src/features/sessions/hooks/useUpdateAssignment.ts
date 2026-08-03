@@ -2,11 +2,13 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { Assignment } from '../../scheduling/types/dto'
+import { uploadFileToStorage } from '../utils/uploadFile'
 
 export interface UpdateAssignmentInput {
   title?: string
   instructions?: string
   dueAt?: string
+  files?: File[]
 }
 
 async function updateAssignment(
@@ -14,7 +16,18 @@ async function updateAssignment(
   sessionId: string,
   input: UpdateAssignmentInput
 ): Promise<Assignment> {
-  const { data } = await api.patch(`/sessions/${sessionId}/assignment`, input)
+  const attachments = []
+  for (const file of input.files ?? []) {
+    const key = await uploadFileToStorage(api, file, 'assignment-attachment')
+    attachments.push({ key, fileName: file.name, mimeType: file.type })
+  }
+
+  const { data } = await api.patch(`/sessions/${sessionId}/assignment`, {
+    title: input.title,
+    instructions: input.instructions,
+    dueAt: input.dueAt,
+    attachments,
+  })
   return data
 }
 

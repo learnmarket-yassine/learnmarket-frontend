@@ -5,11 +5,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import EmptyState from '@/features/myProfile/components/ui/EmptyState'
 import MyProposalRow from './MyProposalRow'
 import LearnRequestPagination from '@/features/learn-requests/components/ui/LearnRequestPagination'
-import { ClipboardList } from 'lucide-react'
+import { EmptyPage } from '@/features/sessions/components/ui/EmptyPage'
+import { Button } from '@/components/ui/button'
 
-const EMPTY_STATE_COPY: Record<ProposalGroup, string> = {
-  ACTIVE: "You don't have any active proposals yet",
-  ARCHIVED: 'No archived proposals',
+const EMPTY_STATE_COPY = {
+  ACTIVE: "No active proposals yet. Once you send proposals to learners, they'll appear here.",
+  ARCHIVED:
+    "No archived proposals yet. Your previous proposals will appear here once they're closed or withdrawn.",
 }
 
 const MyProposalsList = ({
@@ -42,11 +44,18 @@ const MyProposalsList = ({
 
   if (proposals.length === 0) {
     return (
-      <EmptyState
-        icon={ClipboardList}
-        message={EMPTY_STATE_COPY[group]}
-        ctaLabel="Search for jobs"
-        onCta={() => navigate('/accueil')}
+      <EmptyPage
+        description={EMPTY_STATE_COPY[group]}
+        actionButton={
+          <Button
+            type="button"
+            onClick={() => navigate('/accueil')}
+            aria-label="Create Announcement"
+            className={`h-full border border-[#2563EB] bg-[#2563EB] p-3 text-white hover:bg-[#2563EB]`}
+          >
+            <span>Search for learn requests</span>
+          </Button>
+        }
       />
     )
   }
@@ -58,12 +67,9 @@ const MyProposalsList = ({
         {proposals.map((proposal) => (
           <MyProposalRow
             onSelect={() => {
-              // Once accepted, real sessions exist -- send the tutor to the
-              // Job details / Sessions stepper page instead of the plain
-              // pending-proposal view (which has no sessions to show).
               navigate(
                 proposal.status === 'ACCEPTED'
-                  ? `/jobs/${proposal.id}`
+                  ? `/requests/${proposal.id}`
                   : `/proposals/${proposal.id}`
               )
             }}

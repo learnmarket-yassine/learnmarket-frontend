@@ -4,6 +4,7 @@ import AuthImg from '@/assets/images/login.png'
 import { useStore } from '@/store/store'
 import { useEffect } from 'react'
 import useGetUser from '../../hooks/useGetUser'
+import Loader from '@/components/ui/Loader/Loader'
 
 type AuthLayoutProps = {
   children: React.ReactNode
@@ -20,7 +21,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
     }
   }, [auth, user, navigate, getUserQuery.isLoading, getUserQuery.data])
   return auth && !user ? (
-    <div className="flex h-full w-full items-center justify-center"> ...loading</div>
+    <Loader className="flex h-full w-full items-center justify-center" />
   ) : (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background */}

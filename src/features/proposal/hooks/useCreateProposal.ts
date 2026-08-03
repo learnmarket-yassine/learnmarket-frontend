@@ -3,6 +3,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ProposalFormValues } from '../schemas'
 import { AxiosInstance } from 'axios'
 import { isInsufficientSparksError } from '@/features/sparks/utils/errors'
+import { useState } from 'react'
 
 type CreateProposalPayload = {
   learnRequestId: string
@@ -19,6 +20,7 @@ const createProposal = async (
 }
 
 export default function useCreateProposal() {
+  const [InsufficientSparksState, setInsufficientSparksState] = useState(false)
   const queryClient = useQueryClient()
   const axiosPrivate = useAxiosPrivate()
   const createProposalMutation = useMutation({
@@ -26,6 +28,11 @@ export default function useCreateProposal() {
       createProposal(axiosPrivate, learnRequestId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['learn-requests'] })
+    },
+    onError: (error) => {
+      if (isInsufficientSparksError(error)) {
+        setInsufficientSparksState(true)
+      }
     },
   })
 
@@ -39,6 +46,7 @@ export default function useCreateProposal() {
   return {
     handleCreateProposal,
     isPending: createProposalMutation.isPending,
-    isInsufficientSparks: isInsufficientSparksError(createProposalMutation.error),
+    insufficientSparksState: InsufficientSparksState,
+    setInsufficientSparksState,
   }
 }

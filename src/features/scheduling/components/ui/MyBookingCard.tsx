@@ -17,11 +17,8 @@ function counterpartName(booking: MyBooking): string {
   return counterpart ? `${counterpart.firstname} ${counterpart.lastname}` : 'Unknown'
 }
 
-// A tutor's booking carries session.proposalId (-> /jobs/:id); a learner's
-// booking carries session.proposal.learnRequestId (-> /learn-requests/:id).
-// Only one is ever populated, matching whichever role fetched the list.
-function jobDetailsPath(booking: MyBooking): string | null {
-  if (booking.session?.proposalId) return `/jobs/${booking.session.proposalId}`
+function requestDetailsPath(booking: MyBooking): string | null {
+  if (booking.session?.proposalId) return `/requests/${booking.session.proposalId}`
   if (booking.session?.proposal?.learnRequestId) {
     return `/learn-requests/${booking.session.proposal.learnRequestId}`
   }
@@ -30,7 +27,7 @@ function jobDetailsPath(booking: MyBooking): string | null {
 
 const MyBookingCard: React.FC<BookingProps> = ({ booking, isUpcoming = false }) => {
   const navigate = useNavigate()
-  const joinPath = jobDetailsPath(booking)
+  const joinPath = requestDetailsPath(booking)
   return (
     <div
       key={booking.id}

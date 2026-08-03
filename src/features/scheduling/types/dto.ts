@@ -118,10 +118,6 @@ export interface MyBooking {
   startTime: string
   endTime: string
   sessionId: string | null
-  // proposalId is present for a tutor's own bookings (-> /jobs/:proposalId);
-  // proposal.learnRequestId is present for a learner's own bookings
-  // (-> /learn-requests/:learnRequestId). Only one side is ever populated,
-  // matching whichever of findConfirmedByTutor/findConfirmedByLearner ran.
   session: {
     title: string
     proposalId?: string
@@ -141,8 +137,6 @@ export interface LearnRequest {
   updatedAt: string
 }
 
-// The tutor's pitch, submitted before acceptance -- no status at all.
-// Session count before acceptance is contextual: sessionPlans.length.
 export interface ProposalSessionPlan {
   id: string
   proposalId: string
@@ -153,8 +147,6 @@ export interface ProposalSessionPlan {
   updatedAt: string
 }
 
-// The real, committed session -- created only once the Proposal is
-// accepted. Session count after acceptance is contextual: sessions.length.
 export interface Session {
   id: string
   proposalId: string
@@ -164,20 +156,15 @@ export interface Session {
   status: SessionStatus
   createdAt: string
   updatedAt: string
-  // Present when status is HELD (or was, until the next refetch catches up).
   slotHold?: SlotHold | null
 }
 
-// GET /sessions/:id/meeting -- shape already role-scoped server-side.
-// joinUrl is whichever of start_url/join_url is correct for the caller;
-// the frontend never distinguishes the two.
 export type MeetingDetails =
   | { status: 'not_provisioned'; canJoinYet: false }
   | {
       status: 'provisioned'
       canJoinYet: boolean
       joinUrl: string
-      password: string | null
     }
 
 export interface CommentAuthor {

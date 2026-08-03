@@ -51,7 +51,7 @@ export function DatePickerField({
             type="button"
             disabled={disabled}
             className={cn(
-              'border-inputBorder bg-inputBackground placeholder:text-placeholder flex h-10 w-full items-center gap-2 rounded-md border px-3 py-2 text-left text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+              'bg-inputBackground placeholder:text-placeholder flex h-10 w-full items-center gap-2 rounded-md border-[0.5px] border-[#9CA3AF] px-3 py-2 text-left text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
               !selected && 'text-placeholder',
               error && 'border-red-600 focus-visible:ring-transparent'
             )}

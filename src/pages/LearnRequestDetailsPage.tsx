@@ -6,11 +6,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LearnRequestProposalStep from '@/features/learn-requests/components/ui/LearnRequestProposalStep'
-import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
-import SessionsTab from '@/features/sessions/components/ui/SessionsTab'
 import CancelEngagementAction from '@/features/payments/components/CancelEngagementAction'
 import LeaveFeedbackButton from '@/features/feedback/components/ui/LeaveFeedbackButton'
 import { useStore } from '@/store/store'
+import BookingFlow from '@/features/scheduling/components/ui/BookingFlow'
+import SessionsFlow from '@/features/sessions/components/ui/SessionsFlow'
 
 const LearnRequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -45,7 +45,7 @@ const LearnRequestDetailsPage = () => {
     },
     {
       stepNumber: 4,
-      component: acceptedProposal ? <SessionsTab proposalId={acceptedProposal.id} /> : null,
+      component: acceptedProposal ? <SessionsFlow proposalId={acceptedProposal.id} /> : null,
       show: true,
       name: 'Sessions',
       enabled: !!acceptedProposal,

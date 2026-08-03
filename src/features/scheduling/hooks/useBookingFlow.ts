@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { useConfirmHold } from './useConfirmHold'
-import { findActionableSessions } from '../utils/sessions'
 import { Session, SlotHold } from '../types/dto'
 import { useReleaseHold } from './useReleaseHold'
 import { isHoldStillActive } from '../utils/holds'
@@ -9,11 +8,19 @@ export type BookingFlowState = { step: 'selecting' } | { step: 'holding'; hold: 
 
 const SELECTING: BookingFlowState = { step: 'selecting' }
 
-export function useBookingFlow(sessions: Session[]) {
-  const [selectedSessionId, setSelectedSessionId] = useState<string | undefined>(
-    () => findActionableSessions(sessions)[0]?.id
-  )
-  const [state, setState] = useState<BookingFlowState>(SELECTING)
+export function useBookingFlow(session: Session) {
+  const [state, setState] = useState<BookingFlowState>(() => {
+    const hold = session.slotHold
+
+    if (session.status === 'HELD' && hold && isHoldStillActive(hold)) {
+      return {
+        step: 'holding',
+        hold,
+      }
+    }
+
+    return SELECTING
+  })
 
   const {
     handleConfirmHold,
@@ -25,42 +32,32 @@ export function useBookingFlow(sessions: Session[]) {
   const releaseHold = useReleaseHold()
 
   const latestRef = useRef({ state, releaseHold })
+
   useEffect(() => {
-    latestRef.current = { state, releaseHold }
-  })
-
-  const actionableSessions = findActionableSessions(sessions)
-  const activeSession =
-    actionableSessions.find((session) => session.id === selectedSessionId) ?? actionableSessions[0]
-
-  const selectSlot = (hold: SlotHold) => setState({ step: 'holding', hold })
-
-  const backToSelecting = () => setState(SELECTING)
-
-  const selectSession = (sessionId: string) => {
-    if (sessionId === selectedSessionId) return
-
-    if (state.step === 'holding') {
-      releaseHold.mutate(state.hold.id)
+    latestRef.current = {
+      state,
+      releaseHold,
     }
-    setSelectedSessionId(sessionId)
+  }, [state, releaseHold])
 
-    const session = sessions.find((s) => s.id === sessionId)
-    const hold = session?.slotHold
-    if (session?.status === 'HELD' && hold && isHoldStillActive(hold)) {
-      setState({ step: 'holding', hold })
-    } else {
-      backToSelecting()
-    }
+  const selectSlot = (hold: SlotHold) => {
+    setState({
+      step: 'holding',
+      hold,
+    })
+  }
+
+  const backToSelecting = () => {
+    setState(SELECTING)
   }
 
   const confirm = async () => {
     if (state.step !== 'holding') return
+
     const attemptedHoldId = state.hold.id
+
     try {
       await handleConfirmHold(attemptedHoldId)
-    } catch {
-      /* empty */
     } finally {
       setState((current) =>
         current.step === 'holding' && current.hold.id === attemptedHoldId ? SELECTING : current
@@ -69,13 +66,17 @@ export function useBookingFlow(sessions: Session[]) {
   }
 
   const chooseDifferentTime = () => {
-    if (state.step === 'holding') releaseHold.mutate(state.hold.id)
+    if (state.step === 'holding') {
+      releaseHold.mutate(state.hold.id)
+    }
+
     backToSelecting()
   }
 
   useEffect(() => {
     return () => {
       const latest = latestRef.current
+
       if (latest.state.step === 'holding') {
         latest.releaseHold.mutate(latest.state.hold.id)
       }
@@ -84,9 +85,7 @@ export function useBookingFlow(sessions: Session[]) {
 
   return {
     state,
-    activeSession,
     isConfirming: isConfirmHoldPending,
-    selectSession,
     selectSlot,
     confirm,
     chooseDifferentTime,

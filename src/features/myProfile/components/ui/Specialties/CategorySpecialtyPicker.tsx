@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Specialty } from '@/types/category'
 import useCategories from '@/hooks/useCategories'
@@ -9,6 +8,7 @@ import LoadingRow from '../Skills/LoadingRow'
 import CategoryListItem from './CategoryListItem'
 import SpecialtyCheckboxOption from './SpecialtyCheckboxOption'
 import SpecialtyPickerFooter from './SpecialtyPickerFooter'
+import Loader from '@/components/ui/Loader/Loader'
 
 interface CategorySpecialtyPickerProps {
   value: Specialty[]
@@ -100,9 +100,7 @@ function CategorySpecialtyPicker({
           <p className="text-xs font-bold uppercase text-[#9CA3AF]">SELECT CATEGORY</p>
           <div className="flex flex-1 flex-col">
             {isLoading ? (
-              <div className="flex flex-1 items-center">
-                <Loader2 className="size-5 animate-spin text-[#5E5E5E]" aria-hidden="true" />
-              </div>
+              <Loader className="flex h-full w-full items-center justify-center" />
             ) : loadError ? (
               <div className="flex flex-1 items-center">
                 <p className="text-sm text-red-600" role="alert">
@@ -137,7 +135,7 @@ function CategorySpecialtyPicker({
             </div>
           ) : isLoadingSpecialties ? (
             <div className="flex flex-1 items-center">
-              <Loader2 className="size-5 animate-spin text-[#5E5E5E]" aria-hidden="true" />
+              <Loader className="flex h-full w-full items-center justify-center" />
             </div>
           ) : specialtiesLoadError ? (
             <div className="flex flex-1 items-center">

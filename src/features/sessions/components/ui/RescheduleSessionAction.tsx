@@ -8,7 +8,7 @@ import { CalendarSync, CalendarX } from 'lucide-react'
 import { useStore } from '@/store/store'
 import { cn } from '@/lib/utils'
 
-const RESCHEDULE_CUTOFF_HOURS = 2
+export const RESCHEDULE_CUTOFF_HOURS = 2
 
 interface RescheduleSessionActionProps {
   sessionId: string

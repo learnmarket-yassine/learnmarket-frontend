@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Paperclip, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RichTextEditor } from '@/components/ui/rich-text-editor'
@@ -18,6 +18,7 @@ import { Announcement } from '@/features/scheduling/types/dto'
 import { CreateAnnouncementFormData, CreateAnnouncementSchema } from '../../schemas'
 import useCreateAnnouncement from '../../hooks/useCreateAnnouncement'
 import useUpdateAnnouncement from '../../hooks/useUpdateAnnouncement'
+import FileUpload from '@/components/ui/FileUploader'
 
 type AnnouncementModalProps = {
   sessionId: string
@@ -49,7 +50,7 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
 
   const onSubmit: SubmitHandler<CreateAnnouncementFormData> = async (data) => {
     if (isEditMode) {
-      await handleUpdate({ announcementId: announcement.id, content: data.content })
+      await handleUpdate({ announcementId: announcement.id, content: data.content, files })
     } else {
       await handleCreate({ content: data.content, files })
     }
@@ -68,12 +69,12 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
             className={`h-full border border-[#2563EB] p-3 text-[#2563EB]`}
           >
             <PlusIcon className="size-4 text-[#2563EB]" />
-            <span>New Announcement</span>
+            <span>Create Announcement</span>
           </Button>
         )}
       </DialogTrigger>
       <DialogContent
-        className="flex h-[500px] w-[400px] flex-col space-y-6 sm:w-[425px] sm:min-w-[600px]"
+        className="flex w-[400px] flex-col sm:w-[425px] sm:min-w-[600px]"
         style={{
           boxShadow: '0px 0px 10px 0px rgba(255, 255, 255, 0.80)',
         }}
@@ -81,8 +82,8 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
         <DialogHeader>
           <DialogTitle>
             <div className="flex w-full items-center justify-between">
-              <span className="text-4xl font-bold text-[#143681]">
-                {isEditMode ? 'Edit Announcement' : 'New Announcement'}
+              <span className="text-2xl text-[#143681]">
+                {isEditMode ? 'Edit Announcement' : 'Create Announcement'}
               </span>
               <button type="button" onClick={() => setIsOpen(false)}>
                 <X className="size-9" />
@@ -92,7 +93,7 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
         </DialogHeader>
 
         <form
-          className="flex flex-1 flex-col overflow-hidden"
+          className="flex flex-1 flex-col gap-5 overflow-hidden"
           onSubmit={(e) => {
             e.preventDefault()
             handleSubmit(onSubmit)(e)
@@ -101,7 +102,7 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
         >
           <div className="flex-1 space-y-4 overflow-y-auto">
             <div className="flex flex-col gap-2">
-              <Label className="text-base font-bold">Message</Label>
+              <Label className="text-base">Message</Label>
               <Controller
                 name="content"
                 control={control}
@@ -111,46 +112,42 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
                     onChange={field.onChange}
                     onBlur={field.onBlur}
                     placeholder="Share an update with the class…"
-                    contentClassName="min-h-[220px]"
+                    className="border-[0.5px] border-[#9CA3AF]"
+                    contentClassName="min-h-[120px]"
                     error={formState.errors.content?.message}
                   />
                 )}
               />
             </div>
 
-            {!isEditMode && (
-              <div className="flex flex-col gap-2">
-                <label className="flex w-fit cursor-pointer items-center gap-2 text-sm font-medium text-[#2563EB]">
-                  <Paperclip className="size-4" />
-                  Attach files
-                  <input
-                    type="file"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-                  />
-                </label>
-                {files.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {files.map((file, idx) => (
-                      <span
-                        key={`${file.name}-${idx}`}
-                        className="flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-xs text-[#374151]"
+            <div className="flex flex-col gap-2">
+              <FileUpload
+                accept={['application/pdf']}
+                maxSizeMB={25}
+                resetAfterUpload
+                uploadFn={(file) => Promise.resolve(file)}
+                onUploaded={(file) => setFiles((prev) => [...prev, file])}
+              />
+              {files.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {files.map((file, idx) => (
+                    <span
+                      key={`${file.name}-${idx}`}
+                      className="flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-xs text-[#374151]"
+                    >
+                      {file.name}
+                      <button
+                        type="button"
+                        onClick={() => setFiles((prev) => prev.filter((_, i) => i !== idx))}
+                        aria-label="Remove file"
                       >
-                        {file.name}
-                        <button
-                          type="button"
-                          onClick={() => setFiles((prev) => prev.filter((_, i) => i !== idx))}
-                          aria-label="Remove file"
-                        >
-                          <X className="size-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+                        <X className="size-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3">
@@ -166,7 +163,7 @@ function AnnouncementModal({ sessionId, announcement }: AnnouncementModalProps) 
               disabled={isPending}
               className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isPending ? 'Saving…' : isEditMode ? 'Save changes' : 'Post'}
+              {isPending ? 'Saving…' : isEditMode ? 'Save changes' : 'Save'}
             </Button>
           </div>
         </form>

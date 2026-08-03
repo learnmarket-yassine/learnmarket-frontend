@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import TutorLearningRequestCard from './TutorLearningRequestCard'
 import LearningRequestDetailsSheet from './LearningRequestDetailsSheet'
 import { useEffect, useState } from 'react'
+import Loader from '@/components/ui/Loader/Loader'
 
 type TutorLearningRequestListProps = {
   learnRequests: LearnRequest[]
@@ -29,7 +30,7 @@ const TutorLearningRequestList = ({
     if (isSheetOpen && !selectedRequest) setIsSheetOpen(false)
   }, [isSheetOpen, selectedRequest])
 
-  if (isLoading) return <p>...loading</p>
+  if (isLoading) return <Loader className="flex h-full w-full items-center justify-center" />
 
   if (isError || learnRequests.length <= 0)
     return (
