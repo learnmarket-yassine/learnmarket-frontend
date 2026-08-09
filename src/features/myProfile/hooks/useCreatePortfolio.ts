@@ -3,6 +3,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { PortfolioFormValues } from '../schemas'
 import { PortfolioItem } from '../store/types'
 import { flattenSkills } from '../utils/normalizeSkills'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useCreatePortfolio = () => {
   const queryClient = useQueryClient()
@@ -18,6 +19,10 @@ const useCreatePortfolio = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Portfolio item added.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to add portfolio item. Please try again.' })
     },
   })
 }

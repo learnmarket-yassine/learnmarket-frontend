@@ -1,6 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation } from '@tanstack/react-query'
 import { SparksPurchaseIntent } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export default function useCreateSparksPurchaseIntent() {
   const axiosPrivate = useAxiosPrivate()
@@ -11,6 +12,12 @@ export default function useCreateSparksPurchaseIntent() {
         offerId,
       })
       return response.data
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to prepare your Sparks purchase. Please try again.',
+      })
     },
   })
 }

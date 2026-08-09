@@ -1,6 +1,7 @@
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const deleteAnnouncementAttachment = async (
   api: AxiosInstance,
@@ -19,6 +20,10 @@ export default function useDeleteAnnouncementAttachment(sessionId: string, annou
       deleteAnnouncementAttachment(axiosPrivate, announcementId, attachmentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'announcements'] })
+      ToastMessage({ type: 'success', message: 'Attachment deleted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to delete attachment. Please try again.' })
     },
   })
 

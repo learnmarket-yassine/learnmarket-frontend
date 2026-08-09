@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export default function useConnectPayoutAccount() {
   const axiosPrivate = useAxiosPrivate()
@@ -11,6 +12,12 @@ export default function useConnectPayoutAccount() {
     },
     onSuccess: (data) => {
       window.location.href = data.url
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to connect your payout account. Please try again.',
+      })
     },
   })
 }

@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useStore } from '@/store/store'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type RemovePortfolioMediaVariables = {
   itemId: string
@@ -33,6 +34,10 @@ const useRemovePortfolioMedia = () => {
           ),
         },
       })
+      ToastMessage({ type: 'success', message: 'File deleted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to delete file. Please try again.' })
     },
   })
 }

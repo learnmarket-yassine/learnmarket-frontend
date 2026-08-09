@@ -2,6 +2,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosInstance } from 'axios'
 import { SubmissionAttachment } from '../../scheduling/types/dto'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 interface PresignResponse {
   key: string
@@ -44,6 +45,10 @@ export default function useUploadSubmissionAttachment(sessionId: string, assignm
     mutationFn: (file: File) => uploadSubmissionFile(axiosPrivate, assignmentId, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session', sessionId, 'assignment'] })
+      ToastMessage({ type: 'success', message: 'Attachment uploaded.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to upload attachment. Please try again.' })
     },
   })
 

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { Feedback, SubmitFeedbackInput } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export default function useSubmitFeedback(proposalId: string, aboutUserId?: string) {
   const axiosPrivate = useAxiosPrivate()
@@ -16,6 +17,10 @@ export default function useSubmitFeedback(proposalId: string, aboutUserId?: stri
       if (aboutUserId) {
         queryClient.invalidateQueries({ queryKey: ['tutors', aboutUserId, 'rating'] })
       }
+      ToastMessage({ type: 'success', message: 'Feedback submitted.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to submit feedback. Please try again.' })
     },
   })
 

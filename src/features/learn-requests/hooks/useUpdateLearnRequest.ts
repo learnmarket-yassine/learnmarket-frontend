@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { LearnRequest, UpdateLearnRequestPayload } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type Variables = { id: string; payload: UpdateLearnRequestPayload }
 
@@ -16,6 +17,13 @@ const useUpdateLearnRequest = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['learnRequest', data.id] })
       queryClient.invalidateQueries({ queryKey: ['myLearnRequests'] })
+      ToastMessage({ type: 'success', message: 'Learning request updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update the learning request. Please try again.',
+      })
     },
   })
 }

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { AddLanguageFormData } from '../schemas'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type EditLanguageVariables = {
   id: string
@@ -23,6 +24,10 @@ const useEditLanguage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Language updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update language. Please try again.' })
     },
   })
 }

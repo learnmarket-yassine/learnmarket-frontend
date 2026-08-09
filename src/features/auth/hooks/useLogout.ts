@@ -2,6 +2,7 @@ import axios from '@/lib/api/client'
 import { useStore } from '@/store/store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useLogout = () => {
   const setUser = useStore((state) => state.auth.setUser)
@@ -28,7 +29,11 @@ const useLogout = () => {
       setAuthenticationResult(null)
       setFormStep(1)
       queryClient.clear()
+      ToastMessage({ type: 'success', message: 'You have been logged out.' })
       navigate('/')
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to log you out. Please try again.' })
     },
   })
 }

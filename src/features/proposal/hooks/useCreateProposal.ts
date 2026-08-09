@@ -4,6 +4,7 @@ import { ProposalFormValues } from '../schemas'
 import { AxiosInstance } from 'axios'
 import { isInsufficientSparksError } from '@/features/sparks/utils/errors'
 import { useState } from 'react'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type CreateProposalPayload = {
   learnRequestId: string
@@ -28,10 +29,13 @@ export default function useCreateProposal() {
       createProposal(axiosPrivate, learnRequestId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['learn-requests'] })
+      ToastMessage({ type: 'success', message: 'Proposal submitted.' })
     },
     onError: (error) => {
       if (isInsufficientSparksError(error)) {
         setInsufficientSparksState(true)
+      } else {
+        ToastMessage({ type: 'error', message: 'Failed to submit proposal. Please try again.' })
       }
     },
   })

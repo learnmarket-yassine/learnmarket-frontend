@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { EducationFormData } from '../schemas'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type EditEducationVariables = {
   id: string
@@ -26,6 +27,13 @@ const useEditEducation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Education entry updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update education entry. Please try again.',
+      })
     },
   })
 }

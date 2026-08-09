@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store/store'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { EducationFormData } from '../schemas'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useCreateEducation = () => {
   const queryClient = useQueryClient()
@@ -18,6 +19,10 @@ const useCreateEducation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Education entry added.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to add education entry. Please try again.' })
     },
   })
 }

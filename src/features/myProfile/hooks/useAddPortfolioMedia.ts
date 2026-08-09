@@ -3,6 +3,7 @@ import type { AxiosInstance } from 'axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ContentItem } from '@/components/ui/MediaBlock'
 import { PortfolioMedia } from '../store/types'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type PresignResponse = {
   key: string
@@ -77,6 +78,10 @@ const useAddPortfolioMedia = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'File uploaded.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to upload file. Please try again.' })
     },
   })
 }

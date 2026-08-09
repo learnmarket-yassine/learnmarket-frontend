@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 export interface CheckoutIntent {
   clientSecret: string | null
@@ -19,6 +20,9 @@ export default function useCreateCheckout() {
     mutationFn: async (proposalId: string) => {
       const response = await axiosPrivate.post<CheckoutIntent>(`/proposals/${proposalId}/checkout`)
       return response.data
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to start checkout. Please try again.' })
     },
   })
 }

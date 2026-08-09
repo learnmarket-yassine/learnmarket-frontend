@@ -3,6 +3,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { PortfolioFormValues } from '../schemas'
 import { PortfolioItem } from '../store/types'
 import { flattenSkills } from '../utils/normalizeSkills'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 type EditPortfolioVariables = {
   id: string
@@ -23,6 +24,13 @@ const useEditPortfolio = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Portfolio item updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update portfolio item. Please try again.',
+      })
     },
   })
 }

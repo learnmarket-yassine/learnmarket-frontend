@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { Specialty } from '@/types/category'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const useReplaceTutorSpecialties = () => {
   const queryClient = useQueryClient()
@@ -15,6 +16,10 @@ const useReplaceTutorSpecialties = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+      ToastMessage({ type: 'success', message: 'Specialties updated.' })
+    },
+    onError: () => {
+      ToastMessage({ type: 'error', message: 'Failed to update specialties. Please try again.' })
     },
   })
 }

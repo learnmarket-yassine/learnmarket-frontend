@@ -2,6 +2,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UpdateAvailabilityExceptionInput } from '../types/dto'
 import { AxiosInstance } from 'axios'
+import ToastMessage from '@/components/layout/ToastMessage'
 
 const updateAvailabilityException = async (
   axiosPrivate: AxiosInstance,
@@ -18,6 +19,15 @@ export default function useUpdateAvailabilityException() {
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: UpdateAvailabilityExceptionInput }) =>
       updateAvailabilityException(axiosPrivate, id, input),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['availabilityExceptions'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availabilityExceptions'] })
+      ToastMessage({ type: 'success', message: 'Your availability exception has been updated.' })
+    },
+    onError: () => {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to update the availability exception. Please try again.',
+      })
+    },
   })
 }
