@@ -59,38 +59,40 @@ const AssignmentCard = ({ sessionId, isTutor, assignment }: AssignmentCardProps)
       <div className="p-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-semibold">{assignment.title}</h2>
-          <div className="flex items-center gap-1">
-            {isTutor && !isExcused && assignment.submission.status !== 'SUBMITTED' && (
-              <ConfirmModal
-                name="excuse learner"
-                type="inactive"
-                title="Excuse learner from this assignment?"
-                description="This will mark the learner as excused, meaning they will no longer be required to submit this assignment. Use this only when submission is no longer expected."
-                handleConfirm={async (e) => {
-                  e.stopPropagation()
-                  await handleExcuse()
-                }}
-                isLoading={isExcusing}
-                isOpen={isActivateModalOpen}
-                setIsOpen={() => setIsActivateModalOpen(!isActivateModalOpen)}
-                buttonClassName="h-10 w-10 flex !rounded-full items-center justify-center rounded-full border border-[#2563EB] text-[#2563EB]"
-              />
-            )}
-            {isAssigned && <AssignmentModal sessionId={sessionId} assignment={assignment} />}
-            {canDelete && (
-              <ConfirmModal
-                name="assignment"
-                type="delete"
-                title="Delete assignment"
-                description="Are you sure you want to delete this assignment?"
-                handleConfirm={() => {
-                  handleDeleteAssignment()
-                }}
-                buttonClassName="border-none"
-                isLoading={isDeletingAssignment}
-              />
-            )}
-          </div>
+          {isTutor && (
+            <div className="flex items-center gap-1">
+              {!isExcused && assignment.submission.status !== 'SUBMITTED' && (
+                <ConfirmModal
+                  name="excuse learner"
+                  type="inactive"
+                  title="Excuse learner from this assignment?"
+                  description="This will mark the learner as excused, meaning they will no longer be required to submit this assignment. Use this only when submission is no longer expected."
+                  handleConfirm={async (e) => {
+                    e.stopPropagation()
+                    await handleExcuse()
+                  }}
+                  isLoading={isExcusing}
+                  isOpen={isActivateModalOpen}
+                  setIsOpen={() => setIsActivateModalOpen(!isActivateModalOpen)}
+                  buttonClassName="h-10 w-10 flex !rounded-full items-center justify-center rounded-full border border-[#2563EB] text-[#2563EB]"
+                />
+              )}
+              {isAssigned && <AssignmentModal sessionId={sessionId} assignment={assignment} />}
+              {canDelete && (
+                <ConfirmModal
+                  name="assignment"
+                  type="delete"
+                  title="Delete assignment"
+                  description="Are you sure you want to delete this assignment?"
+                  handleConfirm={() => {
+                    handleDeleteAssignment()
+                  }}
+                  buttonClassName="border-none"
+                  isLoading={isDeletingAssignment}
+                />
+              )}
+            </div>
+          )}
         </div>
         {assignment.dueAt && (
           <p className="text-base font-medium leading-snug">

@@ -41,7 +41,7 @@ const SessionDetailPage = () => {
       stepNumber: 2,
       component: <AssignmentsTab sessionId={sessionId} isTutor={context.isTutor} />,
       show: true,
-      name: 'Session announcement',
+      name: 'Session assignments',
       enabled: true,
     },
     {

@@ -60,7 +60,8 @@ const HireProposalAction = ({
         setIsOpen={(next) => setIsConfirmOpen(!!next)}
         title="Hire this tutor?"
         description={`Hiring ${tutorName} will close this request and decline all other pending proposals. You'll be asked to pay the full amount now.`}
-        handleConfirm={async () => {
+        handleConfirm={async (e) => {
+          e.stopPropagation()
           const result = await createCheckout.mutateAsync(proposalId)
           setIsConfirmOpen(false)
           if (result.clientSecret) {
