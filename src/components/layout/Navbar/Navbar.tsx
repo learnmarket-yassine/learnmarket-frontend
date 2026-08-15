@@ -8,10 +8,9 @@ import useLogout from '@/features/auth/hooks/useLogout'
 
 interface NavbarProps {
   user: UserProfile
-  notificationCount?: number
 }
 
-function Navbar({ user, notificationCount = 0 }: NavbarProps) {
+function Navbar({ user }: NavbarProps) {
   const logout = useLogout()
   const navigate = useNavigate()
   return (
@@ -23,7 +22,6 @@ function Navbar({ user, notificationCount = 0 }: NavbarProps) {
         <SearchBar onSearch={(q) => console.log('Search:', q)} className="hidden sm:flex" />
         <NavActions
           user={user}
-          notificationCount={notificationCount}
           onNavigate={(path) => navigate(path)}
           onLogout={() => logout.mutate()}
         />

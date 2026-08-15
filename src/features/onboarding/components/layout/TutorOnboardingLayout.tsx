@@ -19,7 +19,6 @@ const TutorOnboardingLayout = ({ children }: TutorOnboardingLayoutProps) => {
             isOnline: user?.isOnlineForMsg,
             avatarUrl: getAssetUrl(user?.avatar),
           }}
-          notificationCount={2}
         />
       )}
 
