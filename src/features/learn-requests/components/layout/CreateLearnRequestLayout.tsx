@@ -19,7 +19,6 @@ const CreateLearnRequestLayout = ({ children }: CreateLearnRequestLayoutProps) =
             isOnline: user?.isOnlineForMsg,
             avatarUrl: getAssetUrl(user?.avatar),
           }}
-          notificationCount={2}
         />
       )}
 

@@ -9,10 +9,7 @@ const MyProfileLayout = ({ children }: MyProfileLayoutProps) => {
   return (
     <div className="min-h-screen">
       {/* ── Sticky navigation ──────────────────────────────────────────── */}
-      <Navbar
-        user={{ name: 'Amine Ben Khaled', role: 'Teacher', isOnline: true }}
-        notificationCount={2}
-      />
+      <Navbar user={{ name: 'Amine Ben Khaled', role: 'Teacher', isOnline: true }} />
 
       {/* ── Page content ───────────────────────────────────────────────── */}
       <main className="container px-4 py-8 sm:px-6 lg:px-8">
