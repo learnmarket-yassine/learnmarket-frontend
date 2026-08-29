@@ -1,16 +1,11 @@
-import { useState } from 'react'
-import { Education, Language, AvailabilitySlotValue } from '../../store/types'
+import { Education, Language } from '../../store/types'
 import CreateLanguageForm from '../ui/CreateLanguageForm'
 import EditLanguagesForm from '../ui/EditLanguagesForm'
-import AvailabilityCircleGrid from '../ui/AvailabilityCircleGrid'
 import EducationForm from '../ui/EducationForm'
-import EditButton from '../ui/EditButton'
-import { Button } from '@/components/ui/button'
 import { languageLevelLabels } from '@/lib/Constants'
 import { AuthUser } from '@/features/auth/store/types'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 import useDeleteEducation from '../../hooks/useDeleteEducation'
-import useUpdateLearnerAvailability from '../../hooks/useUpdateLearnerAvailability'
 
 interface LearnerProfileLeftSidebarProps {
   myProfile: AuthUser
@@ -18,27 +13,6 @@ interface LearnerProfileLeftSidebarProps {
 
 function LearnerProfileLeftSidebar({ myProfile }: LearnerProfileLeftSidebarProps) {
   const { handleDeleteEducation, isPending: loadingDeleteEducation } = useDeleteEducation()
-  const { mutate: updateAvailabilityMutation, isPending: savingAvailability } =
-    useUpdateLearnerAvailability()
-  const availability = myProfile.learnerProfile?.availability ?? []
-
-  const [isEditingAvailability, setIsEditingAvailability] = useState(false)
-  const [availabilityDraft, setAvailabilityDraft] = useState<AvailabilitySlotValue[]>(availability)
-
-  const handleEditAvailabilityClick = () => {
-    setAvailabilityDraft(availability)
-    setIsEditingAvailability(true)
-  }
-
-  const handleCancelAvailability = () => {
-    setIsEditingAvailability(false)
-  }
-
-  const handleSaveAvailability = () => {
-    updateAvailabilityMutation(availabilityDraft, {
-      onSuccess: () => setIsEditingAvailability(false),
-    })
-  }
 
   return (
     <div className="flex flex-col bg-white p-8">

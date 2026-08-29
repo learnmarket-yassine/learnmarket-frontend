@@ -1,7 +1,5 @@
 import { Badge } from '@/components/ui/badge'
 import HeadlineForm from '../ui/HeadLineForm'
-import PortfolioForm from '../ui/PortfolioForm'
-import PortfolioList from '../ui/PortfolioList'
 import OverviewForm from '../ui/OverviewForm'
 import { AuthUser } from '@/features/auth/store/types'
 import SkillsForm from '../ui/SkillsForm'
