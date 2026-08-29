@@ -3,9 +3,6 @@ import { useStore } from '@/store/store'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
-// Shared across all callers so concurrent 401s/missing-token requests (e.g. several
-// queries refetching at once on window focus) await a single refresh call instead of
-// each firing their own -- avoids a refresh storm where the token/auth state flaps.
 let refreshPromise: Promise<{ token: string }> | null = null
 
 const useRefreshToken = () => {
@@ -36,7 +33,7 @@ const useRefreshToken = () => {
     retry: false, // Disable retry on failure
   })
 
-  return getNewAccessToken // This is now an async function that must be explicitly called
+  return getNewAccessToken
 }
 
 export default useRefreshToken

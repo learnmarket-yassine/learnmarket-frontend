@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Bold, Italic, List, ListOrdered, Strikethrough } from 'lucide-react'
 import { EditorContent, useEditor, type Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -111,6 +112,13 @@ export function RichTextEditor({
       },
     },
   })
+
+  useEffect(() => {
+    if (!editor) return
+    if (value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false })
+    }
+  }, [value, editor])
 
   return (
     <div className="relative w-full">

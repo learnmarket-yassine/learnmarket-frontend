@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
+import { Controller } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { DetailsFormData, detailsSchema } from '@/features/learn-requests/schemas'
 import { StepHandle } from '@/features/learn-requests/store/types'
 import { useDraftStepForm } from '@/features/learn-requests/hooks/useDraftStepForm'
@@ -13,7 +14,7 @@ type DetailsStepProps = {
 
 const DetailsStep = forwardRef<StepHandle, DetailsStepProps>(
   ({ draftId, defaultDescription, onValidityChange }, ref) => {
-    const { register, formState } = useDraftStepForm<DetailsFormData>({
+    const { control, formState } = useDraftStepForm<DetailsFormData>({
       ref,
       schema: detailsSchema,
       draftId,
@@ -39,16 +40,21 @@ const DetailsStep = forwardRef<StepHandle, DetailsStepProps>(
             >
               Description
             </Label>
-            <Textarea
-              id="learn-request-description"
-              rows={8}
-              placeholder="What do you want to learn, and why?"
-              className="rounded-2xl border border-[#D1D5DB] bg-white"
-              {...register('description')}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="What do you want to learn, and why?"
+                  className="rounded-2xl border border-[#D1D5DB] bg-white"
+                  contentClassName="min-h-[180px]"
+                  error={errors.description?.message}
+                />
+              )}
             />
-            {errors.description && (
-              <p className="text-xs text-red-600">{errors.description.message}</p>
-            )}
           </div>
         </div>
       </div>

@@ -1,16 +1,11 @@
-import { useState } from 'react'
-import { Education, Language, AvailabilitySlotValue } from '../../store/types'
+import { Education, Language } from '../../store/types'
 import CreateLanguageForm from '../ui/CreateLanguageForm'
 import EditLanguagesForm from '../ui/EditLanguagesForm'
-import AvailabilityCircleGrid from '../ui/AvailabilityCircleGrid'
 import EducationForm from '../ui/EducationForm'
-import EditButton from '../ui/EditButton'
-import { Button } from '@/components/ui/button'
 import { languageLevelLabels } from '@/lib/Constants'
 import { AuthUser } from '@/features/auth/store/types'
 import ConfirmModal from '@/components/layout/ConfirmModal'
 import useDeleteEducation from '../../hooks/useDeleteEducation'
-import useUpdateLearnerAvailability from '../../hooks/useUpdateLearnerAvailability'
 
 interface LearnerProfileLeftSidebarProps {
   myProfile: AuthUser
@@ -18,27 +13,6 @@ interface LearnerProfileLeftSidebarProps {
 
 function LearnerProfileLeftSidebar({ myProfile }: LearnerProfileLeftSidebarProps) {
   const { handleDeleteEducation, isPending: loadingDeleteEducation } = useDeleteEducation()
-  const { mutate: updateAvailabilityMutation, isPending: savingAvailability } =
-    useUpdateLearnerAvailability()
-  const availability = myProfile.learnerProfile?.availability ?? []
-
-  const [isEditingAvailability, setIsEditingAvailability] = useState(false)
-  const [availabilityDraft, setAvailabilityDraft] = useState<AvailabilitySlotValue[]>(availability)
-
-  const handleEditAvailabilityClick = () => {
-    setAvailabilityDraft(availability)
-    setIsEditingAvailability(true)
-  }
-
-  const handleCancelAvailability = () => {
-    setIsEditingAvailability(false)
-  }
-
-  const handleSaveAvailability = () => {
-    updateAvailabilityMutation(availabilityDraft, {
-      onSuccess: () => setIsEditingAvailability(false),
-    })
-  }
 
   return (
     <div className="flex flex-col bg-white p-8">
@@ -90,40 +64,6 @@ function LearnerProfileLeftSidebar({ myProfile }: LearnerProfileLeftSidebarProps
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Availability */}
-      <div className="space-y-4 px-5 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold text-[#143681]">Availability</p>
-          <EditButton label="edit availability" onClick={handleEditAvailabilityClick} />
-        </div>
-        <div className="space-y-4">
-          <AvailabilityCircleGrid
-            value={isEditingAvailability ? availabilityDraft : availability}
-            onChange={setAvailabilityDraft}
-            editable={isEditingAvailability}
-          />
-          {isEditingAvailability && (
-            <div className="flex justify-end gap-3">
-              <Button
-                type="button"
-                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
-                onClick={handleCancelAvailability}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
-                onClick={handleSaveAvailability}
-                disabled={savingAvailability}
-              >
-                Save
-              </Button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   )

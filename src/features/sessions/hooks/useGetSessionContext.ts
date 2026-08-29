@@ -16,8 +16,10 @@ export interface SessionContext {
   summary: string | null
   summarySubmittedAt: string | null
   learnerConfirmedAt: string | null
-  disputeReason: string | null
-  disputedAt: string | null
+  dispute: {
+    reason: string
+    raisedAt: string
+  } | null
   booking: { id: string; status: BookingStatus; startTime: string; endTime: string } | null
 }
 

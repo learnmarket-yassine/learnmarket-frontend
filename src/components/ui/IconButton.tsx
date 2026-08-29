@@ -16,6 +16,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const button = (
       <Button
         ref={ref}
+        type="button"
         variant="ghost"
         size="icon"
         aria-label={label}
@@ -39,12 +40,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     if (!disabled || !disabledReason) return button
 
     return (
-      // Self-contained provider so this works regardless of whether an
-      // ancestor already mounts one (nested providers are harmless in Radix).
       <TooltipProvider>
         <Tooltip>
-          {/* Native `disabled` buttons don't reliably fire hover/focus events
-              for the tooltip trigger, so wrap in a focusable span. */}
           <TooltipTrigger asChild>
             <span tabIndex={0} className="inline-flex cursor-not-allowed">
               {button}

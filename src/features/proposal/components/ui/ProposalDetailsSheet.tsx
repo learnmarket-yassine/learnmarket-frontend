@@ -9,9 +9,7 @@ import { PAYOUT_METHOD_LABELS } from '../../constants/labels'
 import { LearnRequestStatus } from '@/features/learn-requests/store/types'
 import HireProposalAction from './HireProposalAction'
 import { Button } from '@/components/ui/button'
-import CoverLetterSection from './ProposalCoverLetterSection'
 import ProposalSessionsSection from './ProposalSessionsSection'
-import CustomTabToggle from './CustomTabToggle'
 import ProposalSessionObjective from './ProposalSessionObjective'
 import ReactPlayer from 'react-player/youtube'
 import { languageLevelLabels } from '@/lib/Constants'
@@ -21,6 +19,7 @@ import SendMessageModal from '@/features/messaging/components/ui/SendMessageModa
 import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedBadge'
 import useGetConversations from '@/features/messaging/hooks/useGetConversations'
 import useToggleShortlistProposal from '@/features/learn-requests/hooks/useToggleShortlistProposal'
+import RichTextContent from '@/components/ui/rich-text-content'
 
 type ProposalDetailsSheetProps = {
   isOpen?: boolean
@@ -37,24 +36,6 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
   learnRequestId,
   learnRequestStatus,
 }) => {
-  const steps = [
-    {
-      stepNumber: 1,
-      component: <CoverLetterSection message={proposal?.message} />,
-      show: true,
-      name: 'cover letter',
-      enabled: true,
-    },
-    {
-      stepNumber: 2,
-      component: <ProposalSessionsSection sessions={proposal?.sessionPlans} />,
-      show: true,
-      name: 'sessions',
-      enabled: true,
-    },
-  ]
-
-  const [detailsSection, setDetailsSection] = useState(1)
   const [isMessageOpen, setIsMessageOpen] = useState(false)
   const navigate = useNavigate()
   const { data: conversations } = useGetConversations()
@@ -70,12 +51,15 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
     day: 'numeric',
     year: 'numeric',
   })
-  const currentStep = steps.find((step) => step.stepNumber === detailsSection)
 
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent showCloseButton={false} side={'right'} className="min-w-[1020px] !border-0">
+        <SheetContent
+          showCloseButton={false}
+          side={'right'}
+          className="w-full min-w-[1020px] !border-0"
+        >
           <SheetHeader className="border-b-[0.5px] border-b-[#E0E2E6] p-5">
             <SheetTitle>
               <button type="button" onClick={() => setIsOpen?.(false)} aria-label="Close">
@@ -149,30 +133,14 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                 />
               </div>
             </div>
-            <div className="flex">
-              <div className="flex w-[300px] shrink-0 flex-col border-r border-[#E0E2E6] p-5">
-                <CustomTabToggle
-                  selected={detailsSection}
-                  setSelected={setDetailsSection}
-                  steps={steps}
-                />
-              </div>
-              <div className="w-full space-y-5 p-6">
-                <div className="flex w-full items-center justify-between">
-                  <h1 className="text-xl font-bold">Proposal Details</h1>
-                  <div className="flex items-center gap-6">
-                    <p className="text-base font-bold">{formatBudget(proposal.totalPrice)} TND</p>
-                    <div className="flex items-center gap-2 font-bold">
-                      <Wallet className="size-4 text-[#143681]" />
-                      <p className="text-base">{PAYOUT_METHOD_LABELS[proposal.payoutMethod]}</p>
-                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr]">
+              <aside className="flex flex-col gap-6 border-b border-[#E0E2E6] p-5 lg:border-b-0 lg:border-r">
+                {proposal.message && (
+                  <div>
+                    <p className="text-xl font-semibold">Cover letter</p>
+                    <RichTextContent html={proposal.message} />
                   </div>
-                </div>
-                {currentStep?.component || null}
-              </div>
-            </div>
-            <div className="flex">
-              <div className="flex w-[300px] shrink-0 flex-col space-y-4 border-r border-[#E0E2E6] p-5">
+                )}
                 {proposal.tutor.tutorProfile?.videoIntroUrl && (
                   <div className="space-y-4">
                     <p className="text-xl font-semibold">Meet {proposal.tutor.firstname}</p>
@@ -186,7 +154,6 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                     </div>
                   </div>
                 )}
-                {/* Languages */}
                 {proposal.tutor.languages && (
                   <div>
                     <p className="text-xl font-semibold">Languages</p>
@@ -200,8 +167,26 @@ const ProposalDetailsSheet: React.FC<ProposalDetailsSheetProps> = ({
                     </ul>
                   </div>
                 )}
-              </div>
+              </aside>
               <div className="divide-y divide-[#E0E2E6]">
+                <div>
+                  <div className="flex w-full flex-wrap items-center justify-between gap-3 p-6">
+                    <h1 className="text-xl font-bold">Proposal Details</h1>
+                    <div className="flex items-center gap-6">
+                      <p className="text-base font-bold">{formatBudget(proposal.totalPrice)} TND</p>
+                      <div className="flex items-center gap-2 font-bold">
+                        <Wallet className="size-4 text-[#143681]" />
+                        <p className="text-base">{PAYOUT_METHOD_LABELS[proposal.payoutMethod]}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <section id="proposal-sessions" className="p-6">
+                    <ProposalSessionsSection
+                      sessions={proposal.sessionPlans}
+                      sessionDurationMinutes={proposal.sessionDurationMinutes}
+                    />
+                  </section>
+                </div>
                 <div className="w-full space-y-5 p-6">
                   <p className="text-2xl font-bold text-[#1E293B]">{proposal.tutor.headline}</p>
                   <ProposalSessionObjective

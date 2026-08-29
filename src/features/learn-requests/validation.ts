@@ -1,5 +1,5 @@
 import { LearnRequest, LearnRequestWizardState } from './store/types'
-import { MAX_DESCRIPTION_LENGTH } from './schemas'
+import { MAX_DESCRIPTION_LENGTH, stripHtmlTags } from './schemas'
 
 function isPresent<T>(value: T | null | undefined): value is T {
   return value !== null && value !== undefined
@@ -71,7 +71,7 @@ export function collectPublishErrors(state: LearnRequestWizardState): PublishErr
     })
   }
 
-  const description = state.description.trim()
+  const description = stripHtmlTags(state.description)
   if (!description) {
     errors.push({ field: 'description', message: 'Description is required' })
   } else if (description.length > MAX_DESCRIPTION_LENGTH) {

@@ -13,7 +13,14 @@ export type PayoutMethod = 'PER_SESSION' | 'ON_COMPLETION'
 // The real, committed session -- created only once a Proposal is accepted.
 // A ProposalSession (pre-acceptance plan) has no status at all.
 export type SessionStatus =
-  'LOCKED' | 'PENDING_SCHEDULE' | 'HELD' | 'BOOKED' | 'PENDING_REVIEW' | 'COMPLETED' | 'CANCELLED'
+  | 'LOCKED'
+  | 'PENDING_SCHEDULE'
+  | 'HELD'
+  | 'BOOKED'
+  | 'PENDING_REVIEW'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'DISPUTED'
 
 export type HoldStatus = 'ACTIVE' | 'EXPIRED' | 'CONVERTED'
 

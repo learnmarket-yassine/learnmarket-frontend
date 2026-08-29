@@ -10,6 +10,7 @@ import MeetingImage from '@/assets/images/meeting-image.jpg'
 import { SESSION_STATUS_CONFIG } from '@/lib/Constants'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getAssetUrl } from '@/lib/utils'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 
 interface SessionVideoCardProps {
   meeting: MeetingDetails
@@ -90,7 +91,12 @@ const MeetingCard = ({ meeting, sessionId, context }: SessionVideoCardProps) => 
               </div>
             </div>
           )}
-          <p className="text-base font-medium text-slate-600">{context.objective}</p>
+          {context.objective && (
+            <RichTextContent
+              html={context.objective}
+              className="text-base font-medium text-slate-600"
+            />
+          )}
         </div>
         {hasEnded ? (
           <div className="flex items-start gap-2 rounded-2xl bg-red-50 p-4 text-sm text-red-700">

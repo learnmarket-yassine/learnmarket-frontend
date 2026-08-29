@@ -1,4 +1,5 @@
 import LanguagesIcon from '@/assets/LanguagesIcon'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import {
   TYPE_BADGE_STYLES,
   TYPE_ICONS,
@@ -54,12 +55,11 @@ const ProposalLearnRequestDetailsCard: React.FC<ProposalLearnRequestDetailsCardP
               <p>Posted Jul 21, 2026</p>
             </div>
             <div>
-              <p
+              <RichTextContent
                 ref={descriptionRef}
+                html={learnrequest.description ?? ''}
                 className={`${clampClassName} text-base font-medium text-[#1E293B]`}
-              >
-                {learnrequest.description}
-              </p>
+              />
               {isClampable && (
                 <button
                   type="button"

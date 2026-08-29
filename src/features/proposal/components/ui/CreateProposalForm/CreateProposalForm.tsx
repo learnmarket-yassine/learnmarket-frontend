@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { buildProposalSchema, ProposalFormValues } from '../../../schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LearnRequest } from '@/features/learn-requests/store/types'
@@ -35,7 +35,7 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
       sessionPlans: [{ title: '', objective: '' }],
     },
   })
-  const { fields, append, remove, move } = useFieldArray({
+  const { fields, append, update, remove, replace } = useFieldArray({
     control: form.control,
     name: 'sessionPlans',
     keyName: 'fieldId',
@@ -101,12 +101,12 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
       </div>
       <ProposalFormSessionsSection
         learnRequestType={learnrequest.type}
-        append={append}
-        move={move}
-        register={register}
         errors={errors}
         fields={fields}
+        append={append}
+        update={update}
         remove={remove}
+        replace={replace}
       />
       <ProposalTermsSection
         control={control}
@@ -121,12 +121,20 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
           <Label htmlFor="proposal-message" className="text-sm font-semibold text-[#374151]">
             Cover Letter
           </Label>
-          <Textarea
-            id="proposal-message"
-            {...register('message')}
-            className="h-[200px] resize-none rounded-xl border border-[#6B7280] bg-white p-4"
+          <Controller
+            name="message"
+            control={control}
+            render={({ field }) => (
+              <RichTextEditor
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                placeholder="Introduce yourself and explain why you're a good fit for this learner"
+                contentClassName="min-h-[200px]"
+                error={errors.message?.message}
+              />
+            )}
           />
-          {errors.message && <p className="text-xs text-destructive">{errors.message.message}</p>}
         </div>
       </div>
       <div className="flex justify-end gap-3">

@@ -13,6 +13,7 @@ import useGetSessionContext from '@/features/sessions/hooks/useGetSessionContext
 import { getBrowserTimezone } from '../../utils/timezones'
 import { formatDateLabel, formatSlotTime } from '../../utils/time'
 import { useNavigate } from 'react-router-dom'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 
 interface ViewSessionDetailsModalProps {
   session: Session
@@ -70,7 +71,11 @@ const ViewSessionDetailsModal = ({ session, isJoinable = true }: ViewSessionDeta
             </label>
 
             <div className="max-h-[250px] overflow-y-auto rounded-xl border border-slate-100 bg-slate-50/70 p-4 text-sm leading-relaxed text-slate-700">
-              {session.objective}
+              {session.objective ? (
+                <RichTextContent html={session.objective} />
+              ) : (
+                'No objective provided yet.'
+              )}
             </div>
           </div>
           <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">

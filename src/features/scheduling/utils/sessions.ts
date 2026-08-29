@@ -14,12 +14,13 @@ export function findActionableSessions(sessions: Session[]): Session[] {
 
 export const SESSION_STATUS_LABELS: Record<SessionStatus, string> = {
   LOCKED: 'Waiting on a previous session',
-  PENDING_SCHEDULE: 'Needs scheduling',
+  PENDING_SCHEDULE: 'Ready to schedule',
   HELD: 'Pending confirmation',
   BOOKED: 'Booked',
   PENDING_REVIEW: 'Awaiting review',
   COMPLETED: 'Completed',
   CANCELLED: 'Cancelled',
+  DISPUTED: 'Disputed',
 }
 
 export const SESSION_STATUS_ICON: Record<SessionStatus, LucideIcon> = {
@@ -30,4 +31,5 @@ export const SESSION_STATUS_ICON: Record<SessionStatus, LucideIcon> = {
   PENDING_REVIEW: Circle,
   COMPLETED: CheckCircle2,
   CANCELLED: Circle,
+  DISPUTED: Circle,
 }

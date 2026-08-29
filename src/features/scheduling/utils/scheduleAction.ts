@@ -19,6 +19,7 @@ const SCHEDULE_ACTIONS: Record<SessionStatus, ScheduleAction> = {
   PENDING_REVIEW: { enabled: null, label: 'Schedule' },
   COMPLETED: { enabled: null, label: 'Schedule' },
   CANCELLED: { enabled: true, label: 'Schedule' },
+  DISPUTED: { enabled: null, label: 'Schedule' },
 }
 
 export function getScheduleAction(status: SessionStatus): ScheduleAction {

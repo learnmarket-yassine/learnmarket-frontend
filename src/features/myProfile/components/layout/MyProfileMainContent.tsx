@@ -1,7 +1,5 @@
 import { Badge } from '@/components/ui/badge'
 import HeadlineForm from '../ui/HeadLineForm'
-import PortfolioForm from '../ui/PortfolioForm'
-import PortfolioList from '../ui/PortfolioList'
 import OverviewForm from '../ui/OverviewForm'
 import { AuthUser } from '@/features/auth/store/types'
 import SkillsForm from '../ui/SkillsForm'
@@ -42,17 +40,6 @@ function MyProfileMainContent({ myProfile, readOnly = false }: MyProfileMainCont
           </p>
         </div>
       </div>
-
-      {/* Portfolio */}
-      {(!readOnly || (myProfile.tutorProfile?.portfolio ?? []).length > 0) && (
-        <div className="space-y-5 p-8">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
-            {!readOnly && <PortfolioForm edit={false} />}
-          </div>
-          <PortfolioList portfolio={myProfile.tutorProfile?.portfolio ?? []} readOnly={readOnly} />
-        </div>
-      )}
 
       {/* Specialties */}
       {(!readOnly || (myProfile.tutorProfile?.specialties ?? []).length > 0) && (
