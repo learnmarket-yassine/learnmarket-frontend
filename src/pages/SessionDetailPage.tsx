@@ -53,7 +53,7 @@ const SessionDetailPage = () => {
       ),
       show: true,
       name: 'Session Feedback',
-      enabled: context.status === 'PENDING_REVIEW',
+      enabled: context.status === 'PENDING_REVIEW' || context.status === 'DISPUTED',
     },
   ]
 

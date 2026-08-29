@@ -85,13 +85,20 @@ export const DEFAULT_LEARN_REQUEST_FILTERS: LearnRequestFiltersValues = {
 
 export const MAX_DESCRIPTION_LENGTH = 2000
 
+export function stripHtmlTags(html: string) {
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim()
+}
+
 export const detailsSchema = z.object({
   description: z
     .string()
     .trim()
-    .min(1, 'Description is required')
-    .max(
-      MAX_DESCRIPTION_LENGTH,
+    .refine((html) => stripHtmlTags(html).length > 0, 'Description is required')
+    .refine(
+      (html) => stripHtmlTags(html).length <= MAX_DESCRIPTION_LENGTH,
       `Description must be at most ${MAX_DESCRIPTION_LENGTH} characters`
     ),
 })

@@ -1,4 +1,5 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
 import { LearnRequest } from '@/features/learn-requests/store/types'
 import { formatBudget, cn } from '@/lib/utils'
@@ -61,7 +62,10 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
               </div>
             </div>
             <div className="border-b-[0.5px] border-b-[#E0E2E6] p-8">
-              <p className="text-base font-medium text-[#1E293B]">{request.description}</p>
+              <RichTextContent
+                html={request.description ?? ''}
+                className="text-base font-medium text-[#1E293B]"
+              />
             </div>
             <div className="flex items-center justify-around border-b-[0.5px] border-b-[#E0E2E6] p-8">
               <div className="flex flex-col items-center gap-2 text-lg">

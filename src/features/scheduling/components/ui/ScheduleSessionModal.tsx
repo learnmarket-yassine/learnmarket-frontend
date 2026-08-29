@@ -18,9 +18,15 @@ interface ScheduleSessionModalProps {
   session: Session
   tutorId: string
   durationMinutes: number
+  trigger?: React.ReactNode
 }
 
-const ScheduleSessionModal = ({ session, tutorId, durationMinutes }: ScheduleSessionModalProps) => {
+const ScheduleSessionModal = ({
+  session,
+  tutorId,
+  durationMinutes,
+  trigger,
+}: ScheduleSessionModalProps) => {
   const [open, setOpen] = useState(false)
 
   const timezone = getBrowserTimezone()
@@ -49,13 +55,15 @@ const ScheduleSessionModal = ({ session, tutorId, durationMinutes }: ScheduleSes
         }}
       >
         <DialogTrigger asChild>
-          <button
-            type="button"
-            aria-label="Schedule session"
-            className="flex cursor-pointer items-center justify-center rounded-lg p-2 text-slate-500 transition-all duration-200 hover:bg-[#1D50BB] hover:text-white"
-          >
-            <CalendarClock className="size-5" />
-          </button>
+          {trigger ?? (
+            <button
+              type="button"
+              aria-label="Schedule session"
+              className="flex cursor-pointer items-center justify-center rounded-lg p-2 text-slate-500 transition-all duration-200 hover:bg-[#1D50BB] hover:text-white"
+            >
+              <CalendarClock className="size-5" />
+            </button>
+          )}
         </DialogTrigger>
 
         <DialogContent className="flex w-[720px] max-w-[92vw] flex-col gap-4">

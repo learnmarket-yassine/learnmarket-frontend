@@ -18,10 +18,8 @@ function counterpartName(booking: MyBooking): string {
 }
 
 function requestDetailsPath(booking: MyBooking): string | null {
-  if (booking.session?.proposalId) return `/requests/${booking.session.proposalId}`
-  if (booking.session?.proposal?.learnRequestId) {
-    return `/learn-requests/${booking.session.proposal.learnRequestId}`
-  }
+  if (booking.session?.proposalId)
+    return `/proposals/${booking.session.proposalId}/sessions/${booking.sessionId}`
   return null
 }
 

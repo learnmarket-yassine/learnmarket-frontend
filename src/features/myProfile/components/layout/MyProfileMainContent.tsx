@@ -43,17 +43,6 @@ function MyProfileMainContent({ myProfile, readOnly = false }: MyProfileMainCont
         </div>
       </div>
 
-      {/* Portfolio */}
-      {(!readOnly || (myProfile.tutorProfile?.portfolio ?? []).length > 0) && (
-        <div className="space-y-5 p-8">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-[#143681]">Portfolio</h3>
-            {!readOnly && <PortfolioForm edit={false} />}
-          </div>
-          <PortfolioList portfolio={myProfile.tutorProfile?.portfolio ?? []} readOnly={readOnly} />
-        </div>
-      )}
-
       {/* Specialties */}
       {(!readOnly || (myProfile.tutorProfile?.specialties ?? []).length > 0) && (
         <div className="space-y-5 p-8">

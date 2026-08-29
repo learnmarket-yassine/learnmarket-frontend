@@ -12,6 +12,7 @@ const STATUS_CLASSNAMES: Record<SessionStatus, string> = {
   PENDING_REVIEW: 'bg-amber-50 text-amber-700',
   COMPLETED: 'bg-blue-50 text-[#2563EB]',
   CANCELLED: 'bg-gray-100 text-gray-500',
+  DISPUTED: 'bg-red-100 text-red-700',
 }
 
 interface SessionStatusBadgeProps {

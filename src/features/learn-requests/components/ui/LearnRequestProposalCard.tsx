@@ -16,6 +16,7 @@ import VerifiedBadge from '@/features/tutor-verification/components/ui/VerifiedB
 import useGetTutorRating from '@/features/feedback/hooks/useGetTutorRating'
 import TutorRatingBadge from '@/features/feedback/components/ui/TutorRatingBadge'
 import useToggleShortlistProposal from '../../hooks/useToggleShortlistProposal'
+import RichTextContent from '@/components/ui/rich-text-content'
 
 type LearnRequestProposalCardProps = {
   proposal: Proposal
@@ -135,26 +136,27 @@ const LearnRequestProposalCard = ({
                 <p className="text-sm">{PAYOUT_METHOD_LABELS[proposal.payoutMethod]}</p>
               </div>
             </div>
-            <div>
-              <p
-                ref={descriptionRef}
-                className={`${clampClassName} text-base font-medium text-[#1E293B]`}
-              >
-                {proposal.message}
-              </p>
-              {isClampable && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggle()
-                  }}
-                  className="text-sm font-semibold text-[#565A60] underline"
-                >
-                  {isExpanded ? 'See less' : 'See more'}
-                </button>
-              )}
-            </div>
+            {proposal.message && (
+              <div>
+                <RichTextContent
+                  ref={descriptionRef}
+                  html={proposal.message}
+                  className={`${clampClassName} text-sm text-[#6B7280]`}
+                />
+                {isClampable && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggle()
+                    }}
+                    className="text-sm font-semibold text-[#565A60] underline"
+                  >
+                    {isExpanded ? 'See less' : 'See more'}
+                  </button>
+                )}
+              </div>
+            )}
             <SkillsSlider skills={tutor.tutorProfile?.skills} />
           </div>
         </div>

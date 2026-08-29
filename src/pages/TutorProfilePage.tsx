@@ -32,7 +32,7 @@ const TutorProfilePage = () => {
       </div>
       <CertificationsSection certifications={myProfile?.tutorProfile?.certifications ?? []} />
       <EmploymentSection employment={myProfile?.tutorProfile?.employment ?? []} />
-      <TutorFeedbackSection tutorId={myProfile.id} />
+      {/* <TutorFeedbackSection tutorId={myProfile.id} /> */}
     </>
   )
 }

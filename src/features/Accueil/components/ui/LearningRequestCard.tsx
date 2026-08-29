@@ -1,4 +1,5 @@
 import { LearnRequest } from '@/features/learn-requests/store/types'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import { useLineClamp } from '@/hooks/useLineClamp'
 import SkillsSlider from './SkillsCarousel'
 import { formatLabel, LEVEL_LABELS, TYPE_LABELS } from '@/features/learn-requests/constants/labels'
@@ -81,12 +82,11 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
           {meta} · <span>budget</span>: ${formatBudget(budgetMin)} - ${formatBudget(budgetMax)}
         </p>
         <div>
-          <p
+          <RichTextContent
             ref={descriptionRef}
+            html={description ?? ''}
             className={`${clampClassName} text-base font-medium text-[#1E293B]`}
-          >
-            {description}
-          </p>
+          />
           {isClampable && (
             <button
               type="button"

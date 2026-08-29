@@ -91,40 +91,6 @@ function LearnerProfileLeftSidebar({ myProfile }: LearnerProfileLeftSidebarProps
           </div>
         ))}
       </div>
-
-      {/* Availability */}
-      <div className="space-y-4 px-5 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold text-[#143681]">Availability</p>
-          <EditButton label="edit availability" onClick={handleEditAvailabilityClick} />
-        </div>
-        <div className="space-y-4">
-          <AvailabilityCircleGrid
-            value={isEditingAvailability ? availabilityDraft : availability}
-            onChange={setAvailabilityDraft}
-            editable={isEditingAvailability}
-          />
-          {isEditingAvailability && (
-            <div className="flex justify-end gap-3">
-              <Button
-                type="button"
-                className="h-full whitespace-nowrap rounded-full px-6 py-3 font-medium text-[#1A46A7]"
-                onClick={handleCancelAvailability}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                className="h-full whitespace-nowrap rounded-full bg-[#2563EB] px-6 py-3 font-medium text-white hover:bg-[#2563EB]"
-                onClick={handleSaveAvailability}
-                disabled={savingAvailability}
-              >
-                Save
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   )
 }

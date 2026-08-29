@@ -9,10 +9,10 @@ import {
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import { Textarea } from '@/components/ui/textarea'
 import SessionReportReasonBox from './SessionReportReasonBox'
 import { SESSION_REPORT_REASONS } from '@/lib/Constants'
 import useDisputeSession from '../../hooks/useDisputeSession'
+import RichTextEditor from '@/components/ui/rich-text-editor'
 
 type SessionReportModalProps = {
   sessionId: string
@@ -80,11 +80,12 @@ function SessionReportModal({ sessionId }: SessionReportModalProps) {
                   ))}
                 </div>
               </div>
-              <Textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="What went wrong?"
-                className="h-20 resize-none rounded-xl border border-[#6B7280] bg-white p-4"
+              <RichTextEditor
+                value={reason ?? ''}
+                onChange={(value) => setReason(value)}
+                placeholder="What should the learner do?"
+                className="border-[0.5px] border-[#9CA3AF]"
+                contentClassName="min-h-[120px]"
               />
             </div>
 

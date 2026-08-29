@@ -1,4 +1,5 @@
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import { LearnRequest } from '../../store/types'
 import { TYPE_LABELS, LEVEL_LABELS, formatLabel } from '../../constants/labels'
 
@@ -25,7 +26,7 @@ const LearnRequestDetailsContent = ({ request }: Props) => {
     <section className="space-y-8 p-6">
       <Field label="Description">
         {request.description ? (
-          <p className="text-[#565a60]">{request.description}</p>
+          <RichTextContent html={request.description} className="text-[#565a60]" />
         ) : (
           <p className="italic text-gray-400">Not set</p>
         )}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import EditButton from '@/features/myProfile/components/ui/EditButton'
 import SkillChip from '@/features/myProfile/components/ui/Skills/SkillChip'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 import { cn } from '@/lib/utils'
 import useLearnRequest from '@/features/learn-requests/hooks/useGetLearnRequest'
 import usePublishLearnRequest from '@/features/learn-requests/hooks/usePublishLearnRequest'
@@ -79,7 +80,11 @@ const ReviewStep = ({ draftId, onEdit, onBack, onSaveDraft, onPublished }: Revie
             rowClass(errorFields.has('description'))
           )}
         >
-          <p className="max-w-6xl text-base">{data.description || 'No description yet.'}</p>
+          {data.description ? (
+            <RichTextContent html={data.description} className="max-w-6xl text-base" />
+          ) : (
+            <p className="max-w-6xl text-base italic text-gray-400">No description yet.</p>
+          )}
           <EditButton label="edit description" onClick={() => onEdit(STEP.DETAILS)} />
         </div>
         <div

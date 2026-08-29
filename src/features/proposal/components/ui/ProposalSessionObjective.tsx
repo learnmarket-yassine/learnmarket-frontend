@@ -1,5 +1,6 @@
 import useLineClamp from '@/hooks/useLineClamp'
 import { cn } from '@/lib/utils'
+import { RichTextContent } from '@/components/ui/rich-text-content'
 
 function ProposalSessionObjective({
   objective,
@@ -22,9 +23,11 @@ function ProposalSessionObjective({
 
   return (
     <div className="mt-1">
-      <p ref={ref} className={cn(`${clampClassName} text-sm text-[#6B7280]`, className)}>
-        {objective}
-      </p>
+      <RichTextContent
+        ref={ref}
+        html={objective}
+        className={cn(`${clampClassName} text-sm text-[#6B7280]`, className)}
+      />
       {isClampable && (
         <button
           type="button"
