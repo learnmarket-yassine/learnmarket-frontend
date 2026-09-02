@@ -7,9 +7,13 @@ import { FILTER_OPTIONS } from '@/lib/tableFilterOptions'
 import ClosedFilterIcon from '@/assets/ClosedFilterIcon'
 import { format, parseISO } from 'date-fns'
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-  ({ className, ...props }, ref) => (
-    <div className="relative h-full w-full overflow-y-auto">
+type TableProps = React.HTMLAttributes<HTMLTableElement> & {
+  containerClassName?: string
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, containerClassName, ...props }, ref) => (
+    <div className={cn('relative h-full w-full overflow-y-auto', containerClassName)}>
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   )
@@ -127,7 +131,7 @@ const TableHead = React.forwardRef<
     return (
       <th
         ref={ref}
-        className={`relative ${headerHeight ? headerHeight : 'h-20 lg:h-28'} cursor-pointer whitespace-nowrap px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0`}
+        className={`relative ${headerHeight ? headerHeight : 'h-20 lg:h-20'} cursor-pointer whitespace-nowrap px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0`}
         {...props}
       >
         <div className={cn('flex items-center gap-3', className)}>
@@ -146,7 +150,7 @@ const TableHead = React.forwardRef<
                     style={{ transform: 'translateX(-50%)' }}
                     className={`absolute left-[50%] ${index === 0 ? 'top-[60%]' : 'top-[80%]'} flex items-center justify-between rounded-[6px] bg-[#F0F0F0] px-1`}
                   >
-                    <span className="min-w-[70px] flex-1 text-center text-[#4D2EB2] lg:min-w-[90px]">
+                    <span className="min-w-[70px] flex-1 text-center text-[#2563EB] lg:min-w-[90px]">
                       {currentFilter.filterKey === 'radio'
                         ? getFilterName(currentFilter.optionName, currentFilter.filterValue)
                         : currentFilter.filterKey === 'order'
@@ -156,7 +160,7 @@ const TableHead = React.forwardRef<
                             : currentFilter.filterValue}
                     </span>
                     <button
-                      className="ml-3 flex h-4 w-4 items-center justify-center rounded-full bg-[#4D2EB2]"
+                      className="ml-3 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB]"
                       onClick={() =>
                         handleClearFilter(currentFilter.optionName, currentFilter.filterValue)
                       }

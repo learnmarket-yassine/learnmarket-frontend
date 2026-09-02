@@ -22,7 +22,7 @@ const SessionRoomDetailsLayout = ({
   return (
     <div className="w-full space-y-8">
       <div className="flex w-full items-center justify-between">
-        <BackButton />
+        <BackButton text={'Back'} className="text-xl text-primary" />
         <div>
           {context.booking && (
             <RescheduleSessionAction
