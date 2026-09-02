@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import AvatarImg from '@/assets/images/avatar.png'
 import { AuthUser } from '@/features/auth/store/types'
 import useGetSparksBalance from '@/features/sparks/hooks/useGetSparksBalance'
+import { getAssetUrl } from '@/lib/utils'
 
 interface TutorAccueilRightBarProps {
   user?: AuthUser | null
@@ -36,7 +37,7 @@ const TutorAccueilRightBar: React.FC<TutorAccueilRightBarProps> = ({
       {/* Profile summary  */}
       <div className="flex flex-col items-center gap-3 rounded-3xl border border-gray-200 bg-white p-6 text-center shadow-sm">
         <Avatar className="h-20 w-20 cursor-pointer after:border-none">
-          <AvatarImage src={user.avatar || AvatarImg} alt={user.firstname} />
+          <AvatarImage src={getAssetUrl(user?.avatar) || AvatarImg} alt={user.firstname} />
           <AvatarFallback className="bg-[#2563EB] text-sm font-semibold text-white">
             {initial}
           </AvatarFallback>

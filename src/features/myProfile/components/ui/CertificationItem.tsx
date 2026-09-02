@@ -25,16 +25,15 @@ function CertificationItem({
   return (
     <div className="space-y-4 py-8">
       <div className="flex items-start justify-between gap-2">
-        <div className="space-y-1">
-          <p className="text-xl font-semibold text-[#143681]">{title}</p>
-          <p className="text-base text-[#143681]">{issuer}</p>
-          {(issuedAt || expiresAt) && (
-            <p className="text-sm text-muted-foreground">
-              {issuedAt && format(issuedAt, 'PPP', { locale: fr })}
-              {issuedAt && expiresAt && ' — '}
-              {expiresAt && format(expiresAt, 'PPP', { locale: fr })}
-            </p>
-          )}
+        <div className="space-y-2">
+          <p className="text-xl font-semibold text-[#143681]">
+            {title} | {issuer}
+          </p>
+          <p className="text-base text-[#143681]">
+            {issuedAt && format(issuedAt, 'PPP', { locale: fr })}
+            {issuedAt && expiresAt && ' — '}
+            {expiresAt && format(expiresAt, 'PPP', { locale: fr })}
+          </p>
           {credentialUrl && (
             <a
               href={credentialUrl}

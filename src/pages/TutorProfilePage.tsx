@@ -6,7 +6,6 @@ import MyProfileLeftSidebar from '@/features/myProfile/components/layout/MyProfi
 import MyProfileMainContent from '@/features/myProfile/components/layout/MyProfileMainContent'
 import PayoutDisabledAlert from '@/features/myProfile/components/ui/PayoutDisabledAlert'
 import ProfileUnderReviewAlert from '@/features/tutor-verification/components/ui/ProfileUnderReviewAlert'
-import TutorFeedbackSection from '@/features/feedback/components/ui/TutorFeedbackSection'
 import { useStore } from '@/store/store'
 
 const TutorProfilePage = () => {
@@ -32,7 +31,6 @@ const TutorProfilePage = () => {
       </div>
       <CertificationsSection certifications={myProfile?.tutorProfile?.certifications ?? []} />
       <EmploymentSection employment={myProfile?.tutorProfile?.employment ?? []} />
-      <TutorFeedbackSection tutorId={myProfile.id} />
     </>
   )
 }

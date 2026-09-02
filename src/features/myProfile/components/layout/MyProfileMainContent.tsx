@@ -4,6 +4,7 @@ import OverviewForm from '../ui/OverviewForm'
 import { AuthUser } from '@/features/auth/store/types'
 import SkillsForm from '../ui/SkillsForm'
 import SpecialtiesForm from '../ui/SpecialtiesForm'
+import TutorFeedbackSection from '@/features/feedback/components/ui/TutorFeedbackSection'
 
 interface MyProfileMainContentProps {
   myProfile: AuthUser
@@ -40,7 +41,7 @@ function MyProfileMainContent({ myProfile, readOnly = false }: MyProfileMainCont
           </p>
         </div>
       </div>
-
+      <TutorFeedbackSection tutorId={myProfile.id} />
       {/* Specialties */}
       {(!readOnly || (myProfile.tutorProfile?.specialties ?? []).length > 0) && (
         <div className="space-y-5 p-8">
