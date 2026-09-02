@@ -7,6 +7,7 @@ import { formatBudget } from '@/lib/utils'
 import EmptyState from '@/features/myProfile/components/ui/EmptyState'
 import useGetMyPayouts, { MY_PAYOUTS_FILTER_TYPE } from '../hooks/useGetMyPayouts'
 import PayoutStatusBadge from './ui/PayoutStatusBadge'
+import Loader from '@/components/ui/Loader/Loader'
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -45,6 +46,25 @@ const MyEarningsSection = () => {
   const payouts = data?.pages.flatMap((page) => page.paginatedResult) ?? []
   const totalEarned = data?.pages[0]?.totalEarned
 
+  const payoutsRows = payouts.map((payout) => {
+    const learner = payout.session.proposal.learnRequest.learner
+    return (
+      <TableRow key={payout.id}>
+        <TableCell>{formatDate(payout.triggeredAt)}</TableCell>
+        <TableCell>
+          {learner.firstname} {learner.lastname}
+        </TableCell>
+        <TableCell>{payout.session.title}</TableCell>
+        <TableCell className="font-semibold text-[#1E293B]">
+          {formatBudget(payout.amount)} TND
+        </TableCell>
+        <TableCell>
+          <PayoutStatusBadge status={payout.status} />
+        </TableCell>
+      </TableRow>
+    )
+  })
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -61,7 +81,12 @@ const MyEarningsSection = () => {
   }
 
   return (
-    <div className="flex flex-col gap-16">
+    <div
+      className="h-full space-y-7 p-4"
+      style={{
+        maxHeight: `calc(100% - 100px)`,
+      }}
+    >
       <div className="flex items-center justify-between">
         <div className="space-y-3">
           <h2 className="text-4xl font-semibold">Earnings</h2>
@@ -80,46 +105,34 @@ const MyEarningsSection = () => {
       <div className="space-y-3 rounded-xl border border-[#E0E2E6] p-5">
         <h3 className="text-2xl font-semibold text-blue-900">History</h3>
         <CustomTable
-          filterType={MY_PAYOUTS_FILTER_TYPE}
           headers={HEADERS}
-          hideActions
           headerAlign="start"
-          hasData={payouts.length > 0}
-          emptyMessage="You haven't earned anything yet."
           data={
             <>
-              {payouts.map((payout) => {
-                const learner = payout.session.proposal.learnRequest.learner
-                return (
-                  <TableRow key={payout.id}>
-                    <TableCell>{formatDate(payout.triggeredAt)}</TableCell>
-                    <TableCell>
-                      {learner.firstname} {learner.lastname}
-                    </TableCell>
-                    <TableCell>{payout.session.title}</TableCell>
-                    <TableCell className="font-semibold text-[#1E293B]">
-                      {formatBudget(payout.amount)} TND
-                    </TableCell>
-                    <TableCell>
-                      <PayoutStatusBadge status={payout.status} />
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-              {(hasNextPage || isFetchingNextPage) && (
-                <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={HEADERS.length} className="p-0">
-                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
-                    {isFetchingNextPage && (
-                      <div className="flex justify-center py-4 text-sm text-muted-foreground">
-                        Loading more...
-                      </div>
-                    )}
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={HEADERS.length + 1} className="min-h-full">
+                    <Loader className="flex h-full w-full items-center justify-center" />
                   </TableCell>
                 </TableRow>
+              ) : (
+                <>
+                  {payoutsRows}
+                  <TableRow ref={sentinelRef}>
+                    <TableCell colSpan={HEADERS.length + 1} className="h-full">
+                      {isFetchingNextPage && (
+                        <Loader className="flex w-full items-center justify-center" />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                </>
               )}
             </>
           }
+          filterType={MY_PAYOUTS_FILTER_TYPE}
+          hasData={isLoading || data?.pages[0]?.totalCount !== 0}
+          tableContainerClassName="max-h-[calc(100vh-28rem)] min-h-0"
+          hideActions
         />
       </div>
     </div>

@@ -3,8 +3,8 @@ import { UserProfile } from '@/types/nav'
 import NavActions from './NavActions'
 import NavBrand from './NavBrand'
 import { NavMenu } from './NavMenu'
-import SearchBar from '@/components/ui/SearchBar'
 import useLogout from '@/features/auth/hooks/useLogout'
+import SearchBar from '@/components/ui/SearchBar'
 
 interface NavbarProps {
   user: UserProfile

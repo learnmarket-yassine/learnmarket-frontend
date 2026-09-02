@@ -8,7 +8,7 @@ const BuySparksPageLayout = ({ children }: BuySparksPageLayoutProps) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <BackButton text="" />
+        <BackButton text={'Back'} className="text-xl text-primary" />
       </div>
       <div className="w-full space-y-3">
         <h2 className="text-2xl font-semibold text-blue-600">Buy Sparks</h2>

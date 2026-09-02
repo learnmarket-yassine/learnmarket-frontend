@@ -22,6 +22,7 @@ type Props = {
   headerTitleColor?: string
   headerAlign?: 'start' | 'center'
   emptyMessage?: string
+  tableContainerClassName?: string
 }
 
 const CustomTable = (props: Props) => {
@@ -29,7 +30,7 @@ const CustomTable = (props: Props) => {
   const hasFiltersApplied = filters.length > 0
 
   return (
-    <Table>
+    <Table containerClassName={props.tableContainerClassName}>
       <TableHeader>
         <TableRow>
           {props.headers.map((header) => (

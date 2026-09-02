@@ -65,6 +65,7 @@ const SparksHistoryList = () => {
       headers={HEADERS}
       hideActions
       headerAlign="start"
+      tableContainerClassName="max-h-[calc(100vh-22rem)] min-h-0"
       hasData={transactions.length > 0}
       emptyMessage="No Sparks activity yet."
       data={
