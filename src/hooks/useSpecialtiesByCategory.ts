@@ -13,11 +13,11 @@ const useSpecialtiesByCategory = (categoryId: string | null) => {
       queryFn: async ({ pageParam, signal }) => {
         const response = await axiosPrivate.get<PaginatedResult<Specialty>>(
           `/categories/${categoryId}/specialties`,
-          { params: { page: pageParam, limit: LIMIT }, signal }
+          { params: { page: pageParam, take: LIMIT }, signal }
         )
         return response.data
       },
-      initialPageParam: 1,
+      initialPageParam: 0,
       getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.page + 1 : undefined),
       enabled: !!categoryId,
       staleTime: 60 * 1000,

@@ -12,4 +12,6 @@ export type userToEdit = {
   city?: string
   state?: string
   postalCode?: string
+  oldPassword?: string
+  newPassword?: string
 }

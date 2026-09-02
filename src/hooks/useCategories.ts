@@ -12,12 +12,12 @@ const useCategories = () => {
       queryKey: ['categories'],
       queryFn: async ({ pageParam, signal }) => {
         const response = await axiosPrivate.get<PaginatedResult<Category>>('/categories', {
-          params: { page: pageParam, limit: LIMIT },
+          params: { page: pageParam, take: LIMIT },
           signal,
         })
         return response.data
       },
-      initialPageParam: 1,
+      initialPageParam: 0,
       getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.page + 1 : undefined),
       staleTime: 5 * 60 * 1000,
     })

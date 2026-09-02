@@ -11,7 +11,7 @@ const NavGroupItem = ({ label, items, onSelectItem, selectedItem }: NavGroupItem
   const filteredItems = items.filter((item) => item.show)
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
       <h3 className="text-2xl font-semibold">{label}</h3>
       <div>
         {filteredItems.map((item) => (

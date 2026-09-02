@@ -5,6 +5,7 @@ import SparksSection from '@/features/sparks/components/SparksSection'
 import { useStore } from '@/store/store'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import AccountSettingsForm from '@/features/settings/components/ui/AccountSettingsForm'
 
 const ProfileSettingsPage = () => {
   const location = useLocation()
@@ -18,14 +19,8 @@ const ProfileSettingsPage = () => {
       items: [
         {
           stepNumber: 1,
-          label: 'Contact Info',
-          component: <h1>Contact Info</h1>,
-          show: true,
-        },
-        {
-          stepNumber: 3,
-          label: 'Password & Security',
-          component: <h1>Password & Security</h1>,
+          label: 'Account Settings',
+          component: <AccountSettingsForm />,
           show: true,
         },
       ],
@@ -60,22 +55,19 @@ const ProfileSettingsPage = () => {
   )
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-4xl font-semibold">Settings</h1>
-      <div className="grid grid-cols-[240px_1fr] gap-8">
-        <nav className="space-y-6">
-          {NAV_GROUPS.map(({ label, items }) => (
-            <NavGroupItem
-              key={label}
-              label={label}
-              items={items}
-              selectedItem={selectedSection}
-              onSelectItem={setSelectedSection}
-            />
-          ))}
-        </nav>
-        <div>{selectedItem?.component}</div>
-      </div>
+    <div className="grid grid-cols-[240px_1fr] gap-8">
+      <nav className="space-y-6">
+        {NAV_GROUPS.map(({ label, items }) => (
+          <NavGroupItem
+            key={label}
+            label={label}
+            items={items}
+            selectedItem={selectedSection}
+            onSelectItem={setSelectedSection}
+          />
+        ))}
+      </nav>
+      <div>{selectedItem?.component}</div>
     </div>
   )
 }

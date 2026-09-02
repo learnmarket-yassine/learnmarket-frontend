@@ -69,7 +69,7 @@ const TutorVerificationModal = () => {
             met={hasSpecialty}
           />
           <CheckListItem
-            label="Professional Bio"
+            label="Degree or Certification"
             description="Upload valid certifications credentials or degree copies."
             met={hasCertification}
           />
