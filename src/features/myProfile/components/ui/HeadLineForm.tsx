@@ -36,7 +36,7 @@ function HeadlineForm() {
   }, [isOpen, reset, user])
 
   const onSubmit: SubmitHandler<HeadLineFormData> = async (data) => {
-    editUserMutation(data)
+    editUserMutation(data, { onSuccess: () => setIsOpen(false) })
   }
 
   return (
