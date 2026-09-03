@@ -37,7 +37,7 @@ function OverviewForm() {
   }, [isOpen, reset, user])
 
   const onSubmit: SubmitHandler<OverviewFormData> = async (data) => {
-    editUserMutation(data)
+    editUserMutation(data, { onSuccess: () => setIsOpen(false) })
   }
 
   return (

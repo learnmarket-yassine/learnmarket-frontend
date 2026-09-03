@@ -18,7 +18,7 @@ function TutorFeedbackSection({ tutorId }: TutorFeedbackSectionProps) {
   const { data: feedbacks, isLoading } = useGetTutorFeedback(tutorId)
 
   return (
-    <div className="space-y-6 rounded-lg border border-[#D1D5DA] p-8">
+    <div className="space-y-6 border border-[#D1D5DA] p-8">
       <h2 className="text-3xl font-semibold text-[#143681]">
         Reviews{feedbacks && feedbacks.length > 0 ? ` (${feedbacks.length})` : ''}
       </h2>
