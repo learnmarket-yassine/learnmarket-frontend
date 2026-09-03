@@ -41,6 +41,7 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_ASSETS_BASE_URL: ${{ secrets.VITE_ASSETS_BASE_URL }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
           VITE_APP_NAME: LearnMarket
           VITE_APP_VERSION: ${{ github.sha }}
           VITE_ENVIRONMENT: development
