@@ -170,7 +170,7 @@ const CreateProposalForm = ({ learnrequest, existingProposal }: CreateProposalFo
         isLoading={false}
         handleReturn={(e) => {
           e.stopPropagation()
-          navigate('/buy-sparks')
+          navigate('/sparks/buy')
         }}
       />
     </form>

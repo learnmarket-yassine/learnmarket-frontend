@@ -3,6 +3,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ProposalFormValues } from '../schemas'
 import { AxiosInstance } from 'axios'
 import ToastMessage from '@/components/layout/ToastMessage'
+import { useNavigate } from 'react-router-dom'
 
 type UpdateProposalPayload = {
   proposalId: string
@@ -21,6 +22,7 @@ const updateProposal = async (
 export default function useUpdateProposal() {
   const queryClient = useQueryClient()
   const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
   const updateProposalMutation = useMutation({
     mutationFn: async ({ proposalId, payload }: UpdateProposalPayload) =>
       updateProposal(axiosPrivate, proposalId, payload),
@@ -28,6 +30,7 @@ export default function useUpdateProposal() {
       queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] })
       queryClient.invalidateQueries({ queryKey: ['proposals', 'mine'] })
       ToastMessage({ type: 'success', message: 'Proposal updated.' })
+      navigate(`/proposals/${proposalId}`)
     },
     onError: () => {
       ToastMessage({ type: 'error', message: 'Failed to update proposal. Please try again.' })

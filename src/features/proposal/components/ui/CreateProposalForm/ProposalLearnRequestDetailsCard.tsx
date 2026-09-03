@@ -52,7 +52,14 @@ const ProposalLearnRequestDetailsCard: React.FC<ProposalLearnRequestDetailsCardP
                   {typeLabel}
                 </span>
               )}
-              <p>Posted Jul 21, 2026</p>
+              <p>
+                Posted{' '}
+                {new Date(learnrequest.createdAt).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </p>
             </div>
             <div>
               <RichTextContent

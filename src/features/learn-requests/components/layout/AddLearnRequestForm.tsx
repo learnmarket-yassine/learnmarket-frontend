@@ -120,7 +120,7 @@ const AddLearnRequestForm = ({
 
   const handleSaveDraft = async () => {
     if (formStep === REVIEW_STEP) {
-      navigate('/profile')
+      navigate('/accueil')
       return
     }
 
@@ -143,7 +143,7 @@ const AddLearnRequestForm = ({
           setDraftId(created.id)
         }
       }
-      navigate('/profile')
+      navigate('/accueil')
     } catch {
       // stay on the page — nothing else to persist without a toast system
     }
@@ -237,7 +237,7 @@ const AddLearnRequestForm = ({
           onEdit={setFormStep}
           onBack={handleBack}
           onSaveDraft={handleSaveDraft}
-          onPublished={() => navigate('/profile')}
+          onPublished={() => navigate('/accueil')}
         />
       ),
       show: true,
