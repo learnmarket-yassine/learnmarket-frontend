@@ -32,6 +32,7 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
   description,
   requestedFrequency,
   skills,
+  createdAt,
 }) => {
   const navigate = useNavigate()
   const {
@@ -60,7 +61,16 @@ const LearnRequestCard: React.FC<LearnRequestPreview> = ({
       className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#143681] hover:shadow-lg"
     >
       <div className="space-y-4">
-        <p className="px-2 text-sm text-[#6B7280]">posted 1 hour ago</p>
+        <p className="px-2 text-sm text-[#6B7280]">
+          Posted{' '}
+          {createdAt
+            ? new Date(createdAt).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })
+            : 'date unavailable'}
+        </p>
         <div className="flex items-center justify-between">
           {type && TypeIcon && (
             <span

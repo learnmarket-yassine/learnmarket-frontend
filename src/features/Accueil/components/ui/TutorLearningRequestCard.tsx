@@ -36,6 +36,7 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnReque
     budgetMin,
     level,
     isSavedByMe,
+    createdAt,
   } = learnRequest
   const {
     ref: descriptionRef,
@@ -71,7 +72,16 @@ const TutorLearningRequestCard: React.FC<TutorLearnRequestProps> = ({ learnReque
             </span>
           )}
           <div className="flex items-center gap-3">
-            <p className="text-sm text-[#6B7280]">posted 1 hour ago</p>
+            <p className="text-sm text-[#6B7280]">
+              Posted{' '}
+              {createdAt
+                ? new Date(createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })
+                : 'date unavailable'}
+            </p>
             {id && <SaveLearnRequestButton learnRequestId={id} isSaved={!!isSavedByMe} />}
           </div>
         </div>

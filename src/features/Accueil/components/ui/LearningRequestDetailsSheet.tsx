@@ -58,7 +58,14 @@ const LearningRequestDetailsSheet: React.FC<LearningRequestDetailsSheetProps> = 
                     {typeLabel}
                   </span>
                 )}
-                <span className="text-sm font-[450]">Posted yesterday</span>
+                <span className="text-sm font-[450]">
+                  Posted{' '}
+                  {new Date(request.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </span>
               </div>
             </div>
             <div className="border-b-[0.5px] border-b-[#E0E2E6] p-8">

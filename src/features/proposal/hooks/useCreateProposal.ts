@@ -5,6 +5,7 @@ import { AxiosInstance } from 'axios'
 import { isInsufficientSparksError } from '@/features/sparks/utils/errors'
 import { useState } from 'react'
 import ToastMessage from '@/components/layout/ToastMessage'
+import { useNavigate } from 'react-router-dom'
 
 type CreateProposalPayload = {
   learnRequestId: string
@@ -24,12 +25,14 @@ export default function useCreateProposal() {
   const [InsufficientSparksState, setInsufficientSparksState] = useState(false)
   const queryClient = useQueryClient()
   const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
   const createProposalMutation = useMutation({
     mutationFn: async ({ learnRequestId, payload }: CreateProposalPayload) =>
       createProposal(axiosPrivate, learnRequestId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['learn-requests'] })
       ToastMessage({ type: 'success', message: 'Proposal submitted.' })
+      navigate('/accueil')
     },
     onError: (error) => {
       if (isInsufficientSparksError(error)) {
